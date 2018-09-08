@@ -1,4 +1,5 @@
 const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const phaserPath = path.join(__dirname, "node_modules", "phaser-ce", "build", "custom");
 
 module.exports = function(env, args = {}) {
@@ -39,6 +40,12 @@ module.exports = function(env, args = {}) {
             globalObject: "self",
             path: path.resolve(__dirname, "dist"),
         },
+        plugins: [
+            new HtmlWebpackPlugin({
+                chunks: ["app"],
+                template: "index.html",
+            }),
+        ],
         resolve: {
             alias: {
                 p2: path.join(phaserPath, "p2.js"),
