@@ -32,7 +32,8 @@ monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_pixi, "pixi.comme
 monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_phaser, "phaser.comments.d.ts");
 monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_runtime, "runtime.d.ts");
 
-const editor = new Editor(document.getElementById("editor")!, example, "phaser/source", 5000);
+const editorDiv = document.getElementById("editor")!;
+const editor = new Editor(editorDiv, example, "phaser/source");
 const game = new GameLauncher(800, 600);
 
 document.getElementById("download")!.onclick = () => editor.download("game.ts");
@@ -40,10 +41,18 @@ document.getElementById("upload")!.onclick = () => editor.upload();
 document.getElementById("run")!.onclick = async () => {
     try {
         const fn = await editor.transpile(game.scope);
+        editorDiv.hidden = true;
         game.run(fn);
     } catch (e) {
         alert(e);
     }
 };
-document.getElementById("stop")!.onclick = () => game.stop();
+document.getElementById("stop")!.onclick = () => {
+    try {
+        game.stop();
+    } finally {
+        editorDiv.hidden = false;
+    }
+};
+
 document.getElementById("pause")!.onclick = () => game.pause();

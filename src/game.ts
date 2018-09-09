@@ -17,14 +17,16 @@ export default class GameLauncher {
     private preloadCb = noop;
     private createCb = noop;
     private updateCb = noop;
-    private el: HTMLElement | string | undefined;
     private width: number;
     private height: number;
+    private parent: HTMLElement | string | undefined;
+    private canvasStyle: string | undefined;
 
-    constructor(width: number, height: number, el?: HTMLElement | string) {
+    constructor(width: number, height: number, parent?: HTMLElement | string, canvasStyle?: string) {
         this.width = width;
         this.height = height;
-        this.el = el;
+        this.parent = parent;
+        this.canvasStyle = canvasStyle;
     }
 
     run(fn: () => void) {
@@ -33,8 +35,9 @@ export default class GameLauncher {
         }
         fn();
         this.game = new Phaser.Game({
+            canvasStyle: this.canvasStyle,
             height: this.height,
-            parent: this.el,
+            parent: this.parent,
             state: {
                 create: () => this.createCb(this.game!),
                 preload: () => this.preloadCb(this.game!),

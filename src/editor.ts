@@ -4,7 +4,7 @@ export default class Editor {
     private editor: monaco.editor.IStandaloneCodeEditor;
     private textFile: string | undefined;
 
-    constructor(el: HTMLElement, initFile: string, storageKey: string, safeDelay: number) {
+    constructor(el: HTMLElement, initFile: string, storageKey: string, safeDelay: number = 5000) {
         this.editor = monaco.editor.create(el, {
             language: "typescript",
             value: window.localStorage.getItem(storageKey) || initFile,
@@ -27,7 +27,7 @@ export default class Editor {
         }
         this.textFile = window.URL.createObjectURL(data);
         const link = document.createElement("a");
-        link.setAttribute("download", fileName);
+        link.download = fileName;
         link.href = this.textFile;
         link.dispatchEvent(new MouseEvent("click"));
     }
