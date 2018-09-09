@@ -6,11 +6,12 @@
  * you're also loading in this method, as they won't yet be available.
 */
 preload((game) => {
+    game.load.baseURL = "https://examples.phaser.io/assets/";
     game.load.crossOrigin = "anonymous";
-    game.load.image("atari", "https://examples.phaser.io/assets/demoscene/atari.png");
-    game.load.image("raster", "https://examples.phaser.io/assets/demoscene/pink-raster.png");
-    game.load.image("floor", "https://examples.phaser.io/assets/demoscene/checker-floor.png");
-    game.load.audio("boden", "https://examples.phaser.io/assets/audio/bodenstaendig_2000_in_rock_4bit.mp3");
+    game.load.image("atari", "demoscene/atari.png");
+    game.load.image("raster", "demoscene/pink-raster.png");
+    game.load.image("floor", "demoscene/checker-floor.png");
+    game.load.audio("boden", "audio/bodenstaendig_2000_in_rock_4bit.mp3");
 });
 
 let effect: Phaser.BitmapData;
@@ -33,7 +34,7 @@ create((game) => {
     image.anchor.set(0.5);
     image.smoothed = false;
     mask.setTo(0, 0, effect.width, game.cache.getImage("raster").height);
-    game.add.tween(mask).to({ y: -(mask.height - effect.height) }, 3000, Phaser.Easing.Sinusoidal.InOut, true, 0, 100, true);
+    game.add.tween(mask).to({ y: effect.height - mask.height }, 3000, Phaser.Easing.Sinusoidal.InOut, true, 0, 100, true);
     game.add.tween(image.scale).to({ x: 4, y: 4 }, 3000, Phaser.Easing.Quartic.InOut, true, 0, 100, true);
     game.add.audio("boden").play();
 });
