@@ -14,7 +14,7 @@ export default class Editor {
             if (safeTimeout) {
                 clearTimeout(safeTimeout);
             }
-            safeTimeout = setTimeout(
+            safeTimeout = window.setTimeout(
                 () => window.localStorage.setItem(storageKey, this.editor.getValue()),
                 safeDelay);
         });

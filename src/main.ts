@@ -54,5 +54,5 @@ document.getElementById("stop")!.onclick = () => {
         editorDiv.hidden = false;
     }
 };
-
 document.getElementById("pause")!.onclick = () => game.pause();
+document.getElementById("fullscreen")!.onclick = () => game.fullScreen = true;

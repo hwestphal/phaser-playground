@@ -29,6 +29,21 @@ export default class GameLauncher {
         this.canvasStyle = canvasStyle;
     }
 
+    get fullScreen(): boolean {
+        return !!this.game && this.game.scale.isFullScreen;
+    }
+
+    set fullScreen(fullScreen: boolean) {
+        if (this.game) {
+            if (fullScreen) {
+                this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+                this.game.scale.startFullScreen(false);
+            } else {
+                this.game.scale.stopFullScreen();
+            }
+        }
+    }
+
     run(fn: () => void) {
         if (this.game) {
             this.stop();

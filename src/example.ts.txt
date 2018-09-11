@@ -2,7 +2,7 @@
 
 /*
  * Preload is called first. Normally you'd use this to load your game assets.
- * You shouldn't create any objects in this method that require assets that 
+ * You shouldn't create any objects in this method that require assets that
  * you're also loading in this method, as they won't yet be available.
 */
 preload((game) => {
@@ -11,7 +11,7 @@ preload((game) => {
     game.load.image("atari", "demoscene/atari.png");
     game.load.image("raster", "demoscene/pink-raster.png");
     game.load.image("floor", "demoscene/checker-floor.png");
-    game.load.audio("boden", "audio/bodenstaendig_2000_in_rock_4bit.mp3");
+    game.load.audio("tune", "audio/bodenstaendig_2000_in_rock_4bit.mp3");
 });
 
 let effect: Phaser.BitmapData;
@@ -19,7 +19,7 @@ let image: Phaser.Image;
 const mask = new Phaser.Rectangle();
 
 /*
- * Create is called once preload has completed, this includes the loading of 
+ * Create is called once preload has completed, this includes the loading of
  * any assets.
  * If you don't have a preload method then create is the first method called.
  */
@@ -36,7 +36,7 @@ create((game) => {
     mask.setTo(0, 0, effect.width, game.cache.getImage("raster").height);
     game.add.tween(mask).to({ y: effect.height - mask.height }, 3000, Phaser.Easing.Sinusoidal.InOut, true, 0, 100, true);
     game.add.tween(image.scale).to({ x: 4, y: 4 }, 3000, Phaser.Easing.Quartic.InOut, true, 0, 100, true);
-    game.add.audio("boden").play();
+    game.add.audio("tune").play();
 });
 
 /*
