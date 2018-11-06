@@ -1,12 +1,12 @@
 import * as monaco from "monaco-editor";
-import Editor from "./editor";
-import example from "./example.ts.txt";
+import { Editor } from "./editor";
 import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
 import lib_p2 from "./extraLibs/p2.d.ts.txt";
 import lib_phaser from "./extraLibs/phaser.comments.d.ts.txt";
 import lib_pixi from "./extraLibs/pixi.comments.d.ts.txt";
 import lib_runtime from "./extraLibs/runtime.d.ts.txt";
-import GameLauncher from "./game";
+import { GameLauncher } from "./game";
+import template from "./template.ts.txt";
 
 (self as any).MonacoEnvironment = {
     getWorkerUrl(moduleId: string, label: string) {
@@ -33,7 +33,7 @@ monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_phaser, "phaser.c
 monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_runtime, "runtime.d.ts");
 
 const editorDiv = document.getElementById("editor")!;
-const editor = new Editor(editorDiv, example, "phaser/source");
+const editor = new Editor(editorDiv, template, "phaser/source");
 const game = new GameLauncher(800, 600);
 
 document.getElementById("download")!.onclick = () => editor.download("game.ts");

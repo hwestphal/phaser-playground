@@ -1,6 +1,6 @@
 import * as monaco from "monaco-editor";
 
-export default class Editor {
+export class Editor {
     private editor: monaco.editor.IStandaloneCodeEditor;
     private textFile: string | undefined;
 

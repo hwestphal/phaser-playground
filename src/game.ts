@@ -6,7 +6,7 @@ import Phaser from "phaser-ce";
 type GameCallback = (game: Phaser.Game) => void;
 const noop: GameCallback = () => undefined;
 
-export default class GameLauncher {
+export class GameLauncher {
     readonly scope = {
         create: this.create.bind(this),
         preload: this.preload.bind(this),

@@ -1,0 +1,22 @@
+/*
+ * Preload is called first. Normally you'd use this to load your game assets.
+ * You shouldn't create any objects in this method that require assets that
+ * you're also loading in this method, as they won't yet be available.
+*/
+preload((game) => {
+    game.load.crossOrigin = "anonymous";
+});
+
+/*
+ * Create is called once preload has completed, this includes the loading of
+ * any assets.
+ * If you don't have a preload method then create is the first method called.
+ */
+create((game) => {
+});
+
+/*
+ * Update is called during the core game loop.
+ */
+update((game) => {
+});
