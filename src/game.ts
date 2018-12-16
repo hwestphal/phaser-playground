@@ -29,7 +29,7 @@ export class GameLauncher {
         this.canvasStyle = canvasStyle;
     }
 
-    get fullScreen(): boolean {
+    get fullScreen() {
         return !!this.game && this.game.scale.isFullScreen;
     }
 
@@ -41,6 +41,16 @@ export class GameLauncher {
             } else {
                 this.game.scale.stopFullScreen();
             }
+        }
+    }
+
+    get paused() {
+        return !!this.game && this.game.paused;
+    }
+
+    set paused(paused: boolean) {
+        if (this.game) {
+            this.game.paused = paused;
         }
     }
 
@@ -67,12 +77,6 @@ export class GameLauncher {
             this.game.destroy();
             this.game = undefined;
             this.preloadCb = this.createCb = this.updateCb = noop;
-        }
-    }
-
-    pause() {
-        if (this.game) {
-            this.game.paused = !this.game.paused;
         }
     }
 

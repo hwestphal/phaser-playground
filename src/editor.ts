@@ -6,7 +6,9 @@ export class Editor {
 
     constructor(el: HTMLElement, initFile: string, storageKey: string, safeDelay: number = 5000) {
         this.editor = monaco.editor.create(el, {
+            automaticLayout: true,
             language: "typescript",
+            scrollBeyondLastLine: false,
             value: window.localStorage.getItem(storageKey) || initFile,
         });
         let safeTimeout: number;

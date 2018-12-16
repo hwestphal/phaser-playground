@@ -3,13 +3,17 @@
 
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Phaser Playground</title>
     <style type="text/css">
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         #editor {
-            height: 600px;
-            width: 800px;
+            height: calc(100% - 90px);
         }
     </style>
 </head>
@@ -19,9 +23,9 @@
         <button id="download">Download</button>
         <button id="upload">Upload</button>
         <button id="run">Run</button>
-        <button id="stop">Stop</button>
-        <button id="pause">Pause</button>
-        <button id="fullscreen">Full Screen</button>
+        <button id="stop" disabled>Stop</button>
+        <button id="pause" disabled>Pause</button>
+        <button id="fullscreen" disabled>Full Screen</button>
     </p>
     <div id="editor"></div>
 </body>

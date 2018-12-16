@@ -36,23 +36,53 @@ const editorDiv = document.getElementById("editor")!;
 const editor = new Editor(editorDiv, template, "phaser/source");
 const game = new GameLauncher(800, 600);
 
-document.getElementById("download")!.onclick = () => editor.download("game.ts");
-document.getElementById("upload")!.onclick = () => editor.upload();
-document.getElementById("run")!.onclick = async () => {
+const download = document.getElementById("download") as HTMLButtonElement;
+const upload = document.getElementById("upload") as HTMLButtonElement;
+const run = document.getElementById("run") as HTMLButtonElement;
+const stop = document.getElementById("stop") as HTMLButtonElement;
+const pause = document.getElementById("pause") as HTMLButtonElement;
+const fullscreen = document.getElementById("fullscreen") as HTMLButtonElement;
+
+download.onclick = () => editor.download("game.ts");
+upload.onclick = () => editor.upload();
+run.onclick = async () => {
+    download.disabled = true;
+    upload.disabled = true;
+    run.disabled = true;
+    stop.disabled = false;
+    pause.disabled = false;
+    fullscreen.disabled = false;
     try {
         const fn = await editor.transpile(game.scope);
         editorDiv.hidden = true;
         game.run(fn);
     } catch (e) {
         alert(e);
+        resetButtons();
     }
 };
-document.getElementById("stop")!.onclick = () => {
+stop.onclick = () => {
     try {
         game.stop();
     } finally {
         editorDiv.hidden = false;
+        resetButtons();
     }
 };
-document.getElementById("pause")!.onclick = () => game.pause();
-document.getElementById("fullscreen")!.onclick = () => game.fullScreen = true;
+pause.onclick = () => {
+    const paused = game.paused;
+    game.paused = !paused;
+    pause.innerText = paused ? "Pause" : "Continue";
+    fullscreen.disabled = !paused;
+};
+fullscreen.onclick = () => game.fullScreen = true;
+
+function resetButtons() {
+    download.disabled = false;
+    upload.disabled = false;
+    run.disabled = false;
+    stop.disabled = true;
+    pause.innerText = "Pause";
+    pause.disabled = true;
+    fullscreen.disabled = true;
+}
