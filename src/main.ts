@@ -11,9 +11,9 @@ import template from "./template.ts.txt";
 (self as any).MonacoEnvironment = {
     getWorkerUrl(moduleId: string, label: string) {
         if (label === "typescript" || label === "javascript") {
-            return "./ts.worker.js";
+            return "./dist/ts.worker.js";
         }
-        return "./editor.worker.js";
+        return "./dist/editor.worker.js";
     },
 };
 

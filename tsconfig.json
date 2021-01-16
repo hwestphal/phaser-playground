@@ -10,6 +10,8 @@
         "importHelpers": true,
         "allowJs": true,
         "sourceMap": true,
+        "lib": ["dom", "scripthost", "es2020"],
+
     },
     "include": [
         "src/**/*"

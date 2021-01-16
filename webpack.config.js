@@ -1,11 +1,13 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require('path');
 const phaserPath = path.join(__dirname, "node_modules", "phaser-ce", "build", "custom");
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
-module.exports = function(env, args = {}) {
-    const prod = args.mode === "production";
+module.exports = (env, argv) => {
+    const prod = argv.mode === "production";
+
     return {
         devtool: prod ? "source-map" : "eval-source-map",
+
         entry: {
             "app": "./src/main.ts",
             "editor.worker": "monaco-editor/esm/vs/editor/editor.worker.js",
@@ -14,38 +16,29 @@ module.exports = function(env, args = {}) {
         mode: "development",
         module: {
             rules: [{
-                exclude: /node_modules/,
-                test: /\.(j|t)s$/,
-                use: {
-                    loader: "ts-loader",
-                    options: {
-                        transpileOnly: true,
-                    },
-                },
-            },
-            {
                 test: /\.css$/,
-                use: ["style-loader", "css-loader"],
+                use: ['style-loader', 'css-loader']
+            }, {
+                test: /\.ttf$/,
+                use: ['file-loader']
+            }, {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
             },
             {
-                test: /\.txt$/,
-                use: "raw-loader",
+                test: /\.txt$/i,
+                exclude: '/node_modules/',
+                use: 'raw-loader'
             },
-            { test: /pixi\.js$/, loader: "expose-loader?PIXI" },
-            { test: /phaser-split\.js$/, loader: "expose-loader?Phaser" },
-            { test: /p2\.js$/, loader: "expose-loader?p2" }],
+
+            { test: /pixi\.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["PIXI"] } } },
+            { test: /phaser-split\.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["Phaser"] } } },
+            { test: /p2\.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["p2"] } } },
+
+            ]
         },
-        output: {
-            filename: "[name].js",
-            globalObject: "self",
-            path: path.resolve(__dirname, "dist"),
-        },
-        plugins: [
-            new HtmlWebpackPlugin({
-                chunks: ["app"],
-                template: "index.html",
-            }),
-        ],
+
         resolve: {
             alias: {
                 p2: path.join(phaserPath, "p2.js"),
@@ -54,5 +47,16 @@ module.exports = function(env, args = {}) {
             },
             extensions: [".js", ".ts"],
         },
-    };
+        output: {
+            filename: "[name].js",
+            publicPath: "dist/",
+            globalObject: "self",
+            path: path.resolve(__dirname, "dist"),
+        },
+
+
+        plugins: [
+            new MonacoWebpackPlugin()
+        ]
+    }
 };

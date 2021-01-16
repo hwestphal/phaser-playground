@@ -48,19 +48,23 @@ export class Editor {
     async transpile(scope: any = {}) {
         const names = Object.keys(scope);
         const args = names.map((key) => scope[key]);
-        const resource = this.editor.getModel().uri;
-        const errors = monaco.editor.getModelMarkers({ resource })
-            .map((m) => `Line ${m.startLineNumber}: ${m.message}`)
-            .join("\n");
-        if (errors.length > 0) {
-            throw errors;
+        const model = this.editor.getModel();   // typescript needs a typeguard to be happy
+        if (model !== null) {
+            const resource = model.uri;
+            const errors = monaco.editor.getModelMarkers({ resource })
+                .map((m) => `Line ${m.startLineNumber}: ${m.message}`)
+                .join("\n");
+            if (errors.length > 0) {
+                throw errors;
+            }
+            const worker = await monaco.languages.typescript.getTypeScriptWorker();
+            const client = await worker(resource);
+            const output = await client.getEmitOutput(resource.toString());
+            const code = output.outputFiles[0].text as string;
+            const src = `"use strict";(function(${names.join()}){eval(${JSON.stringify(code)})}).apply(this, arguments[0])`;
+            return () => new Function(src).call(window, args);
+        } else {
+            return () => { alert("no uri, so no source"); };  // have to return something if typeguard fails
         }
-        const worker = await monaco.languages.typescript.getTypeScriptWorker();
-        const client = await worker(resource);
-        const output = await client.getEmitOutput(resource.toString());
-        const code = output.outputFiles[0].text as string;
-        const src = `"use strict";(function(${names.join()}){eval(${JSON.stringify(code)})}).apply(this, arguments[0])`;
-        return () => new Function(src).call(window, args);
     }
-
 }
