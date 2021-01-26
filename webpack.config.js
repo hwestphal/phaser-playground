@@ -1,9 +1,10 @@
 const path = require('path');
-const phaserPath = path.join(__dirname, "node_modules", "phaser-ce", "build", "custom");
+// const phaserPath = path.join(__dirname, "node_modules", "phaser-ce", "build", "custom");
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');  // clean after rebuild
 
 module.exports = (env, argv) => {
-    const prod = argv.mode === "production";
+    const prod = argv.mode === "development";
 
     return {
         devtool: prod ? "source-map" : "eval-source-map",
@@ -32,31 +33,39 @@ module.exports = (env, argv) => {
                 use: 'raw-loader'
             },
 
-            { test: /pixi\.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["PIXI"] } } },
-            { test: /phaser-split\.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["Phaser"] } } },
-            { test: /p2\.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["p2"] } } },
+            { test: /baby.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["Baby"] } } },
+
+                // { test: /pixi\.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["PIXI"] } } },
+                // { test: /phaser-split\.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["Phaser"] } } },
+                // { test: /p2\.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["p2"] } } },
 
             ]
         },
 
-        resolve: {
-            alias: {
-                p2: path.join(phaserPath, "p2.js"),
-                "phaser-ce": path.join(phaserPath, "phaser-split.js"),
-                pixi: path.join(phaserPath, "pixi.js"),
-            },
-            extensions: [".js", ".ts"],
+        optimization: {
+            minimize: true
         },
+
+        resolve: {
+            extensions: ['.ts', '.tsx', '.js']
+        },
+        externals: {
+            Baby: 'baby'
+        },
+
+
         output: {
-            filename: "[name].js",
+            filename: 'bundle.[name].js',
             publicPath: "dist/",
             globalObject: "self",
             path: path.resolve(__dirname, "dist"),
         },
-
-
         plugins: [
-            new MonacoWebpackPlugin()
-        ]
+            new MonacoWebpackPlugin(),
+            new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
+        ],
+        devServer: {
+            contentBase: './'
+        }
     }
 };

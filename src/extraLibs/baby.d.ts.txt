@@ -1,0 +1,701 @@
+declare module 'frontend/utilities' {
+	import { Color3 } from 'babylonjs';
+	export function HTMLColor(colorName: string): Color3;
+	export function randomColorName(): string;
+	/** estimate the number of pixels in a string */
+	export function measureText(str: string, fontSize?: number): number;
+	/** simple class to return a unique number */
+	export class Uuid {
+	    static count: number;
+	    constructor();
+	}
+
+}
+declare module 'frontend/redux' {
+	export type Action<T> = {
+	    type: string;
+	    payload: any;
+	};
+	export type Subscriber<T> = (state: T) => void;
+	export type Reducer<T> = (state: T, action: Action<T>) => T;
+	export function createStore<T>(reducer: Reducer<T>, initialState?: T): {
+	    getState: () => T;
+	    dispatch: (action: Action<T>) => void;
+	    subscribe: (fn: Subscriber<T>) => () => Subscriber<T>[];
+	};
+	export function testRedux(): void;
+
+}
+declare module 'middle/tween' {
+	 
+	import { Vector3, Color3 } from 'babylonjs';
+	/**
+	 * Constructor for the tween
+	 * @param {number} startValue What value does the tween start at
+	 * @param {number} distance How far does the tween's value advance from the startValue?
+	 * @param {number} durationMS Amount of time in milliseconds the tween runs for
+	 * @param {Function} animate What easing function should be used from the easing library?
+	 * See EasingLibrary for a list of potential easing equations.
+	 * @param {string} loop Can be left blank, set to loop, or repeat. Loop repeats repeats the animation
+	 * in reverse every time. Repeat will run the original tween from the beginning
+	 * @returns {self}
+	 */
+	export class Tween {
+	    promise: Promise<void>;
+	    promiseResolve: Function;
+	    name: string;
+	    startTime: number;
+	    timeStamp: number;
+	    durationMS: number;
+	    animationFunction: Function;
+	    updateFunction: Function;
+	    minimum: number;
+	    isCancelled: boolean;
+	    tweenType: 'move' | 'turn' | 'size' | 'color' | 'opacity' | 'misc';
+	    /**
+	     * Has the tween expired yet?
+	     * @returns {boolean} True if the tween has expired
+	     */
+	    expired: Function;
+	    constructor(name?: string);
+	    commonStart(timeStamp: number, seconds: number, animate: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow', updateFunction: Function): Tween;
+	    /**
+	     * Rounds the passed number to two decimal places. Prevents large float
+	     * numbers from being multiplied
+	     * @param {number} num number you want to round
+	     * @returns {number} Rounded number
+	     */
+	    round(num: number): number;
+	    /**
+	     * Retrieves the start time relative to the time passed from the previous start time
+	     * @returns {number} Start time of the tween relative to time passed
+	     */
+	    getStartTime(): number;
+	    /**
+	     * Resets the tween and runs it relative to the current time
+	     * @returns {self}
+	     */
+	    reset(): Tween;
+	}
+	export class NullTween extends Tween {
+	    constructor(name: string);
+	    doTween(): Tween;
+	}
+	/** a promise that resolves true when the update function returns true */
+	export class MiscTween extends Tween {
+	    constructor(name: string);
+	    start(updateFunction: Function): Tween;
+	    doTween(): Tween;
+	}
+	export class V3Tween extends Tween {
+	    startValue: Vector3;
+	    endValue: Vector3;
+	    moveValue: Vector3;
+	    lastDistance: Vector3;
+	    constructor(name: string);
+	    start(tweenType: 'move' | 'turn' | 'size' | 'color' | 'opacity' | 'misc', startValue: Vector3, endValue: Vector3, timeStamp: number, seconds: number, animate: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow', updateFunction: Function): Tween;
+	    /**
+	  * Run the tween computation and update whatever it is supposed to
+	  * @param {number} dateNow is 'Date.now' from the caller (more accurate)
+	  * @returns {number} Current value of the tween
+	  */
+	    doTween(): Tween;
+	}
+	export class ScalarTween extends Tween {
+	    startValue: number;
+	    endValue: number;
+	    moveValue: number;
+	    lastDistance: number;
+	    constructor(name: string);
+	    start(tweenType: 'move' | 'turn' | 'size' | 'color' | 'opacity' | 'misc', startValue: number, endValue: number, timeStamp: number, seconds: number, animate: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow', updateFunction: Function): Tween;
+	    /**
+	  * Run the tween computation and update whatever it is supposed to
+	  * @param {number} dateNow is 'Date.now' from the caller (more accurate)
+	  * @returns {number} Current value of the tween
+	  */
+	    doTween(): Tween;
+	}
+	export class ColorTween extends Tween {
+	    startValue: Color3;
+	    distance: Color3;
+	    lastDistance: Color3;
+	    constructor(name: string);
+	    start(tweenType: 'move' | 'turn' | 'size' | 'color' | 'opacity' | 'misc', startValue: Color3, distance: Color3, timeStamp: number, seconds: number, animate: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow', updateFunction: Function): Tween;
+	    /** Run the tween computation and update whatever it is supposed to */
+	    doTween(): Tween;
+	}
+
+}
+declare module 'frontend/babyGUI' {
+	import { Baby } from 'frontend/baby';
+	import { BabyThing } from 'frontend/babything';
+	import { BabyEngine } from 'middle/babyengine';
+	export class BabyGUI extends BabyThing {
+	    color: string;
+	    background: string;
+	    border: string;
+	    leftRight: number;
+	    topBottom: number;
+	    constructor(model: string, baby: Baby, babyEngine: BabyEngine);
+	    /** role sets the color, eg Primary is blue, Danger is red.  This follows Bootstrap's model. */
+	    role(role: string): BabyGUI;
+	    /** position is one of the eight side/corner positions or 'Center'. eg: 'TopLeft' */
+	    position(position: string): BabyGUI;
+	    /** the message to display */
+	    text(text: string, resize?: boolean): BabyGUI;
+	    onClick(func: Function): BabyGUI;
+	}
+
+}
+declare module 'backend/things' {
+	import { MeshHandle, gameCmd } from 'middle/babyengine';
+	import { Scene } from 'babylonjs';
+	import { PhysicsImpostor } from 'babylonjs';
+	/** if you want to add a shape, then you must implement this interface */
+	interface Thing {
+	}
+	export class ThingCommon {
+	    scene: Scene;
+	    handle: MeshHandle;
+	    params: Object;
+	    impostorString: string;
+	    constructor(cmd: gameCmd, handle: MeshHandle, scene: Scene);
+	    standardMeshSetup(): void;
+	    /** if Ammo tells us a collision happened, this cleans up and notifies the parties */
+	    onCollisionHelper(a: PhysicsImpostor, b: PhysicsImpostor): void;
+	    /** setup collider for a shape */
+	    setupCollider(): void;
+	    /** dispose of a mesh (and its physics impostor) */
+	    dispose(): void;
+	    /** create physics impostor for this shape */
+	    createPhysicsImpostor(): void;
+	    /** dispose of the physics impostor belonging to a mesh */
+	    disposeImpostor(): void;
+	    /** can't resize an impostor, so drop it and recreate  */
+	    recreatePhysicsImpostor(): void;
+	    showDebugImpostor(): void;
+	    setShapeMass(): void;
+	}
+	export class Cube extends ThingCommon implements Thing {
+	    constructor(cmd: gameCmd, handle: MeshHandle, scene: Scene);
+	}
+	export class Sphere extends ThingCommon implements Thing {
+	    constructor(cmd: gameCmd, handle: MeshHandle, scene: Scene);
+	}
+	export class Cylinder extends ThingCommon implements Thing {
+	    constructor(cmd: gameCmd, handle: MeshHandle, scene: Scene);
+	}
+	export class Cone extends ThingCommon implements Thing {
+	    constructor(cmd: gameCmd, handle: MeshHandle, scene: Scene);
+	}
+	export class Torus extends ThingCommon implements Thing {
+	    constructor(cmd: gameCmd, handle: MeshHandle, scene: Scene);
+	}
+	export class Point extends ThingCommon implements Thing {
+	    constructor(cmd: gameCmd, handle: MeshHandle, scene: Scene);
+	}
+	export class Capsule extends ThingCommon implements Thing {
+	    constructor(cmd: gameCmd, handle: MeshHandle, scene: Scene);
+	}
+	export class CameraThing extends ThingCommon implements Thing {
+	    constructor(cmd: gameCmd, handle: MeshHandle, scene: Scene);
+	}
+	export class Floor extends ThingCommon implements Thing {
+	    constructor(cmd: gameCmd, handle: MeshHandle, scene: Scene);
+	}
+	export {};
+
+}
+declare module 'backend/babylon' {
+	import { Vector3, Scene, Engine } from 'babylonjs';
+	import { ArcRotateCamera, FollowCamera, FreeCamera } from 'babylonjs';
+	import { HemisphericLight } from 'babylonjs';
+	import { AmmoJSPlugin } from 'babylonjs';
+	import { AdvancedDynamicTexture } from 'babylonjs-gui';
+	import { ScalarTween, V3Tween } from 'middle/tween';
+	import { BabyEngine, MeshHandle, gameCmd } from 'middle/babyengine';
+	import { PhysicsImpostor } from 'babylonjs';
+	export class Babylon {
+	    canvas: HTMLCanvasElement;
+	    engine: Engine;
+	    scene: Scene;
+	    camera: ArcRotateCamera | FollowCamera | FreeCamera;
+	    isCameraSet: boolean;
+	    playerNumber: number;
+	    advancedTexture: AdvancedDynamicTexture;
+	    babyEngine: BabyEngine;
+	    light0: HemisphericLight;
+	    light1: HemisphericLight;
+	    gravityVector: Vector3;
+	    physicsPlugin: AmmoJSPlugin;
+	    constructor(babyEngine: BabyEngine);
+	    enableAmmo(): Promise<void>;
+	    createBabylonMesh(cmd: gameCmd, handle: MeshHandle): void;
+	    setCamera(cmd: gameCmd, handle: MeshHandle): void;
+	    setOrthographic(cmd: gameCmd, handle: MeshHandle): void;
+	    impostorLookup(a: PhysicsImpostor): MeshHandle;
+	    /** if Ammo tells us a collision happened, this cleans up and notifies the parties */
+	    onCollisionHelper(a: PhysicsImpostor, b: PhysicsImpostor): void;
+	    importShape(cmd: gameCmd, handle: MeshHandle): void;
+	    dispose(cmd: gameCmd, handle: MeshHandle): void;
+	    addSkeleton(cmd: gameCmd, handle: MeshHandle): void;
+	    attachTo(cmd: gameCmd, handle: MeshHandle): void;
+	    addAxes(cmd: gameCmd, handle: MeshHandle): void;
+	    collide(cmd: gameCmd, handle: MeshHandle): void;
+	    setColor(cmd: gameCmd, handle: MeshHandle): void;
+	    setTexture(): void;
+	    setPosition(cmd: gameCmd, handle: MeshHandle): void;
+	    addToPosition(cmd: gameCmd, handle: MeshHandle): void;
+	    setRotation(cmd: gameCmd, handle: MeshHandle): void;
+	    addToRotation(cmd: gameCmd, handle: MeshHandle): void;
+	    setScale(cmd: gameCmd, handle: MeshHandle): void;
+	    setGrid(cmd: gameCmd, handle: MeshHandle): void;
+	    move(cmd: gameCmd, tween: V3Tween, handle: MeshHandle): void;
+	    moveToward(cmd: gameCmd, tween: V3Tween, handle: MeshHandle): void;
+	    moveToZero(cmd: gameCmd, tween: V3Tween, handle: MeshHandle): void;
+	    moveSetupTween(cmd: gameCmd, tween: V3Tween, handle: MeshHandle, start: Vector3, end: Vector3): void;
+	    turn(cmd: gameCmd, tween: V3Tween, handle: MeshHandle): void;
+	    moveAndTurn(cmd: gameCmd, tween: V3Tween, handle: MeshHandle): void;
+	    turnSetupV3Tween(cmd: gameCmd, tween: V3Tween, handle: MeshHandle, start: Vector3, end: Vector3): void;
+	    size(cmd: gameCmd, tween: V3Tween, handle: MeshHandle): void;
+	    color(cmd: gameCmd, tween: V3Tween, handle: MeshHandle): void;
+	    opacity(cmd: gameCmd, tween: ScalarTween, handle: MeshHandle): void;
+	    animatedGif(cmd: gameCmd, tween: ScalarTween, handle: MeshHandle): void;
+	    break(cmd: gameCmd, handle: MeshHandle): void;
+	    createGUI(cmd: gameCmd, handle: MeshHandle): void;
+	    textGUI(cmd: gameCmd, handle: MeshHandle): void;
+	    colorGUI(cmd: gameCmd, handle: MeshHandle): void;
+	    positionGUI(cmd: gameCmd, handle: MeshHandle): void;
+	    resizeGUI(cmd: gameCmd, handle: MeshHandle): void;
+	    /** can't resize an impostor, so drop it and recreate  */
+	    recreatePhysicsImpostor(handle: MeshHandle): void;
+	    inspector(cmd: gameCmd): void;
+	    penUp(cmd: gameCmd, handle: MeshHandle): void;
+	    penDown(cmd: gameCmd, handle: MeshHandle): void;
+	    lineErase(cmd: gameCmd, handle: MeshHandle): void;
+	    runRenderStep(): this;
+	    runPhysicsStep(): void;
+	}
+
+}
+declare module 'middle/remote' {
+	import * as Ably from 'ably'; type playerRole = 'singlePlayer' | 'player0' | 'playerN' | 'server' | 'spectator';
+	export class Remote {
+	    playerRole: playerRole;
+	    ably: Ably.Realtime;
+	    ablyKey: string;
+	    playerUuid: number;
+	    playerNumber: number;
+	    playerUuidList: number[];
+	    constructor(playerRole: playerRole);
+	    gameRoomHost(remote: Remote, received: any): void;
+	    remotePlayer(remote: Remote, received: any): void;
+	    connectAbly(secretKey: string): void;
+	    subscribeAbly(channel: string): void;
+	    publishAbly(channel: string, message: string): void;
+	}
+	export {};
+
+}
+declare module 'middle/babyengine' {
+	import { Vector3, Color3, Mesh, TransformNode, StandardMaterial, Camera } from 'babylonjs';
+	import { GridMaterial, FireMaterial } from 'babylonjs-materials';
+	import { Tween } from 'middle/tween';
+	import { BabyThing } from 'frontend/babything';
+	import { BabyGUI } from 'frontend/babyGUI';
+	import { Babylon } from 'backend/babylon';
+	import { Rectangle } from 'babylonjs-gui';
+	import { Remote } from 'middle/remote';
+	import { PhysicsImpostor, PhysicsViewer, PhysicsHelper } from 'babylonjs';
+	export type Observer = (msg?: object) => void;
+	export class BabyEngine {
+	    static shapeMap: Map<number, MeshHandle>;
+	    static observers: {
+	        [type: string]: Observer[];
+	    };
+	    static remote: Remote;
+	    static babylonShapes: Babylon;
+	    static impostors: PhysicsImpostor[];
+	    static ENV_FILE: object;
+	    static frozen: boolean;
+	    static physicsViewer: PhysicsViewer;
+	    static physicsHelper: PhysicsHelper;
+	    url: URL;
+	    constructor();
+	    static broadcastToPlayers(cmd: gameCmd): Tween;
+	    static processGameCmd(cmd: gameCmd): Tween | null;
+	    static addObserver(type: string, observer: Observer, t?: object): void;
+	    static notifyObservers(type: string, msg?: object): void;
+	    static removeObserver(type: string, observer: Observer): void;
+	    static processTweens(): void;
+	    static getEnv(): Promise<any>;
+	}
+	export class MeshHandle {
+	    uuid: number;
+	    model: string;
+	    type: 'mesh' | 'camera' | 'light' | 'GUI';
+	    babylonMesh: Mesh | Camera;
+	    babylonRectangle: Rectangle;
+	    babyShape: BabyThing | BabyGUI;
+	    bottom: TransformNode;
+	    top: TransformNode;
+	    material: StandardMaterial | GridMaterial | FireMaterial;
+	    size: Vector3;
+	    diffuseColor: Color3;
+	    opacity: number;
+	    tweenArray: Tween[];
+	    collider: 'ghost' | 'solid' | 'active';
+	    lastCollisionTime: number;
+	    mass: number;
+	    restitution: number;
+	    uniqueName: string;
+	    description: string;
+	    fontsize: number;
+	    isPenDown: boolean;
+	    radius: number;
+	    lastPosition: Vector3;
+	    lineArray: Mesh[];
+	    constructor(model: string, uuid: number);
+	    cleanBeforeDispose(): void;
+	    maybeAddLineSegment(): void;
+	    getPosition(): Vector3;
+	    /** not all materials have a diffuseColor (eg: GridMaterial does not) */
+	    hasDiffuseColor(): boolean;
+	}
+	export interface gameCmd {
+	    action: string;
+	    uuid: number;
+	    timestamp?: number;
+	    model?: string;
+	    colorD?: string;
+	    colorA?: string;
+	    colorE?: string;
+	    colorS?: string;
+	    lineColor?: string;
+	    opacity?: number;
+	    direction?: 'forward' | 'backward' | 'left' | 'right' | 'up' | 'down';
+	    distance?: number;
+	    towards?: 'forward' | 'backward' | 'left' | 'right' | 'tiltLeft' | 'tiltRight';
+	    angle?: number;
+	    duration?: number;
+	    animate?: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow';
+	    tweenCmd?: gameCmd;
+	    gridRatio?: number;
+	    major?: number;
+	    x?: number;
+	    y?: number;
+	    z?: number;
+	    dx?: number;
+	    dy?: number;
+	    dz?: number;
+	    cameraType?: string;
+	    heightOffset?: number;
+	    rotation?: number;
+	    otherUuid?: number;
+	    otherHandle?: MeshHandle;
+	    collider?: 'ghost' | 'solid' | 'active';
+	    directory?: string;
+	    filename?: string;
+	    stringParm?: string;
+	    radius?: number;
+	    resolution?: number;
+	    size?: number;
+	    player?: number;
+	    color?: string;
+	    background?: string;
+	    leftRight?: number;
+	    topBottom?: number;
+	    text?: string;
+	    fontsize?: number;
+	    resize?: true;
+	}
+
+}
+declare module 'frontend/babything' {
+	import { Baby } from 'frontend/baby';
+	import { Tween } from 'middle/tween';
+	import { BabyEngine } from 'middle/babyengine';
+	import { Vector3 } from 'babylonjs';
+	/** superclass for BabyShape, BabyCamera and BabyButton */
+	export class BabyThing {
+	    model: string;
+	    uuid: number;
+	    baby: Baby;
+	    babyEngine: BabyEngine;
+	    lastTween: Tween;
+	    collideCallback: Function;
+	    clickCallback: Function;
+	    onPressDown: Function;
+	    constructor(model: string, babyEngine: BabyEngine);
+	    animatedGif(resultion?: number): BabyThing;
+	    /** Returns a promise that resolves when the LAST issued tween is completed.  Use it as  `await thing.move(...).done()` */
+	    done(): Promise<void>;
+	    /** Returns a promise that resolves when no tweens remain active.  Use it as  `await thing.isIdle()` */
+	    isIdle(): Promise<void>;
+	}
+	export class BabyShape extends BabyThing {
+	    constructor(model: string, babyEngine: BabyEngine);
+	    /** a callback when an ACTIVE shape collides with an ACTIVE or PASSIVE shape
+	     * note: if two ACTIVE shapes collide, they BOTH get a callback notification
+	     * eg:  myBall.onCollide((other)=>{      // other is a BabyMesh object
+	     *               if(other == hisBall){  doSomething()  }
+	     *         })
+	     */
+	    onCollide(callback: Function): BabyShape;
+	    /** a callback when the mouse clicks this shape.
+	     * eg:  myBall.onClick(()=>console.log("I was clicked"))
+	     */
+	    onClick(callback: Function): BabyShape;
+	    addAxes(): BabyShape;
+	    dispose(): BabyShape;
+	    /** turn collisions on or off.  'active' will turn on gravity and mass. */
+	    collide(collider?: 'ghost' | 'solid' | 'active'): BabyShape;
+	    /**  Move an entity  */
+	    move(direction: 'forward' | 'backward' | 'left' | 'right' | 'up' | 'down', distance: number, duration?: number, animate?: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow'): BabyShape;
+	    /**  MoveAndTurn - moves in an arc (the turn affects the move)  */
+	    moveAndTurn(moveDirection: 'forward' | 'backward' | 'left' | 'right' | 'up' | 'down', distance: number, turnTowards: 'forward' | 'backward' | 'left' | 'right' | 'tiltLeft' | 'tiltRight', angle: number, duration?: number, animate?: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow'): BabyShape;
+	    /**  MoveToward- moves towards another shape.  Often getDistanceTo(other) is useful.  */
+	    moveToward(other: BabyShape, distance: number, duration?: number, animate?: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow'): BabyShape;
+	    moveToZero(duration?: number, animate?: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow'): BabyShape;
+	    /**  Turn an entity  (1 is a full turn)
+	     *
+	     * @remarks
+	     * You get different results from the two cases below, because in the second case
+	     * the box waits to finish the first turn before starting the second.  Even if you
+	     * do the turns in zero-time, you cannot be sure which will be performed first unless
+	     * you wait. Consider using the 'legacy' function `setRotation()`.
+	     *
+	     *
+	     * ```
+	     * box.turn('forward',.25)
+	     * box.turn('left',.25)
+	     * ```
+	     * and
+	     * ```
+	     * await box.turn('forward',.25).done()
+	     * box.turn('left',.25)
+	     * ```
+	    */
+	    turn(towards: 'forward' | 'backward' | 'left' | 'right' | 'tiltLeft' | 'tiltRight', angle: number, duration?: number, animate?: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow'): this;
+	    turnToSame(other: BabyShape, duration?: number, animate?: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow'): this;
+	    turnToZero(duration?: number, animate?: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow'): this;
+	    /**
+	     * Size or resize an entity  (same as Babylon 'scale' for simple shapes)
+	     */
+	    size(size: number | number[], duration?: number, animate?: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow'): BabyShape;
+	    /**
+	    * Sets diffuse color (the essential color under white light).  For controls
+	    * on ambient, emmisive, or specular color, use 'setColor()'
+	    * @param {diffuseColor} string is one of 140 HTML color names eg: 'mediumvioletred'
+	    */
+	    color(diffuseColor: string, duration?: number, animate?: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow'): BabyShape;
+	    /** Sets opacity between 0 (transparent) and 1 (solid) */
+	    opacity(opacity: number, duration?: number, animate?: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow'): BabyShape;
+	    /** Creates a skeleton frame on a shape */
+	    addSkeleton(): BabyShape;
+	    /** Adds to a shape that has a skeleton */
+	    attachTo(other: BabyShape): BabyShape;
+	    /** Kill any in-progress moves (usually because of a collision).  Turns are not affected. 'Await' will fire if anyone is waiting. */
+	    break(): BabyShape;
+	    /** Set positon of this shape immediately.  This is the Babylon way of moving shapes.  It is
+	     * particularly useful for setting an initial position
+	    */
+	    setPosition(leftRight: number, upDown: number, frontBack: number): BabyShape;
+	    /** modify positon of this shape immediately.  This is the Babylon way of moving shapes.  */
+	    addToPosition(leftRight: number, upDown: number, frontBack: number): BabyShape;
+	    /** set direction of this shape immediately.  This is the Babylon way of rotating shapes.
+	    * The absolute values of the numbers aren't important.  (0,1,0) is the same as (0,100,0).
+	    * Rotations are performed around the x, y, z axis in order.
+	    * */
+	    setRotation(leftRight: number, upDown: number, frontBack: number): this;
+	    /** modify rotation of this shape immediately.  This is the Babylon way of rotating shapes. A quarter-rotation is .25, as usual */
+	    addToRotation(leftRight: number, upDown: number, frontBack: number): this;
+	    /** drop a pen, and start creating a 3d line in space */
+	    penDown(radius?: number): this;
+	    /** raise the pen, stop drawing a 3d line */
+	    penUp(): this;
+	    /** erase a line created with `penDown` and `penUp` */
+	    lineErase(): this;
+	    /** position of this thing at this instance */
+	    getPosition(): Vector3;
+	    /** direction of this thing at this instance */
+	    getRotation(): Vector3;
+	    /** scale of this thing at this instance */
+	    getScale(): Vector3;
+	    /** distance to another shape (center-to-center, so watch out if you have resized one of them) */
+	    getDistanceTo(otherShape: BabyShape): number;
+	}
+	export class BabyCamera extends BabyThing {
+	    constructor(model: string, babyEngine: BabyEngine);
+	    /**  Move an entity  */
+	    move(direction: 'forward' | 'backward' | 'left' | 'right' | 'up' | 'down', distance: number, duration?: number, animate?: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow'): BabyCamera;
+	    /**  MoveToward- moves towards another shape.  Often getDistanceTo(other) is useful.  */
+	    moveToward(other: BabyShape, distance: number, duration?: number, animate?: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow'): BabyCamera;
+	    moveToZero(duration?: number, animate?: '1-Begin And End Normally' | '2-Begin Slow, End Fast' | '3-Begin Fast, End Slow' | '4-Begin And End Fast' | '5-Begin And End Slow'): BabyCamera;
+	    /** set camera mode to Orthographic (ie: not Perspective) */
+	    setOrthographic(orthoSize?: number): this;
+	    /** set camera mode to Orthographic (ie: not Perspective) */
+	    setActive(player?: number): this;
+	}
+
+}
+declare module 'frontend/unittest' {
+	import { Baby } from 'frontend/baby';
+	import { BabyShape } from 'frontend/babything';
+	export class Unittests {
+	    app: Baby;
+	    constructor(app: Baby);
+	    unittestAll(): Promise<void>;
+	    allBabyMethodsTestor(app: Baby): Promise<void>;
+	    spiral(): Promise<void>;
+	    /** a simple test against every method in BabyShape */
+	    babyShapeTester(app: Baby, method: string): Promise<void>;
+	    testAllBaby(app: Baby): Promise<void>;
+	    /** creates an array of things to test */
+	    arrayOfThings(app: Baby): BabyShape[];
+	    /** spin the collection of things we were passed */
+	    spin(a: BabyShape[]): Promise<void>;
+	    /** just a jump to the left, and then a move to the right... */
+	    move(a: BabyShape[]): Promise<void>;
+	    /** just a jump to the left, and then a move to the right... */
+	    scale(a: BabyShape[]): Promise<void>;
+	    /** dispose of an array of shapes */
+	    dispose(a: BabyShape[]): Promise<void>;
+	    getPosition(app: Baby): Promise<void>;
+	    testPhysics(app: Baby): Promise<void>;
+	    testHTMLColor(): void;
+	}
+
+}
+declare module 'frontend/baby' {
+	import { BabyShape } from 'frontend/babything';
+	import { BabyGUI } from 'frontend/babyGUI';
+	import { BabyCamera } from 'frontend/babything';
+	import { BabyEngine } from 'middle/babyengine';
+	export type Observer = (msg?: object) => void;
+	/** For many games, `Baby()` is the only class you need to import.
+	 *
+	 * ```ts
+	 * import { Baby } from 'Baby'
+	 * app = new Baby()    // create an instance of Baby<br><br>
+	 * ```
+	 * @remarks
+	 *
+	 *
+	 * Then create the objects and events you need with methods like:
+	 *
+	 *  ```ts
+	 * floor = app.floor(20,20)               // lay down a floor
+	 * cube = app.shape('cube').color('red')  // add a red cube
+	 *
+	 * // hook the keyboard, and move the cube on each keypress
+	 * app.keydown((data)=>{ cube.move('right',1) })
+	 * ```
+	 *
+	 * <br><br>That's a pretty simple game, but it runs just fine.  We
+	 * explain it in the 'Getting  Started' tutorial.
+	 */
+	export class Baby {
+	    /** @ignore */
+	    runUnittests: boolean;
+	    /** @ignore */
+	    babyEngine: BabyEngine;
+	    /** @ignore */
+	    observers: {
+	        [type: string]: Observer[];
+	    };
+	    /** @ignore */
+	    uuidValue: number;
+	    /** Origin is an invisible non-colliding shape at the origin (0,0,0).
+	    * @remarks
+	    * It is so frequently necessary to find the origin point (the center of
+	    * the floor where new shapes are instantiated) that we
+	    * added an invisible cube there for you.  You could have done it yourself
+	    * with the following line of code.
+	    * ```ts
+	    * const origin = this.shape('cube').opacity(0, 0)  // make invisible in zero time
+	    * ```
+	    */
+	    origin: BabyShape;
+	    /** Start here.  `Baby()` is the only class you need to import.
+	     *
+	     * ```ts
+	     * import { Baby } from 'wherever'
+	     * app = new Baby()    // create an instance of the Baby engine.
+	     * ```
+	     *
+	     * The optional parameter sends code to the game.  It's only intended for writing tutorials.
+	     */
+	    constructor(src?: string);
+	    version(): string;
+	    /** freezes the scene while keeping the engine running; expecially useful with the inspector.
+	    * @remarks
+	    * ```
+	    * Add a button to freeze your sceen:
+	    *    let frozen = false
+	    *    app.GUI('button')
+	    *        .position('BottomLeft')
+	    *        .text('Freeze')
+	    *        .onClick(() => {
+	    *            app.freeze(!frozen)
+	    *            frozen = !frozen;
+	    *        })
+	    * ```
+	    */
+	    freeze(onOff?: boolean): Baby;
+	    /** trap keydown, look at the data object for ctrl-, alt-, etc */
+	    keydown(keyFunction: Function): Baby;
+	    /** trap keypress, look at the data object for ctrl-, alt-, etc */
+	    keypress(keyFunction: Function): Baby;
+	    /** trap keyup, look at the data object for ctrl-, alt-, etc */
+	    keyup(keyFunction: Function): Baby;
+	    multiPlayer(): Baby;
+	    /** Create an 'Shape', which is a single graphic element.  `Baby.Shape('Cube') is the same as calling `Baby.Cube()`,
+	     * but not all shapes have direct calls and you can add new shapes.
+	     * The standard shapes are cube, sphere, cylinder, cone, torus, capsule, point, and floor. */
+	    shape(model: string): BabyShape;
+	    /** Create a Cube (which you can resize into a cuboid) */
+	    cube(): BabyShape;
+	    /** Create a Sphere (which you can resize into an spheroid */
+	    sphere(): BabyShape;
+	    /** Create a Cylinder */
+	    cylinder(): BabyShape;
+	    /** Create a Cone (strictly speaking, an cone is a cylinder) */
+	    cone(): BabyShape;
+	    /** Create a Capsule */
+	    capsule(): BabyShape;
+	    /** Create a Torus */
+	    torus(): BabyShape;
+	    /** Create a Point (think of a sphere that is too small to see) */
+	    point(): BabyShape;
+	    importShape(directory: string, filename: string): BabyShape;
+	    /** Add a floor object with  a default grid. Use .collide('solid') if you want to bounce off it. */
+	    floor(xSize: number, ySize: number, major?: number): BabyShape;
+	    /** A 'camera' defines the player, a multi-player game may have multiple cameras.
+	     * This is the default 3D camera, look at `OrthoCamera` for 2D
+	    */
+	    camera(): BabyCamera;
+	    /** Turn on the BabylonJS Inspector.  Only for player0.
+	     * only valid parameter at this point is 'record', which captures the first 7 seconds of your game in video
+	    */
+	    inspector(stringParm?: string): Baby;
+	    /** random integer between min (includes) and max (excludes).  so randomIntBetween(2,5) might return 2,3, or 4, but not 5. */
+	    randomIntBetween(min: number, max: number): number;
+	    /** Create a 'Button'.  */
+	    GUI(model: 'button'): BabyGUI;
+	}
+
+}
+declare module 'index' {
+	export { Baby } from 'frontend/baby';
+
+}
+declare module 'frontend/csg' {
+	import { Scene } from 'babylonjs';
+	export function csgDemo(scene: Scene, canvas: HTMLCanvasElement): Scene;
+
+}
+declare module 'games/snake' {
+	export {};
+
+}

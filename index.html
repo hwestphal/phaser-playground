@@ -1,35 +1,115 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta charset="utf-8">
+    <title>Local Testing</title>
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Phaser Playground</title>
-    <style type="text/css">
-        html,
-        body {
-            height: 100%;
-            overflow: hidden;
-        }
 
-        #editor {
-            height: calc(100% - 90px);
-        }
+    <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+    <script src="https://cdn.babylonjs.com/ammo.js"></script>
+
+    <link rel="stylesheet" href="main.css">
+
+    <style>
     </style>
 </head>
 
 <body>
-    <p>
-        <button id="download">Download</button>
-        <button id="upload">Upload</button>
-        <button id="run">Run</button>
-        <button id="stop" disabled>Stop</button>
-        <button id="pause" disabled>Pause</button>
-        <button id="fullscreen" disabled>Full Screen</button>
-    </p>
-    <div id="editor"></div>
-    <script src="dist/app.js"></script>
+    <div class="splitter">
+        <div id="lesson">this is the lesson</div>
+        <div id="vseparator"></div>
 
+        <div id='right'>
+            <div id="buttons">
+                <p>
+                    <button id="download">Download</button>
+                    <button id="upload">Upload</button>
+                    <button id="run">Run</button>
+                    <button id="stop" disabled>Stop</button>
+                    <button id="pause" disabled>Pause</button>
+                    <button id="fullscreen" disabled>Full Screen</button>
+                </p>
+            
+            </div>
+            <div id="editor"></div>
+            <div id="hseparator"></div>
+            <div id="canvas"><canvas id="renderCanvas" touch-action="none"></canvas></div>
+        </div>
+    </div>
+
+    <script>
+
+        // A function is used for dragging and moving
+        function dragElement(element, direction) {
+            var md; // remember mouse down info
+            const lesson = document.getElementById("lesson");
+            const editor = document.getElementById("editor");
+            const canvas = document.getElementById("canvas");
+
+            element.onmousedown = onMouseDown;
+
+            function onMouseDown(e) {
+                console.log("mouse down: " + e.clientX);
+                md = {
+                    e,
+                    offsetLeft: element.offsetLeft,
+                    offsetTop: element.offsetTop,
+                    lessonWidth: lesson.offsetWidth,
+                    editorWidth: editor.offsetWidth,
+                    canvasWidth: canvas.offsetWidth,
+                    editorHeight: editor.offsetHeight,
+                    canvasHeight: canvas.offsetHeight,
+                };
+
+                document.onmousemove = onMouseMove;
+                document.onmouseup = () => {
+                    console.log("mouse up");
+                    document.onmousemove = document.onmouseup = null;
+                }
+            }
+
+            function onMouseMove(e) {
+                console.log("mouse move: " + e.clientX, direction);
+                var delta = {
+                    x: e.clientX - md.e.clientX,
+                    y: e.clientY - md.e.clientY
+                };
+
+                if (direction === "H") // Horizontal
+                {
+                    // Prevent negative-sized elements
+                    delta.x = Math.min(Math.max(delta.x, -md.lessonWidth),
+                        md.editorWidth);
+
+                    element.style.left = md.offsetLeft + delta.x + "px";
+                    lesson.style.width = (md.lessonWidth + delta.x) + "px";
+                    editor.style.width = (md.editorWidth - delta.x) + "px";
+                    canvas.style.width = (md.canvasWidth - delta.x) + "px";
+                }
+                if (direction === "V") // Vertical (between editor and canvas)
+                {
+                    // Prevent negative-sized elements
+                    delta.y = Math.min(Math.max(delta.y, -md.editorHeight),
+                        md.canvasHeight);
+
+                    element.style.left = md.offsetLeft + delta.y + "px";
+                    editor.style.height = (md.editorHeight + delta.y) + "px";
+                    canvas.style.height = (md.canvasHeight - delta.y) + "px";
+                }
+
+            }
+        }
+
+
+        dragElement(document.getElementById("vseparator"), "H");
+        dragElement(document.getElementById("hseparator"), "V");
+
+    </script>
+
+
+
+<script src="dist/bundle.app.js"></script>
 </body>
 
 </html>
