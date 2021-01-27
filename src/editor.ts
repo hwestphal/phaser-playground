@@ -1,6 +1,7 @@
 import * as monaco from "monaco-editor";
 import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
 import lib_baby from "./extraLibs/baby.d.ts.txt";
+import lib_promise from "./extraLibs/lib.es2015.promise.d.ts.txt";
 
 import { Baby } from 'baby'
 
@@ -37,7 +38,7 @@ export class Editor {
             strictFunctionTypes: false,
             allowUnreachableCode: true,
             allowUnusedLabels: true,
-            noImplicitThis:true,
+            noImplicitThis: true,
             noImplicitReturns: true,
             target: monaco.languages.typescript.ScriptTarget.ES5,
         });
@@ -48,8 +49,40 @@ export class Editor {
             noLib: true,                        // don't bring in everything
         });
 
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_baby, "lib.baby.d.ts");
+
+        // don't want all of DOM, but I DO want console.log() and similar
+        let lib_baby_plus = lib_baby + `
+        interface Console {
+            memory: any;
+            assert(condition?: boolean, ...data: any[]): void;
+            clear(): void;
+            count(label?: string): void;
+            countReset(label?: string): void;
+            debug(...data: any[]): void;
+            dir(item?: any, options?: any): void;
+            dirxml(...data: any[]): void;
+            error(...data: any[]): void;
+            exception(message?: string, ...optionalParams: any[]): void;
+            group(...data: any[]): void;
+            groupCollapsed(...data: any[]): void;
+            groupEnd(): void;
+            info(...data: any[]): void;
+            log(...data: any[]): void;
+            table(tabularData?: any, properties?: string[]): void;
+            time(label?: string): void;
+            timeEnd(label?: string): void;
+            timeLog(label?: string, ...data: any[]): void;
+            timeStamp(label?: string): void;
+            trace(...data: any[]): void;
+            warn(...data: any[]): void;
+        }
+        
+        declare var console: Console;
+        `
+
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_baby_plus, "lib.baby.d.ts");
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es5, "lib.es5.d.ts");
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_promise, "lib.es2015.promise.d.ts");
 
 
         this.editor = monaco.editor.create(this.el, {
@@ -116,18 +149,29 @@ export class Editor {
             const code = output.outputFiles[0].text as string;
             console.log('code from editor is ', code)
 
+
+            // new Function(src) is a safer form of eval().  
+            // code = `app.floor(30,30,5);let cube = app.cube().color('blue').move('up',1)`
+            var app = new Baby(code)
+
+
+            // new Function(src) is a safer form of eval().  
+            // let code = `app.floor(30,30,5);let cube = app.cube().color('blue').move('up',1)`
+
+            // let app = new Baby(code)        // passes code into Baby to be run
+            // new Function(src) is a safer form of eval().  
+
+
+
             // let src = "use strict";(function(${names.join()}) {eval(${JSON.stringify(code)})}).apply(this, arguments[0]);
 
-            
+
             // new Function(src) is a safer form of eval().  
-            //TODO: add a whitelist?
-            let app = new Baby()
-            // src = `let app = new Baby();  app.cube().color('blue).move('up',1)`
 
             // let f = new Function(src)
             // f.call(app)
-        //     return () => new Function(src).call(window, args);
-        // } else {
+            //     return () => new Function(src).call(window, args);
+            // } else {
             return () => { alert("no source"); };  // have to return something if typeguard fails
         }
     }

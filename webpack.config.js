@@ -50,12 +50,14 @@ module.exports = (env, argv) => {
             extensions: ['.ts', '.tsx', '.js']
         },
         externals: {
-            Baby: 'baby'
+            Baby: 'baby',
+            Ammo: 'ammo',
+            Babylon: 'babylon',
         },
 
 
         output: {
-            filename: 'bundle.[name].js',
+            filename: 'bundle.[name].js',     // for small bundles
             publicPath: "dist/",
             globalObject: "self",
             path: path.resolve(__dirname, "dist"),

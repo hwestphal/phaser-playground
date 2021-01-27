@@ -65,9 +65,9 @@ class Main {
         this.fullscreen = document.getElementById("fullscreen") as HTMLButtonElement;
 
 
-        // new Function(src) is a safer form of eval().  
-        let code = `app.floor(30,30,5);let cube = app.cube().color('blue').move('up',1)`
-        let app = new Baby(code)
+        // // new Function(src) is a safer form of eval().  
+        // let code = `app.floor(30,30,5);let cube = app.cube().color('blue').move('up',1)`
+        // let app = new Baby(code)
 
         this.download.onclick = () => this.editor.download("game.ts");
         this.upload.onclick = () => this.editor.upload();
