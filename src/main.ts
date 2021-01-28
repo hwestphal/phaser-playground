@@ -4,16 +4,7 @@
 //   - you should also remove   /** @ignore */ and the line that follows
 
 
-
-
-import * as monaco from "monaco-editor";
 import { Editor } from "./editor";
-import { GameLauncher } from "./game";
-import {Baby} from 'baby'
-
-
-// webpack creates a string from this file using 'raw-loader'
-import template from "./template.ts.txt";
 
 
 // not sure if this is useful
@@ -39,6 +30,9 @@ class Main {
     pause: HTMLButtonElement
     fullscreen: HTMLButtonElement
 
+    template = "let app = new Baby()"
+
+
     constructor() {
 
         const State = {
@@ -48,12 +42,10 @@ class Main {
 
 
 
-
-
         // monaco.editor.createModel(lib_baby, 'typescript', monaco.Uri.parse(babyUri));
 
         this.editorDiv = document.getElementById("editor")! as HTMLDivElement
-        this.editor = new Editor(this.editorDiv, template);
+        this.editor = new Editor(this.editorDiv, this.template);
 
 
         // this.game = undefined //new GameLauncher(800, 600);

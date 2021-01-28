@@ -1,7 +1,5 @@
 const path = require('path');
-// const phaserPath = path.join(__dirname, "node_modules", "phaser-ce", "build", "custom");
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');  // clean after rebuild
 
 module.exports = (env, argv) => {
     const prod = argv.mode === "development";
@@ -64,7 +62,6 @@ module.exports = (env, argv) => {
         },
         plugins: [
             new MonacoWebpackPlugin(),
-            new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
         ],
         devServer: {
             contentBase: './'
