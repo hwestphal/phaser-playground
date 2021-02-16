@@ -1,6 +1,7 @@
 import * as monaco from "monaco-editor";
 import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
 import lib_baby from "./extraLibs/baby.d.ts.txt";
+import lib_dom from "./extraLibs/dom-mini.d.ts.txt";
 import lib_promise from "./extraLibs/lib.es2015.promise.d.ts.txt";
 
 import { Baby } from 'baby'
@@ -82,6 +83,7 @@ export class Editor {
 
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_baby_plus, "lib.baby.d.ts");
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es5, "lib.es5.d.ts");
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es5, "lib.dom.d.ts");
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_promise, "lib.es2015.promise.d.ts");
 
 
@@ -149,6 +151,10 @@ export class Editor {
             const code = output.outputFiles[0].text as string;
             console.log('code from editor is ', code)
 
+            // let string = "let vt = new vt52(); vt.print('hello world')npm nkkj; console.log('hello world')"
+            // console.log('code from editor is ', string)
+            // eval(string)
+            
 
             // new Function(src) is a safer form of eval().  
             // code = `app.floor(30,30,5);let cube = app.cube().color('blue').move('up',1)`
@@ -161,7 +167,11 @@ export class Editor {
             // let app = new Baby(code)        // passes code into Baby to be run
             // new Function(src) is a safer form of eval().  
 
-
+            // let vt = this.vt52()
+            // vt.print('HELLO WORLD')
+            // await vt.print('done')
+            // console.log('done')
+    
 
             // let src = "use strict";(function(${names.join()}) {eval(${JSON.stringify(code)})}).apply(this, arguments[0]);
 

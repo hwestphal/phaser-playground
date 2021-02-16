@@ -1,4 +1,3 @@
-
 /** @ignore */
 declare type Observer = (msg?: object) => void;
 /** For many games, `Baby()` is the only class you need to import.
@@ -57,6 +56,7 @@ origin: BabyShape;
 * The optional parameter sends code to the game.  It's only intended for writing tutorials.
 */
 constructor(src?: string);
+test(): Promise<void>;
 version(): string;
 /** @ignore */
 signal(msg: string, value?: number): void;
@@ -100,6 +100,15 @@ capsule(): BabyShape;
 torus(): BabyShape;
 /** Create a Point (think of a sphere that is too small to see) */
 point(): BabyShape;
+/** Create a terminal plane modelled on the classic VT52 terminal.
+* Underneath, it's really a cube, with a pair of prints functions.
+*
+* We DETACH the camera controls from the canvas when you create a VT52
+* because that's almost always right.  If you want to use the controls
+* then simply turn them back on AFTER you create the VT52 instance
+* eg:   app.activeCameraControls(true)
+*/
+vt52(): VT52;
 /** Add a floor object with  a default grid. Use .collide('solid') if you want to bounce off it. */
 floor(xSize: number, ySize: number, major?: number): BabyShape;
 /** A 'camera' defines the player, a multi-player game may have multiple cameras.
@@ -116,6 +125,8 @@ randomIntBetween(min: number, max: number): number;
 GUI(model: 'button'): BabyGUI;
 /** dispose of the scene, releasing all meshes, animations, etc */
 dispose(): void;
+/** attach or detach the current camera controls from the canvas */
+activeCameraControls(on: boolean): void;
 }
 
 declare class BabyGUI extends BabyThing {
@@ -234,14 +245,54 @@ penDown(radius?: number): this;
 penUp(): this;
 /** erase a line created with `penDown` and `penUp` */
 lineErase(): this;
+/** sets a texture with HTML Canvas commands, for example:
+*     let ctx = app.cube().getContext()
+*     box.setTexture((ctx)=>{
+*
+*
+*     })
+*/
+setTexture(width: any, height: any, resolution: any, ctx: CanvasRenderingContext2D, ctxFunction: Function): this;
 /** position of this thing at this instance */
 getPosition(): Vector3;
 /** direction of this thing at this instance */
 getRotation(): Vector3;
 /** scale of this thing at this instance */
-getScale(): Vector3;
+getSize(): Vector3;
 /** distance to another shape (center-to-center, so watch out if you have resized one of them) */
 getDistanceTo(otherShape: BabyShape): number;
+/** get the HTML context for drawing on this shape
+* eg:  let box = app.cube()
+*      let ctx = box.getContext()
+*      ctx.fillStyle = 'red'
+*      ctx.beginPath()
+*      ctx.rect(0, 0, 100,100)
+*      ctx.fill()
+*/
+getContext(): CanvasRenderingContext2D;
+}
+declare class VT52 extends BabyShape {
+constructor(model: string, babyEngine: BabyEngine);
+/** A VT52 is like an old-fashioned text terminal.  Embed \n in your string for a newline
+*
+* @remarks
+* vt52.print() is an async, so you can use `await vt52.print('done')`.  The
+* promise is resolved when the *LAST* character in the buffer is printed, so
+* you can print multiple statements and only `await` the last one.
+*
+* `Await vt.print()` only waits for the local machine, but all players should take the same time.
+*
+*/
+print(text: string, color?: string): Promise<void>;
+/** A simple wait-for-input. Make sure you remember the `async` before `vt52.input()
+* async myFunction(){
+*       let userName = await vt52.input("What's your name? ")
+*       vt52.print("Hello " + userName)
+* }
+*
+* You can't use this for multi-player because it doesn't tell you WHO typed.
+*/
+input(prompt?: string): Promise<string>;
 }
 declare class BabyCamera extends BabyThing {
 constructor(model: string, babyEngine: BabyEngine);

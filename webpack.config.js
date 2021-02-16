@@ -5,7 +5,7 @@ module.exports = (env, argv) => {
     const prod = argv.mode === "development";
 
     return {
-        devtool: prod ? "source-map" : "eval-source-map",
+        devtool: 'inline-source-map',
 
         entry: {
             "app": "./src/main.ts",

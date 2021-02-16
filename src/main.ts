@@ -68,7 +68,7 @@ class Main {
             console.log('clicked RUN')
             this.download.disabled = true;
             this.upload.disabled = true;
-            this.run.disabled = true;
+            this.run.disabled = false;  // was true
             this.stop.disabled = false;
             this.pause.disabled = false;
             this.fullscreen.disabled = false;
@@ -85,6 +85,7 @@ class Main {
         };
         this.stop.onclick = () => {
             try {
+                //TODO: implement stop
                 // this.game.stop();
             } finally {
                 this.editorDiv.hidden = false;
