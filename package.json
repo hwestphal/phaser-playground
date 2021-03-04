@@ -31,6 +31,7 @@
     "webpack-dev-server": "^3.11.2"
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.5"
+    "@types/jquery": "^3.5.5",
+    "speed-measure-webpack-plugin": "^1.4.2"
   }
 }

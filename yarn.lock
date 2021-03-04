@@ -4036,6 +4036,13 @@
     "select-hose" "^2.0.0"
     "spdy-transport" "^3.0.0"
 
+"speed-measure-webpack-plugin@^1.4.2":
+  "integrity" "sha512-AtVzD0bnIy2/B0fWqJpJgmhcrfWFhBlduzSo0uwplr/QvB33ZNZj2NEth3NONgdnZJqicK0W0mSxnLSbsVCDbw=="
+  "resolved" "https://registry.npmjs.org/speed-measure-webpack-plugin/-/speed-measure-webpack-plugin-1.4.2.tgz"
+  "version" "1.4.2"
+  dependencies:
+    "chalk" "^4.1.0"
+
 "split-string@^3.0.1", "split-string@^3.0.2":
   "integrity" "sha512-NzNVhJDYpwceVVii8/Hu6DKfD2G+NrQHlS/V/qgv763EYudVwEcMQNxd2lh+0VrUByXN/oJkl5grOhYWvQUYiw=="
   "resolved" "https://registry.npmjs.org/split-string/-/split-string-3.1.0.tgz"
@@ -4634,7 +4641,7 @@
     "source-list-map" "^2.0.0"
     "source-map" "~0.6.1"
 
-"webpack@^4.46.0", "webpack@^4.5.0 || 5.x":
+"webpack@^1 || ^2 || ^3 || ^4 || ^5", "webpack@^4.46.0", "webpack@^4.5.0 || 5.x":
   "integrity" "sha512-6jJuJjg8znb/xRItk7bkT0+Q7AHCYjjFnvKIWQPkNIOyRqoCGvkOs0ipeQzrqz4l5FtN5ZI/ukEHroeX/o1/5Q=="
   "resolved" "https://registry.npmjs.org/webpack/-/webpack-4.46.0.tgz"
   "version" "4.46.0"
