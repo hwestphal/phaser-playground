@@ -108,7 +108,16 @@ point(): BabyShape;
 * then simply turn them back on AFTER you create the VT52 instance
 * eg:   app.activeCameraControls(true)
 */
-vt52(): VT52;
+VT52(): Vt52;
+/** Create a 2D Graph plane. Underneath, it's really a cube of size x * y).
+* To create the grid, use  `let g = app.Graph(20,16).drawGrid()
+*
+* We DETACH the camera controls from the canvas
+* because that's almost always right.  If you want to use the controls
+* then simply turn them back on AFTER you create the Graph instance
+* eg:   app.activeCameraControls(true)
+*/
+Graph(x: number, y: number): BabyGraph;
 /** Add a floor object with  a default grid. Use .collide('solid') if you want to bounce off it. */
 floor(xSize: number, ySize: number, major?: number): BabyShape;
 /** A 'camera' defines the player, a multi-player game may have multiple cameras.
@@ -271,7 +280,7 @@ getDistanceTo(otherShape: BabyShape): number;
 */
 getContext(): CanvasRenderingContext2D;
 }
-declare class VT52 extends BabyShape {
+declare class Vt52 extends BabyShape {
 constructor(model: string, babyEngine: BabyEngine);
 /** A VT52 is like an old-fashioned text terminal.  Embed \n in your string for a newline
 *
@@ -294,6 +303,27 @@ print(text: string, color?: string): Promise<void>;
 */
 input(prompt?: string): Promise<string>;
 }
+/** A 2D graph class for showing math */
+declare class BabyGraph extends BabyShape {
+scaleX: number;
+scaleY: number;
+constructor(model: string, babyEngine: BabyEngine);
+/** draw a grid from -x to x, from -y to y (defaulting to the graph size).  */
+drawGrid(x?: number, y?: number): BabyGraph;
+/** draw a line through a series of points declared as [x,y]
+* eg: graph.line([2,1],[2,2],[3,3])
+*/
+line(markerSymbol: 'none' | 'arrow' | 'arrowdot' | 'dot', start: [number, number], ...restofPoints: [number, number][]): BabyGraph;
+/** draw a circle of radius r at point [x,y]
+* eg: graph.circle([2,1],5)
+*/
+circle(point: [number, number], radius: number): BabyGraph;
+/** draw a rectangle defined by bottom-left and top-right points
+* eg: graph.rectangle([-3,-3],[2,1])
+*/
+rectangle(point1: [number, number], point2: [number, number]): BabyGraph;
+textAt(text: string, x: number, y: number, offsetX?: number, offsetY?: number): this;
+}
 declare class BabyCamera extends BabyThing {
 constructor(model: string, babyEngine: BabyEngine);
 /**  Move an entity  */
@@ -305,5 +335,7 @@ moveToZero(duration?: number, animate?: '1-Begin And End Normally' | '2-Begin Sl
 setOrthographic(orthoSize?: number): this;
 /** set camera mode to Orthographic (ie: not Perspective) */
 setActive(player?: number): this;
+/** gives players control of the camera) */
+attachControls(): this;
 }
 

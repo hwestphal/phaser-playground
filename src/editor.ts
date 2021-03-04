@@ -41,11 +41,11 @@ export class Editor {
             allowUnusedLabels: true,
             noImplicitThis: true,
             noImplicitReturns: true,
-            target: monaco.languages.typescript.ScriptTarget.ES5,
+            target: monaco.languages.typescript.ScriptTarget.ES2015,
         });
 
         monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-            target: monaco.languages.typescript.ScriptTarget.Latest,
+            target: monaco.languages.typescript.ScriptTarget.ES2015,
             allowNonTsExtensions: true,
             noLib: true,                        // don't bring in everything
         });
@@ -53,6 +53,10 @@ export class Editor {
 
         // don't want all of DOM, but I DO want console.log() and similar
         let lib_baby_plus = lib_baby + `
+        interface Array<T> {                // otherwise array(10).fill(0) doesn't work
+            fill(value: T): Array<T>;
+        }
+        
         interface Console {
             memory: any;
             assert(condition?: boolean, ...data: any[]): void;

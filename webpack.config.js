@@ -14,24 +14,27 @@ module.exports = (env, argv) => {
         },
         mode: "development",
         module: {
-            rules: [{
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader']
-            }, {
-                test: /\.ttf$/,
-                use: ['file-loader']
-            }, {
-                test: /\.tsx?$/,
-                use: 'ts-loader',
-                exclude: /node_modules/,
-            },
-            {
-                test: /\.txt$/i,
-                exclude: '/node_modules/',
-                use: 'raw-loader'
-            },
+            rules: [
+                {
+                    test: /\.css$/,
+                    use: ['style-loader', 'css-loader']
+                },
+                {
+                    test: /\.ttf$/,
+                    use: ['file-loader']
+                },
+                 {
+                    test: /\.tsx?$/,
+                    use: 'ts-loader',
+                    exclude: /node_modules/,
+                },
+                {
+                    test: /\.txt$/i,
+                    exclude: '/node_modules/',
+                    use: 'raw-loader'
+                },
 
-            { test: /baby.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["Baby"] } } },
+                { test: /baby.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["Baby"] } } },
 
                 // { test: /pixi\.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["PIXI"] } } },
                 // { test: /phaser-split\.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["Phaser"] } } },

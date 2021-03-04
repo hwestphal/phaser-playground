@@ -2821,17 +2821,17 @@
   dependencies:
     "minimist" "^1.2.5"
 
-"monaco-editor-webpack-plugin@^2.1.0":
-  "integrity" "sha512-DG7Dpo/ItWEOl/BG2egc/UIiHoCbHjq0EOF0E6eJQT+6QNZBOfSVU4GxaXG+kQJXB8rauxli96Xp1ITnNLZtSw=="
-  "resolved" "https://registry.npmjs.org/monaco-editor-webpack-plugin/-/monaco-editor-webpack-plugin-2.1.0.tgz"
-  "version" "2.1.0"
+"monaco-editor-webpack-plugin@^3.0.0":
+  "integrity" "sha512-oPuYInTZIT5ctj8gjx7VEzxZFjcIBJXazVOaF6wJ/TPCldF0Lb/58jEeKTERXr4nr1Yobgx2tVfKcfkncAlAHg=="
+  "resolved" "https://registry.npmjs.org/monaco-editor-webpack-plugin/-/monaco-editor-webpack-plugin-3.0.0.tgz"
+  "version" "3.0.0"
   dependencies:
     "loader-utils" "^2.0.0"
 
-"monaco-editor@^0.21.2":
-  "integrity" "sha512-jS51RLuzMaoJpYbu7F6TPuWpnWTLD4kjRW0+AZzcryvbxrTwhNy1KC9yboyKpgMTahpUbDUsuQULoo0GV1EPqg=="
-  "resolved" "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.21.2.tgz"
-  "version" "0.21.2"
+"monaco-editor@^0.22.3", "monaco-editor@0.22.x":
+  "integrity" "sha512-RM559z2CJbczZ3k2b+ouacMINkAYWwRit4/vs0g2X/lkYefDiu0k2GmgWjAuiIpQi+AqASPOKvXNmYc8KUSvVQ=="
+  "resolved" "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.22.3.tgz"
+  "version" "0.22.3"
 
 "move-concurrently@^1.0.1":
   "integrity" "sha1-viwAX9oy4LKa8fBdfEszIUxwH5I="
@@ -4634,7 +4634,7 @@
     "source-list-map" "^2.0.0"
     "source-map" "~0.6.1"
 
-"webpack@^4.46.0":
+"webpack@^4.46.0", "webpack@^4.5.0 || 5.x":
   "integrity" "sha512-6jJuJjg8znb/xRItk7bkT0+Q7AHCYjjFnvKIWQPkNIOyRqoCGvkOs0ipeQzrqz4l5FtN5ZI/ukEHroeX/o1/5Q=="
   "resolved" "https://registry.npmjs.org/webpack/-/webpack-4.46.0.tgz"
   "version" "4.46.0"
