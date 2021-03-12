@@ -1,5 +1,7 @@
 /** @ignore */
 declare type Observer = (msg?: object) => void;
+/** Creates an array of n elements, 0,1,2... */
+declare let range: (start: number, stop?: number, step?: number) => any[];
 /** For many games, `Baby()` is the only class you need to import.
 *
 * ```ts

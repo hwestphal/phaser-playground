@@ -35,6 +35,8 @@ class Main {
 
     constructor() {
 
+        console.log('in Main.constructor()')
+        
         const State = {
             inputModel: null,
             outputModel: null,

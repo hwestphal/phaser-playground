@@ -23,21 +23,22 @@ body {
     margin:0px;
 }
 .right {
-    width: 50%;
+    /* width: 50%; */
     height: 100%;
     display: flex;
     margin:0px;
+    padding:0px;
 }
 .editor {
     width: 100%;
     height: 50%;
-    display: flex;
+    /* display: flex; */
     margin:0px;
 }
 .canvas {
     width: 100%;
     height: 50%;
-    display: flex;
+    /* display: flex; */
     margin:0px;
 }
 .renderCanvas {

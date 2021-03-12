@@ -1,61 +1,21 @@
 import * as monaco from "monaco-editor";
+
 import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
+import lib_es2015_core from "./extraLibs/lib.es2015.core.d.ts.txt";
+// import lib_es2015_collection from "./extraLibs/lib.es2015.collection.d.ts.txt";
+// import lib_es2015_promise from "./extraLibs/lib.es2015.promise.d.ts.txt";
+// import lib_es2016_array_include from "./extraLibs/lib.es2016.array.include.d.ts.txt";
+// import lib_es2017_asynciterables from "./extraLibs/lib.es2015.asynciterables.d.ts.txt";
+// import lib_es2017_string from "./extraLibs/lib.es2017.string.d.ts.txt";
+// import lib_es2017_typedarrays from "./extraLibs/lib.es2017.typearrays.d.ts.txt";
+// import lib_es2018_asynciterable from "./extraLibs/lib.es2015.iterable.d.ts.txt";
+// import lib_es2019_string from "./extraLibs/lib.es2019.string.d.ts.txt";
+// import lib_es2020_bigint from "./extraLibs/lib.es2020.bigint.d.ts.txt";
+// import lib_esnext_string from "./extraLibs/lib.esnext.string.d.ts.txt";
+
 import lib_baby from "./extraLibs/baby.d.ts.txt";
 import lib_dom from "./extraLibs/lib.dom_mini.d.ts.txt";
 import lib_promise from "./extraLibs/lib.es2015.promise.d.ts.txt";
-
-import lib_es2015_collection from "./extraLibs/lib.es2015.collection.d.ts.txt"
-import lib_es2015_core from "./extraLibs/lib.es2015.core.d.ts.txt"
-import lib_es2015_promise from "./extraLibs/lib.es2015.promise.d.ts.txt"
-import lib_es2016_array_include from "./extraLibs/lib.es2016.array.include.d.ts.txt"
-import lib_es2017_string from "./extraLibs/lib.es2017.string.d.ts.txt"
-import lib_es2017_typedarrays from "./extraLibs/lib.es2017.typedarrays.d.ts.txt"
-import lib_es2018_asynciterable from "./extraLibs/lib.es2018.asynciterable.d.ts.txt"
-import lib_es2019_string from "./extraLibs/lib.es2019.string.d.ts.txt"
-import lib_es2020_bigint from "./extraLibs/lib.es2020.bigint.d.ts.txt"
-
-
-// let known = [2]
-
-// let foo = (n: number) => (n + 1)
-// for (let i = 0; i < 10; i++) {
-//     foo(i)
-// }
-
-// // using reduce()
-// let t:number
-// // reducer simply adds up ALL the remainders.
-// let reducer = (accumulator:number,currentV:number) => accumulator + (t % currentV==0?0:1 )
-// for (t = 3; t < 150; t++)
-//     if (known.reduce(reducer)>0)
-//         known.push(t)
-
-// console.log(known)
-
-// // using filter()
-// known=[]
-// for (let t = 3; t < 150; t++)
-//     if (known.filter((n) => t % n == 0).length == 0)
-//         known.push(t)
-
-// console.log(known)
-
-
-// // using find()
-// known=[]
-// for (let t = 3; t < 150; t++)
-//     if (known.find((n) => t % n == 0)==undefined)
-//         known.push(t)
-
-// console.log(known)
-
-
-
-
-
-
-
-
 
 import { Baby } from 'baby'
 
@@ -73,34 +33,34 @@ export class Editor {
 
 
     constructor(el: HTMLElement, initFile: string) {
-
+console.log('in editor')
         this.el = el
         this.initFile = initFile
         this.storageKey = ''
         this.safeDelay = 5000
 
-        monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+        let params = {
             allowNonTsExtensions: true,
             inlineSourceMap: true,
             inlineSources: true,
             noLib: true,
             sourceMap: false,
-            strict: true,
             noImplicitAny: false,
+            strict: true,
             strictNullChecks: false,
-            strictFunctionTypes: false,
+            strictFunctionTypes: true,
             allowUnreachableCode: true,
             allowUnusedLabels: true,
             noImplicitThis: true,
             noImplicitReturns: true,
-            target: monaco.languages.typescript.ScriptTarget.ES2020,
-        });
+            noUnusedParameters: false,
+            target: monaco.languages.typescript.ScriptTarget.ESNext,
+        }
 
-        monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-            target: monaco.languages.typescript.ScriptTarget.ES2020,
-            allowNonTsExtensions: true,
-            noLib: true,                        // don't bring in everything
-        });
+
+        monaco.languages.typescript.typescriptDefaults.setCompilerOptions(params);
+
+        monaco.languages.typescript.javascriptDefaults.setCompilerOptions(params);
 
 
         // don't want all of DOM, but I DO want console.log() and similar
@@ -135,22 +95,14 @@ export class Editor {
         }
         
         declare var console: Console;
+
         `
 
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_baby_plus, "lib.baby.d.ts");
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es5, "lib.es5.d.ts");
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_baby_plus);
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es5);
+        // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2015_core);
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom, "lib.dom_mini.d.ts");
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_promise, "lib.es2015.promise.d.ts");
-
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2015_collection)
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2015_core)
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2016_array_include)
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2017_string)
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2017_typedarrays)
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2018_asynciterable)
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2019_string)
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2020_bigint)
-
 
 
         this.editor = monaco.editor.create(this.el, {
@@ -209,9 +161,11 @@ export class Editor {
                 .map((m) => `Line ${m.startLineNumber}: ${m.message}`)
                 .join("\n");
             if (errors.length > 0) {
-                alert(errors)    // 
+                alert(errors[0])
                 return
             }
+        
+        
             const worker = await monaco.languages.typescript.getTypeScriptWorker();
             const client = await worker(resource);
             const output = await client.getEmitOutput(resource.toString());
@@ -225,6 +179,10 @@ export class Editor {
 
             // new Function(src) is a safer form of eval().  
             // code = `app.floor(30,30,5);let cube = app.cube().color('blue').move('up',1)`
+
+            
+
+
             var app = new Baby(code)
 
 

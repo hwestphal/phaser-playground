@@ -44,14 +44,14 @@ module.exports =  smp.wrap({
         ]
     },
 
-    optimization: {
-        // minimize: true
-        runtimeChunk:true,
-        removeAvailableModules: false,
-        removeEmptyChunks: false,
-        splitChunks: false,
-     
-    },
+    ///////////  danger here
+    // optimization: {
+    //     // minimize: true
+    //     runtimeChunk:true,
+    //     removeAvailableModules: false,
+    //     removeEmptyChunks: false,
+    //     splitChunks: false,
+    // },
 
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
