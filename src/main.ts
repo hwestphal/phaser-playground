@@ -28,7 +28,7 @@ class Main {
     run: HTMLButtonElement
     stop: HTMLButtonElement
     pause: HTMLButtonElement
-    fullscreen: HTMLButtonElement
+    // fullscreen: HTMLButtonElement
 
     template = "let app = new Baby()"
 
@@ -56,7 +56,7 @@ class Main {
         this.run = document.getElementById("run") as HTMLButtonElement;
         this.stop = document.getElementById("stop") as HTMLButtonElement;
         this.pause = document.getElementById("pause") as HTMLButtonElement;
-        this.fullscreen = document.getElementById("fullscreen") as HTMLButtonElement;
+        // this.fullscreen = document.getElementById("fullscreen") as HTMLButtonElement;
 
 
         // // new Function(src) is a safer form of eval().  
@@ -73,7 +73,7 @@ class Main {
             this.run.disabled = false;  // was true
             this.stop.disabled = false;
             this.pause.disabled = false;
-            this.fullscreen.disabled = false;
+            // this.fullscreen.disabled = false;
             try {
                 // const fn = await this.editor.transpile(this.game.scope);
                 //this.editorDiv.hidden = true;
@@ -111,7 +111,7 @@ class Main {
         this.stop.disabled = true;
         this.pause.innerText = "Pause";
         this.pause.disabled = true;
-        this.fullscreen.disabled = true;
+        // this.fullscreen.disabled = true;
     }
 }
 

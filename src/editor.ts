@@ -13,6 +13,7 @@ import lib_es2017_typedarrays from "./extraLibs/lib.es2017.typedarrays.d.ts.txt"
 import lib_es2018_asynciterable from "./extraLibs/lib.es2018.asynciterable.d.ts.txt"
 import lib_es2019_string from "./extraLibs/lib.es2019.string.d.ts.txt"
 import lib_es2020_bigint from "./extraLibs/lib.es2020.bigint.d.ts.txt"
+import lib_es2021_string from "./extraLibs/lib.es2021.string.d.ts.txt"
 
 
 // let known = [2]
@@ -150,6 +151,7 @@ export class Editor {
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2018_asynciterable)
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2019_string)
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2020_bigint)
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2021_string)
 
 
 
