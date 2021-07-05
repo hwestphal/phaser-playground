@@ -1,7 +1,10 @@
+
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
+    <meta charset="utf-8" />
+
     <title>Local Testing</title>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,8 +22,49 @@
     </style>
 </head>
 
-<body>
-    <div class="splitter">
+<body style="background-color:lightpink;">
+
+
+    <div id="header">
+        <div id="logo"><img src="logo.png" height="100px" /></div>
+        <div id="title">title</div>
+
+    </div>
+
+    <div id="headerbtns">
+        <div id="closeBtn"><span class="arrow2">x</span><span class="txt">Close</span></div>
+        <div id="next"><span class="txt">Next </span><span class="arrow1">></span></div>
+        <div id="pageno"></div>
+        <div id="back"><span class="arrow">
+                << /span><span class="txt"> Back</span></div>
+        <div id="coursemapbtn"></div>
+        <div id="progress">
+            <div id="fill"></div>
+            <div id="progressTxt"></div>
+        </div>
+
+    </div>
+
+    <div id="coursemapContainer">
+        <div id="coursemapHeader">COURSE MAP</div>
+        <div id="coursemap">
+            <!--<ul>
+                    <li class='completed'>Module 1: What Is Excel?</li>
+                    <li class='completed'>Module 2: Adding/ Changing Workbooks</li>
+                    <li>Module 2: Adding/ Changing Workbooks</li>
+                </ul-->
+
+        </div>
+    </div>
+
+    <div class="splitter" style="margin:auto;width:98%">
+
+
+        <!---  texteditor - remove for production -->
+        <div id="texteditor">this is the editor</div>
+        <div id="vseparator1"></div>
+
+
         <div id="lesson">this is the lesson</div>
         <div id="vseparator"></div>
 
@@ -32,9 +76,9 @@
                     <button id="run">Run</button>
                     <button id="stop" disabled>Stop</button>
                     <button id="pause" disabled>Pause</button>
-                    <button id="fullscreen" disabled>Full Screen</button>
+                    <!-- button id="fullscreen" disabled>Full Screen</button -->
                 </p>
-            
+
             </div>
             <div id="editor"></div>
             <div id="hseparator"></div>
@@ -113,7 +157,7 @@
 
 
 
-<script src="dist/bundle.app.js"></script>
+    <script src="dist/bundle.app.js"></script>
 </body>
 
 </html>
