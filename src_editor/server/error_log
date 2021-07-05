@@ -1,0 +1,84 @@
+[20-May-2018 11:12:19 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/communit2049/public_html/gamecode/php/database.php on line 169
+[20-May-2018 11:16:34 UTC] PHP Parse error:  syntax error, unexpected '::' (T_PAAMAYIM_NEKUDOTAYIM) in /home/communit2049/public_html/gamecode/php/database.php on line 169
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli::mysqli(): (HY000/1045): Access denied for user 'root'@'localhost' (using password: YES) in /home/communit2049/public_html/gamecode/php/database.php on line 1331
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Notice:  Undefined offset: 0 in /home/communit2049/public_html/gamecode/php/database.php on line 93
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Notice:  Undefined offset: 0 in /home/communit2049/public_html/gamecode/php/database.php on line 104
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Notice:  Undefined offset: 0 in /home/communit2049/public_html/gamecode/php/database.php on line 110
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Notice:  Undefined offset: 0 in /home/communit2049/public_html/gamecode/php/database.php on line 150
+[20-May-2018 11:38:11 UTC] PHP Notice:  Could not find field 'UserID' in array N; in /home/communit2049/public_html/gamecode/php/database.php on line 236
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1342
+[20-May-2018 11:38:11 UTC] PHP Warning:  mysqli_error(): Couldn't fetch mysqli in /home/communit2049/public_html/gamecode/php/database.php on line 1361

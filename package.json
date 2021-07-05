@@ -1,9 +1,13 @@
 {
   "private": true,
   "scripts": {
-    "build": "rm -rf dist/ && tsc --noEmit && webpack",
+    "comment00": "==== run the course",
     "comment01": "npm watch is at localhost/baby...., NOT at :8080",
-    "watch2": "webpack --watch",
+    "build": "rm -rf dist/ && tsc --noEmit && webpack --config webpack.player.config.js",
+    "watch": "webpack --watch --config webpack.player.config.js",
+    "buildeditor": "webpack --config webpack.editor.config.js && npm run copyeditor",
+    "watcheditor": "webpack --watch --config webpack.editor.config.js",
+    "copyeditor": "cp src_editor/runtime/_index.* dist_editor/index.html  && cp src_editor/mod_gamecode/3djoomla.php dist_editor && cp src_editor/runtime/3d.css dist_editor && cp -R assets dist/assets",
     "clean": "rm -rf dist/",
     "lint": "tslint -p . src/**/*.ts src/**/*.js ",
     "start:static": "http-server -s -c-1 dist"
@@ -20,6 +24,7 @@
     "jquery": "^3.5.1",
     "monaco-editor": "^0.22.3",
     "monaco-editor-webpack-plugin": "^3.0.0",
+    "prismjs": "^1.24.1",
     "raw-loader": "^4.0.2",
     "style-loader": "^1.2.1",
     "ts-loader": "^8.0.14",
@@ -30,6 +35,7 @@
   },
   "devDependencies": {
     "@types/jquery": "^3.5.5",
+    "@types/prismjs": "^1.16.2",
     "speed-measure-webpack-plugin": "^1.4.2"
   }
 }

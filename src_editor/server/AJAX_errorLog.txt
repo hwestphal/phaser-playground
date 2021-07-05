@@ -1,0 +1,305 @@
+
+
+2019-11-18 22:18:45
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(135)"
+OUT: "cmd not set for AJAX request a:1:{s:14:\"{\"input\":\"42\"}\";s:0:\"\";}"
+
+2019-11-18 22:19:14
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(135)"
+OUT: "cmd not set for AJAX request a:1:{s:78:\"------WebKitFormBoundaryBDL2k89uVLD4HIAn\r\nContent-Disposition:_form-data;_name\";s:59:\"\"input\"\r\n\r\n42\r\n------WebKitFormBoundaryBDL2k89uVLD4HIAn--\r\n\";}"
+
+2019-11-18 22:20:26
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(135)"
+OUT: "cmd not set for AJAX request a:1:{s:14:\"{\"input\":\"42\"}\";s:0:\"\";}"
+
+2019-11-18 22:21:32
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(135)"
+OUT: "cmd not set for AJAX request a:1:{s:14:\"{\"cmd\":\"test\"}\";s:0:\"\";}"
+
+2019-11-18 22:24:59
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(135)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-18 22:26:13
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(135)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-18 22:26:42
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(135)"
+OUT: "cmd not set for AJAX request a:1:{s:14:\"{\"cmd\":\"test\"}\";s:0:\"\";}"
+
+2019-11-18 22:28:17
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(75)"
+OUT: "json_decode() expects parameter 1 to be string, array given"
+
+2019-11-18 22:29:18
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(138)"
+OUT: "cmd not set for AJAX request a:1:{s:14:\"{\"cmd\":\"test\"}\";s:0:\"\";}"
+
+2019-11-18 22:30:38
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(78)"
+OUT: "Undefined offset: 0"
+
+2019-11-18 22:32:30
+IN:  "\/home\/tom\/html\/3d\/src\/server\/utilities.php(174)"
+OUT: "Undefined offset: 1"
+
+2019-11-18 22:34:29
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(75)"
+OUT: "Undefined offset: 1"
+
+2019-11-18 22:36:16
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(69)"
+OUT: "Undefined variable: REQUEST"
+
+2019-11-18 22:36:52
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(129)"
+OUT: "cmd not set for AJAX request a:1:{s:14:\"{\"cmd\":\"test\"}\";s:0:\"\";}"
+
+2019-11-18 22:37:53
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(129)"
+OUT: "cmd not set for AJAX request a:1:{s:14:\"{\"cmd\":\"test\"}\";s:0:\"\";}"
+
+2019-11-18 22:39:44
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(129)"
+OUT: "cmd not set for AJAX request a:1:{s:14:\"{\"cmd\":\"test\"}\";s:0:\"\";}"
+
+2019-11-18 22:40:31
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(129)"
+OUT: "cmd not set for AJAX request a:1:{s:25:\"{\"cmd\":\"test\",\"index\":42}\";s:0:\"\";}"
+
+2019-11-19 06:20:42
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(129)"
+OUT: "cmd not set for AJAX request a:1:{s:25:\"{\"cmd\":\"test\",\"index\":42}\";s:0:\"\";}"
+
+2019-11-19 06:25:13
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(69)"
+OUT: "Undefined variable: contestType"
+
+2019-11-19 06:25:58
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(131)"
+OUT: "cmd not set for AJAX request a:1:{s:25:\"{\"cmd\":\"test\",\"index\":42}\";s:0:\"\";}"
+
+2019-11-19 06:29:30
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-19 11:16:45
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-19 15:37:55
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 12:18:48
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 12:23:31
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 12:23:34
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 12:23:46
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 12:27:27
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 12:27:35
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 12:28:12
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:13:34
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:16:22
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:16:24
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:18:10
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:19:49
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:21:19
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:21:29
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:21:54
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:22:01
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:22:35
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:24:20
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:26:43
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:28:44
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:50:44
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:51:14
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:52:46
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:54:49
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:55:27
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:55:42
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:56:22
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:56:39
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:59:05
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 13:59:18
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:00:22
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:01:09
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:04:54
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:05:22
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:05:33
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:05:37
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:17:03
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:17:33
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:17:36
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:18:44
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:18:48
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:25:22
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:26:27
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:27:29
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:28:59
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:29:02
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:32:09
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:32:42
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:33:12
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:36:14
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:36:44
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-22 14:36:47
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"
+
+2019-11-24 08:38:21
+IN:  "\/home\/tom\/html\/3d\/src\/server\/AJAX.php(142)"
+OUT: "cmd not set for AJAX request a:0:{}"

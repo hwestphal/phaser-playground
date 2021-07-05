@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge" /> -->
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <link rel="stylesheet" href="3d.css" />
+</head>
+
+<body>
+
+    <br><br><br><math id='testmath'></math><br>
+    <div class="navbar">
+        <div style="float:right;padding-right:200px">
+            <button id="save">Save</button>
+        </div>
+        <div style="float:right">
+            <button id="load">Load</button>
+        </div>
+        <div style="float:right">
+            <button id="run">Run</button>
+        </div>
+        <div style="float:right">
+            <button id="debug">Debug</button>
+        </div>
+        <div style="float:right">
+            <button id="tagcount"></button>
+        </div>
+        <div style="float:right">
+            <button id="suggestName"></button>
+        </div>
+
+    </div>
+
+
+    <div class="main" style="margin-top:30px">
+        <p>If you’re using Chrome or Edge, enable “Experimental Web Platform features” on the chrome://flags page.</p>
+        <!-- lesson and editor, side by side-->
+        <div id="lesson"
+            style="border-style: solid;  border-block-color: black;border-width: 1px; float:left; width:45%">
+        </div>
+        <div
+            style="border-style: solid;  border-block-color: black;border-width: 1px; float:left; width:45%; height:100%;">
+            <div>
+
+                <textarea rows="1000" id="tomseditor" style="width:100%;margin:2px;padding:5px;"></textarea>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <script src="bundle.js"></script>
+
+
+</body>
+
+</html>
