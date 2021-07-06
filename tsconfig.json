@@ -5,14 +5,19 @@
         "target": "esnext",
         "module": "esnext",
         "moduleResolution": "node",
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
         "importHelpers": true,
         "allowJs": true,
-        "sourceMap": true,
-        "lib": ["dom", "ESNext",],
+        "sourceMap": false,
+        "lib": [
+            "dom",
+            "ESNext.String"
+        ],
+        "esModuleInterop": true
     },
     "include": [
         "src/**/*"
-    ]
-}
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"],
+    }

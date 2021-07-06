@@ -1,5 +1,5 @@
 import path from 'path'
-import { ITag } from '../runtime/T'
+import { ITag } from '../src_editor/runtime/T'
 
 const validTags = ['p', 'subtitle', 'section', 'br', 'code', 'asciimath', 'youtube',
     'title', 'module', 'lesson', 'shortdesc', 'break', 'drill', 'key', 'run']

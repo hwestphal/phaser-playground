@@ -14,6 +14,7 @@ import { asciiMath, testAsciiMath } from './ASCIIMathML'
 
 
 
+
 type utterance = {
     id: string,   // 'utter015' or similar
     text: string,
@@ -493,10 +494,10 @@ class SectionCode extends LessonSections {
         let initialCode = section.rawvalue.trimRight()
 
 
-        initialCode = initialCode.replaceAll(`“`, `"`)   // replace web quotes with proper double-quotes
-        initialCode = initialCode.replaceAll(`”`, `"`)   // replace web quotes with proper double-quotes
-        initialCode = initialCode.replaceAll(`‘`, `'`)   // replace web quotes with proper single-quotes
-        initialCode = initialCode.replaceAll(`’`, `'`)   // replace web quotes with proper single-quotes
+        initialCode = initialCode.replace(/“/g, `"`)   // replace web quotes with proper double-quotes
+        initialCode = initialCode.replace(/”/g, `"`)   // replace web quotes with proper double-quotes
+        initialCode = initialCode.replace(/‘/g, `'`)   // replace web quotes with proper single-quotes
+        initialCode = initialCode.replace(/’/g, `'`)   // replace web quotes with proper single-quotes
 
 
         let tag = document.getElementById(this.divName('left', this.tkt))

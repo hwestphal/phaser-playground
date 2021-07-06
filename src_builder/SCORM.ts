@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path';
 import colors from 'colors'
-import { ITag } from '../runtime/T'
+import { ITag } from '../../src_editor/runtime/T'
 
 import {LessonToITags} from './lessonToITags'
 

@@ -1,5 +1,5 @@
 import { ITag } from './T'
-import { LessonToITags } from '../createSCORM/lessonToITags'
+import { LessonToITags } from '../../src_builder/lessonToITags'
 import { LessonPage } from '../runtime/lessonpage'
 
 

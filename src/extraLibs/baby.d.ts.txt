@@ -2,6 +2,8 @@
 declare type Observer = (msg?: object) => void;
 /** Creates an array of n elements, 0,1,2... */
 declare let range: (start: number, stop?: number, step?: number) => any[];
+/** generates iterable stream of numbers, use this to replace for(let i=0; i< n; i++) */
+declare function numbers(first: number, max?: number, step?: number): Generator<number, void, unknown>;
 /** For many games, `Baby()` is the only class you need to import.
 *
 * ```ts
@@ -58,7 +60,8 @@ origin: BabyShape;
 * The optional parameter sends code to the game.  It's only intended for writing tutorials.
 */
 constructor(src?: string);
-test(): Promise<void>;
+numberAt(text: string, x: number, y: number, color: string): Promise<void>;
+graphTest(): Promise<void>;
 version(): string;
 /** @ignore */
 signal(msg: string, value?: number): void;
@@ -110,7 +113,7 @@ point(): BabyShape;
 * then simply turn them back on AFTER you create the VT52 instance
 * eg:   app.activeCameraControls(true)
 */
-VT52(): Vt52;
+VT52(): BabyShape;
 /** Create a 2D Graph plane. Underneath, it's really a cube of size x * y).
 * To create the grid, use  `let g = app.Graph(20,16).drawGrid()
 *
@@ -187,6 +190,7 @@ onCollide(callback: Function): BabyShape;
 */
 onClick(callback: Function): BabyShape;
 addAxes(): BabyShape;
+/** dispose of this shape or camera. */
 dispose(): BabyShape;
 /** turn collisions on or off.  'active' will turn on gravity and mass. */
 collide(collider?: 'ghost' | 'solid' | 'active'): BabyShape;
@@ -257,13 +261,21 @@ penUp(): this;
 /** erase a line created with `penDown` and `penUp` */
 lineErase(): this;
 /** sets a texture with HTML Canvas commands, for example:
-*     let ctx = app.cube().getContext()
-*     box.setTexture((ctx)=>{
+*   let params = { 'text': '5'}
+*   numberCube.setTexture(params, () => {
+*       ctx.fillStyle = 'yellow';
+*       ctx.beginPath();
+*       ctx.rect(0, 0, 1024, 1024);  // preset to 1024
+*       ctx.fill();
 *
-*
-*     })
+*       ctx.beginPath();
+*       ctx.moveTo(200, 200)
+*       ctx.fillStyle = 'blue';
+*       ctx.font = "512px Arial";
+*       ctx.fillText(params['text'], 300, 600)
+*   })
 */
-setTexture(width: any, height: any, resolution: any, ctx: CanvasRenderingContext2D, ctxFunction: Function): this;
+setTexture(params: object, ctxFunction: Function): this;
 /** position of this thing at this instance */
 getPosition(): Vector3;
 /** direction of this thing at this instance */
@@ -282,7 +294,7 @@ getDistanceTo(otherShape: BabyShape): number;
 */
 getContext(): CanvasRenderingContext2D;
 }
-declare class Vt52 extends BabyShape {
+declare class Vt52Thing extends BabyShape {
 constructor(model: string, babyEngine: BabyEngine);
 /** A VT52 is like an old-fashioned text terminal.  Embed \n in your string for a newline
 *

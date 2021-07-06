@@ -7,15 +7,14 @@ export function testAsciiMath() {
 
     eqn = ' [[a,b,|,c],[d,e,|,f]]'
     a = asciiMath(eqn)
-    main = document.getElementById('testmath')
-    if (main !== null)
-        main.appendChild(a)
-
+    return (a)
 }
 export function asciiMath(str: string) {
     let asciiMath = new AsciiMath()
     return asciiMath.parseMath(str, false)
 }
+
+
 
 
 
@@ -57,6 +56,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+
+
 
 
 var mathcolor = "blue";        // change it to "" (to inherit) or another color
@@ -431,26 +432,18 @@ export class AsciiMath {
 
     // Add a stylesheet, replacing any previous custom stylesheet (adapted from TW)
     setStylesheet(s: string) {
-        var id = "AMMLcustomStyleSheet";
-        var n = document.getElementById(id);
-        // if (document.createStyleSheet) {     // tbtb
-        //     // Test for IE's non-standard createStyleSheet method
-        //     if (n)
-        //         n.parentNode.removeChild(n);
-        //     // This failed without the &nbsp;
-        //     document.getElementsByTagName("head")[0].insertAdjacentHTML("beforeend", "&nbsp;<style id='" + id + "'>" + s + "</style>");    // tbtb not 'beforeEnd'
-        // } else {
-        if (n) {
-            // @ts-ignore    // TODO
-            n.replaceChild(document.createTextNode(s), n.firstChild);
+        let id = "AMMLcustomStyleSheet";
+        let n = document.getElementById(id) as Node  
+        if (n !== null) {
+            // replace the style element
+            n.replaceChild(document.createTextNode(s), n.firstChild as Node)
         } else {
-            n = document.createElement("style");
-            // n.type = "text/css";   //tbtb
-            n.id = id;
-            n.appendChild(document.createTextNode(s));
-            document.getElementsByTagName("head")[0].appendChild(n);
+            let newN = document.createElement("style") as HTMLElement
+            // newN.type = "text/css";   // no longer used
+            newN.id = id;
+            newN.appendChild(document.createTextNode(s));
+            document.getElementsByTagName("head")[0].appendChild(newN);
         }
-        // }
     }
 
 
