@@ -2,7 +2,7 @@
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
         "strict": true,
-        "target": "esnext",
+        "target": "es6",
         "module": "esnext",
         "moduleResolution": "node",
         "importHelpers": true,

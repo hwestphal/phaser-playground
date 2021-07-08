@@ -37,21 +37,22 @@ interface courseInfo {
 export class Runtime {
 
     // scormHost: object
+    public lessonPage: LessonPage | null = null     // link to the lessonPage builder
 
-    courseInfo: courseInfo | null = null    // have to fetch it
-    lessons = new Map<string, ITag[]>()
 
-    editor: Editor
-    // setup the writer's editor
+    public courseInfo: courseInfo | undefined     // have to fetch it
+    public lessons = new Map<string, ITag[]>()
 
-    lessonPage: LessonPage | null = null     // link to the lessonPage builder
+    public editor: Editor    // setup the writer's editor
 
 
     constructor() {
+        console.log('in class Runtime')
+        this.courseInfo = undefined // until we load it
+
         let editorDiv = document.getElementById('tomseditor')! as HTMLTextAreaElement
         this.editor = new Editor(editorDiv)
 
-        console.log('in class Runtime')
         // this.paintWelcome()
 
     }

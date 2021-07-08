@@ -8,7 +8,7 @@
     "comment02": "==== run the editor",
     "buildeditor": "webpack --config webpack.editor.config.js && npm run copyeditor",
     "watcheditor": "webpack --watch --config webpack.editor.config.js",
-    "copyeditor": "cp src_editor/runtime/_index.* dist_editor/index.html  && cp src_editor/mod_gamecode/3djoomla.php dist_editor && cp src_editor/runtime/3d.css dist_editor && cp -R assets dist/assets",
+    "copyeditor": "cp src_editor/runtime/_index.* dist_editor/index.html  && cp src_editor/mod_gamecode/3djoomla.php dist_editor && cp src_editor/runtime/3d.css dist_editor && cp -R assets dist_editor/assets",
     "clean": "rm -rf dist/",
     "start:static": "http-server -s -c-1 dist",
     "test": "jest --env=jsdom"
@@ -36,7 +36,6 @@
   "devDependencies": {
     "@gamestdio/scorm": "^0.1.3",
     "@types/jest": "^26.0.23",
-    "@types/node": "^16.0.0",
     "@types/prismjs": "^1.16.2",
     "jest": "^27.0.6",
     "speed-measure-webpack-plugin": "^1.4.2",

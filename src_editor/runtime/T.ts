@@ -24,8 +24,8 @@ interface String {
 
 
 // TODO: change URI addresses to be configurations
-const lessonURI = 'http://localhost/baby/baby-scorm/lessons/'
-const assetsURI = 'http://localhost/baby/baby-scorm/assets/'
+const lessonURI = 'http://localhost/baby/baby-playground/lessons/'
+const assetsURI = 'http://localhost/baby/baby-playground/assets/'
 
 const studentID = '00001'
 const firstName = 'Tom '
@@ -33,7 +33,7 @@ const lastName = 'Berend'
 
 export const config = {
     helpline: 'Discord',
-    assetURI: 'http://localhost/baby/baby-scorm/assets/'
+    assetURI: 'http://localhost/baby/baby-playground/assets/'
 
 } 
 
