@@ -1,0 +1,169 @@
+<module>01-Beginner Javascript
+<lesson>03-Functions and Arrays
+<shortdesc>Functions and Arrays
+
+<p(h1)>Functions
+<p>So far, we know about ^strings^ and ^numbers^, and how to write simple control structures using ^if()^ and ^while()^.
+<p>This lesson is going to dramatically increase the tools you have for writing JavaScript programs.
+
+<break>
+<p>A ^function^ is a value that holds a piece of programming.  You can ^invoke^ it and it will run that programming.  Sometimes it will ^return^ a value.
+
+<p>An ^arrow function^ is a slightly restricted version of a ^function^.  
+
+<p>Here's an example of an ^arrow function^ that prints 'Hello World' to the console, plus a call to invoke it.  The `let greeter` part is exactly like the bindings that we used for numbers and strings. Try it out.
+
+<code>
+let greeter = () => console.log('hello world')
+
+greeter()    // invoke greeter 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>OK, now let's add a ^parameter^ to `greeter()` to make it more flexible.
+
+<break>
+<p(mindset)>Typescript lets you specify rules for how much ^type^ information you must provide as you program.  Lenient rules look exactly like JavaScript. Tighter rules require you to add more information.
+
+<p>We have set the editor to enforce #strict# rules for ^functions^ because it will save you an enormous amount of debugging in the future.  
+
+<break>
+<p>We are going to add a ^parameter^ of type ^string^ to our `greeter()`.  Try it.
+
+
+<code>
+let greeter = (name:string) =>  console.log('hello ' + name)
+
+greeter('sam')     // invoke greeter 
+greeter('susan')   // again...
+
+
+<break>
+<p(mindset)>JavaScript only understands `let greeter = (name) => `. We added the additional type annotation `:string` for TypeScript.
+
+<p>Because we are a bit stricter, you now can't make a mistake by invoking `greeter()` without a parameter, or with too many parameters, or with a ^number^ parameter, etc.  You can't use `greeter()` as a string or a number.  Try to make some of these errors and see what happens.
+
+
+
+
+
+
+<code>
+let greeter = (name:string) =>  console.log( 'hello ' + name )
+
+greeter()    // invoke greeter 
+greeter(5)
+greeter('sam','susan')
+let foo = greeter + 5
+
+
+
+
+
+
+
+<p(img=fivetimes.png)>If we want more than one statement in our ^function^, we can add curly brackets exactly the same as ^if()^ and ^while()^.  Try it out.  
+<p>Note: When you run the code below, your browser will probably print each message just once, and put up a little marker to indicate that it was printed several times.  
+
+<code>
+let greeter = (name: string, count: number) => {
+    while (count > 0) {
+        console.log('hello ' + name)
+        count = count - 1
+    }
+}
+greeter('susan',5)   // greet susan five times
+greeter('bill',3)    // greet bill three times
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>And the BEST feature of a ^function^ is that it can ^return^ a value.  For example, we know the area of a circle is pi [*|times] radius squared.  It's an easy calculation but we use it all the time.  So we create a function.
+
+<code>
+let circleArea = (radius:number) => 3.14 * radius * radius 
+
+console.log(circleArea(3))  // area of circle with radius 3
+console.log(circleArea(4))  //                            4
+console.log(circleArea(5))  //                            5
+
+<p>If we use curly brackets to create a multi-line function, then we need to use a ^return^ statement to tell the browser what to send back.
+
+<code>
+let circleArea = (radius:number) => {
+    let temp = 3.14 * radius * radius 
+    return temp
+}
+
+console.log(circleArea(3))  // area of circle with radius 3
+
+<p>Let's move on. 
+
+
+
+
+
+<p(h1)>Arrays
+
+<p>An ^array^ is a list of things.  We create an array with square brackets &#91; and &#92;. Here's a list of my favorite fruits.
+
+<code(norun)>
+['apple','orange','blueberry']
+
+
+
+
+
+
+
+
+
+
+let maxHunt = 150
+let knownPrimes = [2]
+
+let test = 3  // start above known [2]
+while (test < maxHunt) {
+    let divisors = knownPrimes.filter((n)=> test % n == 0)
+
+    if (divisors.length == 0){
+        knownPrimes.push(test)
+    } else {
+        console.log(test, ' is divisible by ', divisors)
+    }
+    test++    
+}
+console.log(knownPrimes)
+

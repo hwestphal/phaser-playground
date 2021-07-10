@@ -6,9 +6,9 @@
     "build": "rm -rf dist/ && tsc --noEmit && webpack --config webpack.player.config.js",
     "watch": "webpack --watch --config webpack.player.config.js",
     "comment02": "==== run the editor",
-    "buildeditor": "webpack --config webpack.editor.config.js && npm run copyeditor",
+    "buildeditor": "rm -rf dist_editor && webpack --config webpack.editor.config.js && npm run copyeditor",
     "watcheditor": "webpack --watch --config webpack.editor.config.js",
-    "copyeditor": "cp src_editor/runtime/_index.* dist_editor/index.html  && cp src_editor/mod_gamecode/3djoomla.php dist_editor && cp src_editor/runtime/3d.css dist_editor && cp -R assets dist_editor/assets",
+    "copyeditor": "cp src_editor/runtime/index.php dist_editor/index.php  && cp src_editor/mod_gamecode/3djoomla.php dist_editor && cp src_editor/runtime/3d.css dist_editor && cp -R assets dist_editor/assets",
     "clean": "rm -rf dist/",
     "start:static": "http-server -s -c-1 dist",
     "test": "jest --env=jsdom"

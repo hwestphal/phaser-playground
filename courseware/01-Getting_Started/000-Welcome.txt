@@ -1,0 +1,497 @@
+<module>01-Welcome
+<lesson>00-Information about this course
+
+<p> first line?   this is #emp#_ text (underscore).   this is ^bold^ text. (caret)  this is `code` text. (backtick)   this is <key>ctrl+k</key> text  < key > ctrl+k < / key > 
+
+<break>
+
+<p>sum_(i=1)^n i^3=((n(n+1))/2)^2
+
+
+<asciimath>sum_(i=1)^n i^3=((n(n+1))/2)^2
+
+
+
+
+<shortdesc>This lesson introduces the course, and provides housekeeping information.  At the end, you should be able to decide whether this is the right course for you.
+
+
+<title>Welcome to GameCode
+
+<run(src=logo.ts)>
+
+<p(video=intro.webm)>We all #play# video games. This course is going to teach you how the graphics are made.  We are going to dive into programming, computer graphics, and physics, and write some small games.  It's fun, and programming is a great hobby, maybe even a career. But there is a lot to learn.
+
+<p>There are already many great courses to help you learn how to program.  This one is a bit different.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p(h2)>GameCode is Really a Math Course
+<p>We're going to pretend this is a programming course, and teach you how to program.  Specifically, we are going to teach you how to create and control computer graphics.  We'll show you how to animate shapes and move them around your screen.  
+
+
+We'll teach you computer programming, show you some good practices, and give you an introduction to the data structures and algorithms that you need for games.  
+
+
+<p>To get there, we are going to teach you a #ton# of math and physics.  You are going to pretend you don't notice, because it looks like we are teaching you how to create computer graphics.  But you should pay attention to the math, it's the most portable skill you will learn here.  
+
+<break>
+<p>On a computer screen, you don't just 'paint' a color. You set up a model of material with certain properties, and surround it with models of lights with other properties.  Then you run billions of calculations to combine the natural colors, reflections and highlights, glow, and background lighting into something you can project pixel-by-pixel.
+
+<p>The software that does that is called a 'Shader'.  We're going to write one.  But to do that will require a deep-dive into Geometry, Linear Equations, Trigonometry, Algebra, Calculus, Vectors, and Matrices.  There's no magic, everything you see on your screen is done with math.
+
+
+<break>
+<p>Then you are going to need more math to move things around, and physics if you want them to look realistic.  You need probability if you want games of chance to be interesting, and game theory for strategy games.  You need time-dependent dynamics if you want your game space to evolve properly.  You need feedback loops if you want competitors to interact.  Kinematics for robot simulations.  It's all math.
+
+
+
+<break>
+<p>And we're not going to do those calculations by hand.  So we are going to learn how to calculate this math with computer programs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p(h2)>This Math stuff is OLD. 
+
+<p>Seriously. This is all old math.  We aren't going to touch anything from the last 250 years.
+
+<p(img=greek.jpg)>The Greeks had nailed down the basic ideas of Algebra and Geometry before the start of the Roman Empire. They didn't have computers or calculators like we do.  They didn't have paper, they scratched on pieces of wax or clay, or drew on animal skins. 
+
+<p>They didn't even have modern numbers like 1, 2 and 3, they used a form of Roman Numerals like I, II, and III.  They didn't even have #Zero#, which was only invented a few hundred years later.  So I'm telling you, this stuff is simple!
+
+<break>
+<p>The [analytic geometry| analytic geometry|https://en.wikipedia.org/wiki/Analytic_geometry] needed for computer graphics was described by Rene Descartes in 1637, when the Pilgrims were still building their first homes.  The [classical mechanics| classical mechanics|https://www.toptal.com/game/video-game-physics-part-i-an-introduction-to-rigid-body-dynamics] of game physics was described by Issac Newton in 1687.  
+
+<p(img=washington.jpg)>Euler, Lagrange, Bernoullis, and a few others had completely nailed down 'modern math' and engineering physics by the middle of the [1700s| seventeen hundreds], including our modern notation.  All the math in this course was well-known by the time George Washington crossed the Delaware.
+
+
+
+
+
+
+
+
+
+
+<break>
+<p>The old guys didn't have calculators or computers or even electricity.  If they worked after dark, it was with a candle (or later, a lantern with whale oil).  They made their pens out of goose quills.  They traveled at the speed of horses.
+
+<p>My point is, don't be afraid of old math stuff.  It's not rocket science.  It won't be hard, and it WILL be fun.
+
+<break>ur 
+<p(science,img=compound.png)>^Ha!^  The stuff in this course totally IS rocket science. The motion of [cannonballs |cannonballs | https://en.wikipedia.org/wiki/Projectile_motion] and ^Angry Birds^ is old math that dates back to Galileo. The orbits of the planets are described by Newton's Laws.    
+
+<p>Even 'newer' concepts from the [1800's|eighteen hundreds] like [Fluid Dynamics | fluid dynamics | https://en.wikipedia.org/wiki/Fluid_dynamics] and [Heat Transfer | heat transfer | https://en.wikipedia.org/wiki/Heat_transfer] use only basic old math.  There are some slight exceptions, the orbit of Mercury is slightly affected by General Relativity, but that chestnut is over 100 years old too.
+
+
+
+
+
+<break>
+<p(h2)>You Need a Computer
+<p(img=laptop.jpg)>You will need a computer to follow the course material.  You #cannot# run this course on a tablet or phone.  
+
+
+<p>We are going to show you how to set up your computer for programming, and how to develop software outside this browser.  We'll show you the open-source tools and libraries that game developers use.  We'll suggest websites where you can learn more about different types of technologies like VR, and the libraries to use them.
+
+<p>If you intend to install the editors and tools that we recommend, then you must be running a Windows, Linux, or Apple computer with a reasonable amount of processing power and disk space. It is possible to [install|install|https://www.howtogeek.com/162120/how-to-install-ubuntu-linux-on-your-chromebook-with-crouton/] Linux on a Chromebook but the keyboard won't be right.
+
+<p>If you are buying a new computer, look for at least 1920x1080 pixel display, and an Intel i5 or AMD Ryzen 5 processor or better.  You don't need a dedicated graphics card (eg: NVIDIA) for this course. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p(h2)>We Meet on Discord
+<p>We are a ^Community of Learners^.  We are not a day-care or an after-school program. We learn at our own pace, following our own interests, choosing our own projects, for our own reasons.  We learn from each other and teach each other. We collaborate on projects, we follow our curiosity, and we experiment with new ideas. 
+
+
+
+<p(img=discord.jpg)>We use ^DISCORD^ as our meeting place, for getting help, sharing what we know, and showing off our awesomeness. 
+<p>Discord is an invitation-only service.  If you do not already have an account, you should join.  Then you will be able to use [this invitation link| this invitation link |https://discord.gg/jCjecSG ] to join our channel.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p(h1)>We use JavaScript
+
+
+<p(img=javascript.png)>There are many programming languages because each is good at different things.  The language we will be working with is called [JavaScript|JavaScript|https://developer.mozilla.org/en-US/docs/Web/JavaScript]. It is particularly good for embedding software into a document (like this course).
+
+<p>JavaScript programs are included in almost every web page you visit, and they are run by your browser. If you want to write a web-based game, JavaScript is your first choice.
+
+<break>
+<p>JavaScript is also used for connected smart devices - the "Internet of Things" (IOT) and is embedded in devices around you. Many apps on your phone are written in JavaScript using a library called [Cordova | cordova | https://cordova.apache.org/]. You are surrounded by JavaScript.
+
+<p>Javascript is the language of [immersive media|immersive media|https://immersiveweb.dev/]. As I write this in 2021, JavaScript is the target language for front-edge development of virtual reality and augmented reality.  It is one of the most common programming languages, and will not go away soon.
+
+
+
+
+
+
+<break>
+<p(science)>There is a small subset of JavaScript called [asm.js | a s m dot j s | HTTP://asm.js] designed to boost performance for small carefully-written chunks of code. Programmers quickly started using it to port other computer languages to run in the browser, since it was easier to write faster code in specialized languages.  
+<p>Asm.js was superseded by [Webassembly | web assembly | https://webassembly.org], which is better suited for porting other languages. So now there are many languages that can run in a browser, but they require complex compile steps. JavaScript remains the simplest and most common language for the Web.
+
+
+
+<break>
+<p(h2)>People Hate JavaScript
+<p>JavaScript is probably the most hated programming language on the planet.  It invites bugs. It is hard to write, hard to read, and hard to maintain. In 1995, Javascript was cobbled together in just 10 days, as a simple scripting language that could run in a browser.  It was awful.
+
+<p>And for the next 20 years, it remained awful.  Then starting in 2015, there were a series of upgrades that both improved the language and made it possible to add modern toolings. There have been upgrades every year since then.
+
+
+
+<break>
+<p>The good news is that the new stuff added to JavaScript is quite nice, and more new stuff is coming. The 2015 upgrade to the ^ES6^ version (sometimes called ^ES2015^) was huge, and made JavaScript into an almost-modern language. Since then, yearly upgrades have addressed the worst pain-points, especially asynchronous programming, multi-processor support, and iteration methods.  We'll visit all of that. 
+
+<p>JavaScript is FAST. There are amazing libraries for it.  This course is entirely written in JavaScript.  There are many reasons that JavaScript is the most widely-used programming language, and likely to remain so.
+
+<break>
+<p>But all the old awful stuff is still there, still awful. To ensure that existing websites don't stop running, nothing is ever removed from the language.  So JavaScript isn't going to be less hated anytime soon.    
+
+
+
+
+
+
+
+<p(h2)>TypeScript
+
+<p>In this course, we are going to focus on the ^nice^ parts of JavaScript. We'll tell you about the older stuff because you will see old code everywhere and otherwise you won't understand what you are looking at.  
+<p(img=typescript.png)>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+We are also going to use an extended flavor of JavaScript called [TypeScript|Type Script|https://www.typescriptlang.org/]. TypeScript is a newer, cleaner flavor of JavaScript. It originally was just a way of adding static types to JavaScript, but it became much more.
+
+<p>^Types^ describe the shape of things (numbers, images, data) in your program.  ALL programming languages have ^types^, the issue is whether you have to tell your computer exactly what kind of ^type^ you want (and then stick to it), or let your computer guess which shape you intended to use.  
+
+<p>JavaScript is infamous for having a very loose ^dynamic^ type system, that lets you change the shape of your things on the fly.  A large percentage of 'bugs' in JavaScript happen because programmers weren't clear about what they wanted.
+
+<p>As well, JavaScript has a horrible type called 'NULL', which pops up unexpectedly and crashes your programs if you forget to check for it.    
+
+<p>TypeScript is a superset of JavaScript that lets you add explicit descriptions of the type shapes IF YOU WANT, and warns you about places where NULL can pop up. This helps catch mistakes early and makes your programs much more likely to be correct.  But they make you do more work, and sometimes prevent you from writing perfectly good code that doesn't follow the type rules.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p(h2)>You have a Proctor
+<p>If you are joining this course as part of a school course or as a cohort of learners, then you will be assigned a ^proctor^.  Their role is to monitor your progress, and ensure that you have fully learned each module before starting the next.  
+
+<p>This module you are now starting has a half-dozen lessons and several exercises. When you believe you have mastered them, you will chat with your proctor on Discord, share your code, and demonstrate your mastery.  Your proctor will then admit you into the next module.
+
+
+
+<break>
+<p>This style of learning is called a [Keller Plan | Keller Plan | https://en.wikipedia.org/wiki/Keller_Plan].  The key elements are
+<p(bullet)>Written materials.
+<p(bullet)>Self-paced instruction.
+<p(bullet)>Units of content.
+<p(bullet)>Mastery of each unit before advancing.
+<p(bullet)>Proctors.
+
+
+<p(h2)>Click on the Voice Reader
+<p>Even if you are a strong reader, voice readers are a useful learning tool. They slow you down and help you attend to the complete text.  As well, in this course they sometimes launch graphic illustrations.
+<p>We have also embedded lots of web links in this course. You must acquire far more knowledge than we can possibly include, and you need to learn to do your own learning.  So we continually point you at reliable resources on the web.  You should at least click and see what we are pointing you at.
+
+
+
+
+
+
+
+
+
+
+
+<break>
+<p(h1)>An Example of How We Teach
+
+<p>What makes this course unique is the mix of math and computation, combined with programming experiments and demonstrations.
+
+<p(img=comp_math.png)>Math and Computation are very different disciplines. Math provides a set of Axioms and Postulates, sometimes describes as #what is# knowledge. Computation is about technique, it approaches problem-solving with  #how to# knowledge.  This course will try to help you learn both together, interactively.
+
+<p>Here's a simple example. In Math, a [square root|square root|https://www.mathsisfun.com/square-root.html] of a number #x# is a number #y# such that #y<sup>2</sup> = x#.  That's completely true, but not helpful when you need to know a square root.
+
+
+<break>
+<p(img=newguess.png)>In Computation, we might offer a [method|method|https://blogs.sas.com/content/iml/2016/05/16/babylonian-square-roots.html] to calculate the square root.  
+
+<p>The one below was known to the Babylonians 30 centuries ago.
+It works because a number divided by its square root 'echos' the square root.  5 is the square root of 25, so 25 divided by 5 should echo '5'.
+
+<p>But we don't know '5' is the answer, so we just guess at something.  If the guess is not the square root of the number we want the root of, then the 'echo' be on the other side of that number.  Then improve your guess by picking a new guess between the guess and echo, and try again.
+
+<p>The code below might not make sense to you yet, but it will soon. You can copy it to the editor on the upper right with the copy icon, or run it with the blue man.  You can change the number on line 2 and run the program again for a different root.   Try it now.
+
+<code>
+// Babylonian Method of Square Roots
+let n = 25  // the number we want to take square root from
+
+let guess = n / 2 // initial guess 
+while (Math.abs(guess * guess - n) > .0001) {
+  let echo = n / guess
+  guess = (guess + echo) / 2
+}
+alert(`square root of ${n} is about ${guess}`)
+
+
+<p>Here's the same program, but with some print statements so you can watch the progress. Try it too.
+
+<code>
+// Babylonian Method of Square Roots
+let app = new Baby()
+let vt = app.VT52()   // simple terminal for output
+
+let n = 25  // the number we want to take square root from
+
+let guess = n / 2 // initial guess 
+vt.print(`We want the root of ${n}, our starting guess is ${guess}\n`)
+while (Math.abs(guess * guess - n) > .0001) {
+  let echo = n / guess
+  vt.print(`desired root is between guess ${guess} and echo ${echo}\n`)
+  guess = (guess + echo) / 2
+  vt.print(`average of guess and echo becomes our new guess ${guess}\n`)
+}
+vt.print(`close enough, square root of ${n} is about ${guess}\n\n`)
+
+
+
+
+
+
+
+
+<p>By the way, did you notice that the answer was not EXACTLY right?  The square root of ^25^ is ^5^, but we came up with  [^5.000000000016778^ | 5 point 0 0 0 0 0 0 something something]?  
+
+<p>Good.  We'll talk about that in the third lesson, about how computers handle numbers.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p(h2)>There's a Library for That
+
+<p>Of course you are not going to calculate square roots yourself.  There is a library for that.  JavaScript has a square root function `Math.sqrt()` that would have given us the answer, faster and more accurately.
+
+<p>Here's the thing. You probably knew about square roots before this. We could have just said "To find a square root, use `Math.sqrt()`.  And from now on, that's what we expect you to do.  
+
+<p>But if you have spent a moment with the Babylonian algorithm, maybe just chuckling about its simplicity, then you have learned something about both math and computation.  Maybe you have some new intuition about square roots.  The iterative technique used in this solution is a basic tool of problem-solving that we will run into again and again. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p(h1)>Is This the Right Course for You?
+
+
+<p>Just like there are libraries for calculating square roots, there are amazing libraries for rendering graphics and building games.  If that's what you want to do, then head over to them.  But you won't really understand them unless you start at the bottom and work up.  
+
+<p>That's exactly how we feel about math.  You won't really understand it unless you start at the bottom and work up.
+
+
+<break>
+<p>Many 'Learn to Code' camps use drag-and-drop languages like [Scratch|Scratch|https://scratch.mit.edu/] or [GameMaker|Game Maker|https://www.yoyogames.com/gamemaker].  That's not entirely a bad thing, because you get to create amazing things, quickly.  That's not what we are planning for you.  
+
+<p>We have a lot to cover, and this course is going to take you months of steady work.  If you want to do something quickly or learn a specific skill, this isn't the course for you.
+
+
+<break>
+<p> This course teaches math, computation, and physics starting at the bottom.  We will cover a lot of the math and physics you need for grades 10 and 11. Along the way we will teach you some serious programming skills. And we will show you how to use the editors and compilers that programmers use.
+
+<p>Our hope is that when you have reached the end of these lessons, you will have a foundation in math that will carry you into science or engineering.  We hope you have the programmer skills to join the worldwide community of JavaScript programmers and game developers.  And the confidence to continue learning and building these skills.
+
+<p>And most of all, we hope you develop a love of Math.  And programming.  And that you write some awesome games.
+
+
+
+<p(h2)>What We Won't Teach You
+
+<p(img=halo.jpg)>There's no 'art' in these courses.  The digital artwork in video games is amazing, teams of artists, animators, and special-effect (FX) specialists create the look and feel of a modern game. We are going to stick to simple mathematical shapes, this is a Math course.
+
+<p>There's no 'Game Design' in this course.  A Game Designer is a specialist in setting up game plots and storylines, levels and environments, character interactions, and other creative aspects.  There is a lot involved in making a game 'fun'.  But trust me on this, a good Game Designer knows the math in this course. 
+
+<p>There no sound design or audio work in this course.  You can't write a decent game without audio.
+
+
+
+
+
+
+
+
+<break>
+<p(video=wolf.webm)>The video on the right is a homework assignment in the third week of the free course ^Introduction to Programming and Animation with Alice^ from [Coursera | Coursera | https://www.coursera.org/learn/introtoalice]. That lesson focuses on camera management.   
+
+<p>I took that Alice course with some teenagers, it was wonderful and I loved it. You will #NOT# be able to do anything like that here, even after months.
+
+
+
+<break>
+<p>But at the end of the Alice course, those students were hitting the limits of the Alice language. They had not seen anything outside the friendly Alice environment. They had not seen a real text editor or a real programming language. 
+
+<p>One of them wanted to move on to the [Unity|Unity|https://unity.com/] game engine.  But he had no foundation in programming, no understanding of the geometry concepts, and not even the vocabulary to understand the documentation.
+
+<p>So we're going to start at the beginning and build a solid foundation of basic math and programming knowledge.  It won't be fancy, and it may not be for everyone.  We won't be unhappy if you decide you want to be creative instead, and head over to Alice.
+
+
+
+
+
+
+<break>
+<p(h1)>Let's get Started
+<p>OK, enough introduction. Let's get to work. If this is the right course for you, then sign up, and proceed to the first lesson.  We are going to start by writing a few programs together.
+
+
+
+
+
+
