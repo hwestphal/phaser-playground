@@ -492,15 +492,13 @@ export class LessonToITags {
 
                     // maybe an image to the right
                     if ('img' in o.params) {
-                        //TODO: 01 is hardcoded, need to change to lesson#
-                        aTags[i].url = 'assets/' + '01/' + o.params['img']  // TODO - check that this image exists
+                        aTags[i].url = o.params['img']  // TODO - check that this image exists
                         break
                     }
 
                     // maybe a video to the right
                     if ('video' in o.params) {
-                        //TODO: 01 is hardcoded, need to change to lesson#
-                        aTags[i].url = 'assets/' + '01/' + o.params['video']  // TODO - check that this image exists
+                        aTags[i].url = o.params['video']  // TODO - check that this image exists
                         break
                     }
 

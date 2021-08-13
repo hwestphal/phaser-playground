@@ -35,7 +35,7 @@ module.exports =  smp.wrap({
                 use: 'raw-loader'
             },
 
-            // { test: /baby.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["Baby"] } } },
+            { test: /baby.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["Baby"] } } },
 
             // { test: /pixi\.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["PIXI"] } } },
             // { test: /phaser-split\.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["Phaser"] } } },
@@ -55,6 +55,11 @@ module.exports =  smp.wrap({
 
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
+    },
+    externals: {
+        Baby: 'baby',
+        Ammo: 'ammo',
+        Babylon: 'babylon',
     },
 
 

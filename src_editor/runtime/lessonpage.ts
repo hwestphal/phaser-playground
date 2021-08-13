@@ -13,8 +13,6 @@ import { asciiMath, testAsciiMath } from './ASCIIMathML'
 
 
 
-
-
 type utterance = {
     id: string,   // 'utter015' or similar
     text: string,
@@ -69,11 +67,11 @@ export class LessonPage {
         codeStrings = []
 
     }
+
+    /* load an array of ITags into the page */
     load(sections: ITag[], debug = false) {
 
         this.clear() // start by erasing
-
-
         let previousWasP = false        // we need to accumulate <p>'s together
 
         console.assert(sections.length > 0, "Didn't get any sections")
@@ -85,6 +83,8 @@ export class LessonPage {
         // cycle through the ITags, creating a section for each one
         sections.forEach((section) => {
 
+
+            // an h1, h2, h3 as a parameter is like a 'break'    
             if ('h1' in section.params || 'h2' in section.params || 'h3' in section.params) {
                 // console.log('FFOUND', section.tag)
                 if (previousWasP) {
@@ -247,6 +247,10 @@ export class LessonPage {
 }
 
 
+
+
+
+
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
 
@@ -255,6 +259,8 @@ let bakeryTicket: number = 0
 
 interface IAttribute { name: string, value: string }
 
+const imageURLPath = '../courseware/00-assets/'
+
 
 
 /** abstract class for adding lesson sections.  use concrete class like sectionVT52 */
@@ -262,10 +268,12 @@ abstract class LessonSections {
     public tkt: number  // bakery ticket for this section
     public sectionName: string // 'sect004' or similar
     public editor: any // used by monaco editor
+    public imageURLPath :string
 
     constructor(tag: ITag) {
         this.tkt = bakeryTicket++       // unique bakery ticket
         this.sectionName = this.divName('sect', this.tkt)
+        this.imageURLPath = imageURLPath;   // might get more complicated later
     }
 
     /** format a class or id into something like 'sect005' */
@@ -273,7 +281,13 @@ abstract class LessonSections {
         return (prefix + ("00" + tkt).slice(-3))   // prefix + 3-digit tkt
     }
 
-    /** create a new node  */
+    /** create a new node  
+     *       node(newElement,   // a tag ike 'P'
+     *            content,      // the innerHTML of the tag (may be another node())
+     *            newId,        // tag id
+     *            className     // class name    
+     *            attributes    // array of IAttribute  (name, value)
+    */
     node(newElement: string, content: string | HTMLElement, newId: string = '', className: string = '', attributes: IAttribute[] = []): HTMLElement {
         let node: HTMLElement = document.createElement(newElement)
         if (className.length > 0) { node.className = className }
@@ -288,7 +302,13 @@ abstract class LessonSections {
         return (node)
     }
 
-    /** attach node to existing ID */
+    /** attach node to existing ID 
+     *     attach(lesson,      \\     attaching to <div id='lesson'>
+     *             pContent,   \\     string, id, class
+     *             pID,        \\     string
+     *             pClass,     \\     string
+     *             aNode       \\     a fully formed content formed with node()
+    */
     attach(existingId: string, pContent: string, pId: string, pClassName: string, aNode: HTMLElement[]) {
         let tag = document.getElementById(existingId)
         if (tag === null) {
@@ -633,8 +653,9 @@ class SectionP extends LessonSections {   // <p> with speaker and
 
         // right side image
         if ('img' in currentSection.params) {
+            console.log("CURRENTSECTION",currentSection)
             this.nodes.push(this.node('IMG', '', '', 'pimage', [
-                { name: 'src', value: currentSection.url },
+                { name: 'src', value: this.imageURLPath + currentSection.url },
             ]))
         }
         // right side video

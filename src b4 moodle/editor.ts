@@ -58,7 +58,7 @@ import lib_es2021_string from "./extraLibs/lib.es2021.string.d.ts.txt"
 
 
 
-// import { Baby } from 'baby'
+//import { Baby } from 'baby'
 
 // the Editor is also responsible for RUNNING the game.  if you want to 
 // run a snippet without user input, then you STILL give it to the editor to run.
@@ -105,8 +105,8 @@ export class Editor {
 
 
         // don't want all of DOM, but I DO want console.log() and similar
-        // let lib_baby_plus = lib_baby + `
-        interface Array<T> {                // otherwise array(10).fill(0) doesn't work
+        let lib_baby_plus = //lib_baby + `
+        `interface Array<T> {                // otherwise array(10).fill(0) doesn't work
             fill(value: T): Array<T>;
         }
         
@@ -135,13 +135,12 @@ export class Editor {
             warn(...data: any[]): void;
         }
         
-        var console: Console;
-        
-   
-        // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_baby_plus, "lib.baby.d.ts");
+        declare var console: Console;
+        `
+
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_baby_plus, "lib.baby.d.ts");
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es5, "lib.es5.d.ts");
-        // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom, "lib.dom_mini.d.ts");
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom, "lib.dom.d.ts");
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom, "lib.dom_mini.d.ts");
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_promise, "lib.es2015.promise.d.ts");
 
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2015_collection)
@@ -223,12 +222,12 @@ export class Editor {
 
             // let string = "let vt = new vt52(); vt.print('hello world')npm nkkj; console.log('hello world')"
             // console.log('code from editor is ', string)
-            eval(code)
+            // eval(string)
 
 
             // new Function(src) is a safer form of eval().  
             // code = `app.floor(30,30,5);let cube = app.cube().color('blue').move('up',1)`
-            // var app = new Baby(code)
+            var app = new Baby(code)
 
 
             // new Function(src) is a safer form of eval().  
