@@ -1,7 +1,7 @@
 import { ITag } from './T'
 import { LessonToITags } from '../../src_builder/lessonToITags'
 import { LessonPage } from '../runtime/lessonpage'
-
+// import {mathcodeEditor} from './T'      // or webpack will ignore it
 
 
 
@@ -49,6 +49,9 @@ export class Runtime {
     constructor() {
         console.log('in class Runtime')
         this.courseInfo = undefined // until we load it
+
+        // let t = new mathcodeEditor()   // just so webpack doesn't lose it
+        // t.findme()
 
         let editorDiv = document.getElementById('tomseditor')! as HTMLTextAreaElement
         this.editor = new Editor(editorDiv)
@@ -177,12 +180,15 @@ class Editor {
 
         this.save.onclick = () => this.doSave();
         this.load.onclick = () => this.doLoad();
-        this.run.onclick = () => this.doRun();
+        this.run.onclick = () => {AJAXuploadContent(); this.doRun()};
         this.debug.onclick = () => this.doDebug();
 
         this.lessonPage = new LessonPage()
 
     }
+
+
+
 
 
     doSave() {
@@ -227,7 +233,11 @@ class Editor {
 
     doRun() {
         let area = document.getElementById('tomseditor') as HTMLTextAreaElement
-        // console.log('doRun',area.value)
+        console.log('doRun',area, area.value)
+
+        // I can't see AJAXuploadContent from TS, but I can call it...
+        eval('AJAXuploadContent();')
+
         let iTags = new LessonToITags().parse('../assets', area.value)
         // console.log('about to run iTags', iTags)
         this.lessonPage.load(iTags, this.isDebug)

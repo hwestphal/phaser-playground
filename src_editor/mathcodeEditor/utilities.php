@@ -147,7 +147,7 @@ function printNice($elem)
         }
     }
 
-    $HTML .= "-->".printNiceHelper($elem);
+    $HTML .= "-->" . printNiceHelper($elem);
     echo $HTML;
 }
 
@@ -298,7 +298,7 @@ class HTMLTester extends UnitTestCase
                 $openTag = array_pop($stack);
                 if (('/' . $openTag['clean']) != $cleanTag) { // no match
                     $goodHTML = false;
-                    $this->assertTrue(false, "Unmatched closing tag '$cleanTag' (got '/{$openTag['clean']}' instead) at '" . htmlentities('<' . substr($string, $openTag['start'], 100)) . "'");
+                    assertTrue(false, "Unmatched closing tag '$cleanTag' (got '/{$openTag['clean']}' instead) at '" . htmlentities('<' . substr($string, $openTag['start'], 200)) . "'");
                     break;
                 }
             } else {
@@ -308,12 +308,6 @@ class HTMLTester extends UnitTestCase
             //echo serialize($stack),"<br>";
         }
 
-        if (!$goodHTML) {
-            $this->assertTrue(false, 'bad html, see debug tab');
-            $document = document::singleton();
-            $document->writeTabDebug('Bad HTML', $this->format($string));
-        }
-        return ($goodHTML);
     }
 
     public function format($string)
@@ -439,9 +433,6 @@ function calculateFutureDate($plusCount = 0, $plusType = 'Days')
     return ($until);
 }
 
-
-
-
 function Button($text, $color, $p = '', $q = '', $solid = true, $onClick = '')
 {
     assertTrue(!empty($text));
@@ -461,15 +452,40 @@ function Button($text, $color, $p = '', $q = '', $solid = true, $onClick = '')
     return "<a href='?p=$p&q=$q' class='$buttonClass' role='button' $confirm>$text</a>";
 }
 
+function badge($text, $color, $p = '', $q = '', $solid = true, $onClick = '')
+{
+    assertTrue(!empty($text));
+    assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']));
+    assertTrue(is_bool($solid));
 
-/////// this is a simple ACL for permissions
-///   admin > board > teacher > member > dancer
-///   we ONLY look at $_SESSION['role']
+    $confirm = '';
+    if (!empty($onClick)) {
+        $confirm = "onclick=\"return(confirm('$onClick - Are you sure?'))\"";
+    }
 
-///  acl('teacher')  will be true for teachers, board, and admin
+    // if (empty($p)) {
+    //     return "<a class='$buttonClass' role='button' $confirm>$text</a>";
+    // }
+    // return "<a href='reserve.php?p=$p&q=$q' class='$buttonClass' role='button' $confirm>$text</a>";
+
+    // EDIT button in blue
+    $href = "href='{$GLOBALS['url']}?p=$p&q=$q'";
+    $class = "class='badge bg-$color' role='button'";
+    $style = "style = 'float:right;'";
+    $ret = "<a $class $href $style $confirm>$text</a>";
+    return ($ret);
+}
+
+/////// this is the old  ACL from 30-up
+// now look at role (1=admin 2 =teacher, etc)
+// can have multiple values
 
 function ACL($role)
 { // call acl('teacher'), will return true for admin, board, teacher
+
+    assertTrue(false, 'ACL is not set up');
+    return false;
+
     if (!isset($_SESSION['role'])) {
         return false;
     }
@@ -526,3 +542,6 @@ function alertMessage($message, $alertType = "danger") // primary, secondary, su
                 </div>";
 
 }
+
+
+

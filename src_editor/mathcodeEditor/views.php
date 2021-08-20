@@ -5,6 +5,8 @@ defined('_KELLER') or die('cannot access views.php directly');
 class Views extends UnitTestCase
 {
 
+    var $codeEditorPage = true;
+
     public function htmlHeader()
     {
         $HTML = "<!DOCTYPE html>
@@ -28,11 +30,56 @@ class Views extends UnitTestCase
                         <!-- tinyMCE -->
                         <script src='https://cdn.tiny.cloud/1/rj9dbfq7jyvk2dec9zridnbc8qs622xo61ma9gmrta4c6t2g/tinymce/5/tinymce.min.js' referrerpolicy='origin'></script>
 
+                        <!-- our css -->
+                        <link rel='stylesheet' href='../../dist_editor/3d.css'>
+
                     </head>
-                    <body onload='window.history.pushState(null, null, `index.php`);'>
+                    <body>"; //  onload='window.history.pushState(null, null, `index.php`);'>
+
+        //===schema
+        //The schema option enables you to switch between the HTML4 and HTML5
+        // schema. This controls the valid elements and attributes that can be
+        // placed in the HTML. This value can either be the default html5, html4 or html5-strict.
+
+        // The html5 schema is the full HTML5 specification including the older
+        // HTML4 elements for compatibility. The html5-strict will only allow the
+        // elements that are in the current HTML5 specification excluding things
+        // that were removed. The html4 schema includes the full html4 transitional
+        // specification.
+
+        // Also note that all event attributes are excluded by default since it’s a
+        // bad practice to use inline script handles like “onclick”. You can manually
+        // add extra elements and attributes using the extended_valid_elements option.
+
+        //=== valid_elements
+        // The valid_elements option defines which elements will remain in the edited
+        // text when the editor saves. You can use this to limit the returned HTML to a subset.
+
+        // This option contains a comma separated list of element conversion
+        // chunks. Each chunk contains information about how one element and its
+        // attributes should be treated. The default rule set for this option is
+        // a mixture of the full HTML5 and HTML4 specification or the HTML5 or
+        // HTML4 specification depending on the configured schema.
+
+        //If you just want to add or change some behavior for a few items, use
+        //the extended_valid_elements option
+
+        // ===extended_valid_elements
+        // This option is very similar to valid_elements. The only difference
+        // between this option and valid_elements is that this one gets added
+        // to the existing rule set. This can be very useful if the existing
+        // rule set is fine but you want to add some specific elements that
+        // also should be valid. The default rule set is controlled by the schema option.
+
+        // When adding a new attribute by specifying an existing element rule (e.g. img), the entire rule for that element is over-ridden so be sure to include all valid attributes not just the one you wish to add. See valid_elements for default rules.
+
+        $HTML .= "
                     <script>
+
+
+
                     tinymce.init({
-                        selector: 'textarea',
+                        selector: 'textarea#mathcode',
                         height: 500,
                         menubar: false,
                         plugins: [
@@ -40,18 +87,21 @@ class Views extends UnitTestCase
                           'searchreplace visualblocks code codesample fullscreen',
                           'insertdatetime media table paste link image code help wordcount'
                         ],
-                        toolbar: 'undo redo | formatselect | ' +
-                        'bold italic underline strikethrough backcolor |' +
+                        toolbar: 'bold italic underline backcolor |' +
                         //'alignleft aligncenter alignright alignjustify |' +
                         'bullist numlist outdent indent | ' +
                         'removeformat | insertfile image media link codesample | code  | help',
-                        extended_valid_elements : 'mycustomblock[id],mycustominline',
+
+                        extended_valid_elements: 'img[class=myclass|!src|border:0|alt|title|width|height|style]',
+                        //  <p><img style='display: block; margin-left: auto; margin-right: auto;' title='Tiny Logo' src='https://www.tiny.cloud/labs/android-chrome-256x256.png' alt='TinyMCE Logo' width='128' height='128' /></p>
+
                         content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
                       });
 
 
                   </script>
-                    <div class='container'>
+
+                    <div class='container-fluid'>
                     <div class='row'>
                     ";
         return ($HTML);
@@ -95,8 +145,8 @@ class Views extends UnitTestCase
         $HTML = '';
         $HTML .= '
 
-            <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-color:blue;border-style:solid;>
-            <a href="#" class="navbar-left"><img src="logo.png" height="40px" style="margin-right:50px"></a>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-color:blue;border-style:solid;">
+            <a href="#" class="navbar-left"><img src="logo.png" height="40px" style="margin-right:50px;" /></a>
 
             <div class="container-fluid">
               <a class="navbar-brand" href="#">MathCode Editor</a>
@@ -113,6 +163,23 @@ class Views extends UnitTestCase
                     <a class="nav-link active" href="?p=showCourses">Courses</a>
                 </li>';
 
+        $HTML .= '
+                <li class="nav-item btn btn-sm btn-outline-primary">
+                    <a class="nav-link active" href="?p=showAllActivities">Outline</a>
+                </li>';
+
+        $HTML .= '
+                <li class="nav-item btn btn-sm btn-outline-primary">
+                    <a class="nav-link active" href="?p=login">Logout</a>
+                </li>';
+
+        if($this->codeEditorPage){     // only put up the run/save if
+            $HTML .= '
+            <li class="nav-item btn btn-sm" >
+            </li>
+            <button class="btn-warning" id="run">Save&Run</button>
+                ';
+        }
         ////////////// examples for navbar
         // $HTML .= '
         // <li class="nav-item">
@@ -140,7 +207,7 @@ class Views extends UnitTestCase
 
                   </ul>
                 <form class="d-flex">
-                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"></input>
                   <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
               </div>
@@ -183,7 +250,7 @@ class Views extends UnitTestCase
     {
 
         $HTML = '<div class="container">
-                    <form action="limits.php?login" method="post">
+                    <form action="?login" method="post">
                         <div class="form-group row">
                             <label for="lgFormGroupInput" class="col-sm-2 col-form-label col-form-label-lg">Email</label>
                             <div class="col-sm-5">
@@ -229,9 +296,6 @@ class Views extends UnitTestCase
         </div>
         <div style="float:right">
             <button id="load">Load</button>
-        </div>
-        <div style="float:right">
-            <button id="run">Run</button>
         </div>
         <div style="float:right">
             <button id="debug">Debug</button>
@@ -286,10 +350,10 @@ class Views extends UnitTestCase
         <p>If you’re using Chrome or Edge, enable “Experimental Web Platform features” on the chrome://flags page.</p>
         <!-- lesson and editor, side by side-->
         <div id="lesson"
-            style="border-style: solid;  border-block-color: black;border-width: 1px; float:left; width:45%">
+            style="border-style: solid;  border-block-color: black;border-width: 1px; float:left; width:50%;">
         </div>
         <div
-            style="border-style: solid;  border-block-color: black;border-width: 1px; float:left; width:45%; height:100%;">
+            style="border-style: solid;  border-block-color: black;border-width: 1px; float:left; width:50%; height:100%;">
             <div>
 
                 <textarea rows="1000" id="tomseditor" style="width:100%;margin:2px;padding:5px;"></textarea>
@@ -433,18 +497,20 @@ class Views extends UnitTestCase
 
         printNice($form);
 
-        if ($isAdd) {
-            $return = '<input type="hidden" name="p" value="saveTopicForm"></input>';
-            $name = '';
-            $summary = '';
-            $sequence = '';
-        } else {
+        $return = '<input type="hidden" name="p" value="saveTopicForm"></input>';
+        $name = '';
+        $summary = '';
+        $sequence = '';
+        $expectations = '';
+
+        if (!$isAdd) {
             printNice($form);
             $return = '<input type="hidden" name="p" value="updateTopicForm" />
                        <input type="hidden" name="q" value="' . $form['uniq'] . '" />';
             $name = $form['topicname'];
             $expectations = $form['topicexpectations'];
             $sequence = $form['topicsequence'];
+            $expectations = $form['topicexpectations'];
         }
 
         $HTML .=
@@ -463,7 +529,7 @@ class Views extends UnitTestCase
 
             <div class='form-group'>
                   <label for='topicName'>Topic Name</label>
-                  <input type='text' class='form-control' name='topicname' value = '$name'placeholder='Topic Name' required></input>
+                  <input type='text' class='form-control' name='topicname' value = '$name' placeholder='Topic Name' required></input>
             </div>
             <div class='form-group'>
                   <label for='topicSummary'>Topic Expectations</label>
@@ -499,7 +565,7 @@ class Views extends UnitTestCase
         $topic = new topics();
 
         $ret = $topic->allTopics($courseuniq);
-        printNice($ret);
+        // printNice($ret);
 
         $add = button('add', 'warning', 'addTopicForm', $courseuniq);
         $resequence = button('resequence', 'primary', 'resequenceTopics', $courseuniq);
@@ -543,62 +609,92 @@ class Views extends UnitTestCase
     ///////// activities //////////
     ///////////////////////////////
 
-    public function showAllActivities($topicuniq)
+    // this is the generalized function for activities.  everyone uses it.
+    public function showAllActivities($where = '')
     {
+
+        $header = "
+        <tr>
+          <th></th>   <!-- buttons -->
+          <th>Sequence</th>
+          <th>#</th>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Size</th>
+          <th>Competencies</th>
+          <th></th>
+
+          <th>Expectations</th>
+          <th>LastEdit</th>
+          <th>&nbsp;</th>   <!-- buttons -->
+        </tr> ";
 
         $HTML = '';
 
-        $course = new courses();
-
-        $topic = new topics();
-        $t = $topic->showTopic($topicuniq);
-        $tname = $t[0]['topicname'];
-
         $a = new activities();
-        $ret = $a->allActivities($topicuniq);
+        $ret = $a->allActivities($where); // returns activities left join topics left join courses
         // printNice($ret);
 
-        $add = button('add', 'warning', 'addActivityForm', $topicuniq);
-        $resequence = button('resequence', 'primary', 'resequenceTopics');
-        $HTML .= "<h3>Activities in '$tname'  $add $resequence</h3>
-            <table class='table'>
-            <thead>
-              <tr>
-                <th></th>   <!-- buttons -->
-                <th>Sequence</th>
-                <th>#</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Size</th>
-                <th>Summary</th>
-                <th>LastEdit</th>
-                <th></th>   <!-- buttons -->
-              </tr>
-            </thead>
+        $HTML .= "
+            <table class='table'>";
 
-            <tbody>";
+        $currentCourse = 0;
 
         foreach ($ret as $r) {
-            $edit = button('edit', 'primary', 'editActivityForm', $a['uniq']);
-            $delete = button('delete', 'danger', 'updateActivityForm', $a['uniq'], true, "Delete this Activity?");
-            $open = button('open', 'success', 'showActivities', $a['uniq']);
+            $edit = button('edit', 'primary', 'editActivityForm', $r['uniq']);
+            $delete = button('delete', 'danger', 'updateActivityForm', $r['uniq'], true, "Delete this Activity?");
+            $open = button('open', 'success', 'mathcodeEditor', $r['uniq']);
             $len = strlen($r['content']);
+            $topicsInCourse = badge($r['courseuniq'], 'success', 'showTopics', $r['courseuniq']);
+            $activitiesInCourse = badge($r['topicuniq'], 'secondary', 'showActivities', $r['topicuniq']);
+            $course = "<table><tr><td>$topicsInCourse</td><td>&nbsp;</td><td>{$r['coursename']}</td></tr>
+                        <tr><td>$activitiesInCourse</td><td>&nbsp;</td><td>{$r['topicname']}</td></tr></table>";
+
+            if ($currentCourse !== $r['courseuniq']) {
+                $HTML .= "<thead><tr><td colspan=10><br><br><h2>{$r['coursename']}</h2></td></tr>";
+                $HTML .= $header . '</thead>';
+                $currentCourse = $r['courseuniq'];
+            }
+
             $HTML .= "
               <tr>
                 <td>$open</td>   <!--buttons-->
-                <th>{$r['act_sequence']}</th>
+                <th>{$r['act_seq']}</th>
                 <td>{$r['uniq']}</td>
-                <td>{$r['act_title']}</td>
+                <td>{$r['activityname']}</td>
                 <td>{$r['act_type']}</td>
                 <td>$len</td>
+                <td>{$r['competency1']}<br>{$r['competency2']}</td>
+                <td>$course</td>
+
+
                 <td>{$r['act_expect']}</td>
                 <td>{$r['datelastedit']}</td>
                 <td>$edit&nbsp;$delete</td>   <!--buttons-->
               </tr>";
         }
         $HTML .= "
-              </tbody>
             </table> ";
+
+        return $HTML;
+
+    }
+
+    // this is the small one, for a specific topic
+    public function showActivitiesForTopic($topicuniq)
+    {
+
+        $HTML = '';
+
+        $topic = new topics();
+        $t = $topic->showTopic($topicuniq);
+        $tname = $t[0]['topicname'];
+
+        $add = button('add', 'warning', 'addActivityForm', $topicuniq);
+        $resequence = button('resequence', 'primary', 'resequenceActivities', $topicuniq);
+        $HTML .= "<h3>Activities in '$tname'  $add $resequence</h3>";
+
+        $HTML .= $this->showAllActivities("topicuniq = $topicuniq");
 
         return $HTML;
     }
@@ -614,27 +710,29 @@ class Views extends UnitTestCase
         $topic = $topics->showTopic($topicuniq);
         printNice($topic);
 
-        if ($isAdd) {
-            $return = '<input type="hidden" name="p" value="saveActivityForm"></input>';
-            $name = '';
-            $summary = '';
-            $expectation = '';
-            $sequence = '';
-        } else {
+        $return = '<input type="hidden" name="p" value="saveActivityForm"></input>';
+        $name = '';
+        $summary = '';
+        $expectation = '';
+        $sequence = '';
+        $prereq = '';
+
+        if (!$isAdd) {
             printNice($form);
             $return = '<input type="hidden" name="p" value="updateActivityForm" />
                            <input type="hidden" name="q" value="' . $form['uniq'] . '" />';
             $name = $form['topicname'];
             $expectation = $form['act_expect'];
-            $sequence = $form['topicsequence'];
+            $sequence = $form['act_seq'];
+            $prereq = $form['act_prereq'];
         }
 
         $HTML .=
             "<div class='container'>
-            <div class='row'>";
+        <div class='row'>";
 
         $HTML .=
-            "<form>
+            "<form class='row'>
                 <input type='hidden' name='topicuniq' value='$topicuniq' />
 
                 $return
@@ -646,27 +744,31 @@ class Views extends UnitTestCase
                 <div class='form-group'>
                       <label for='activityName'>Activity Name</label>
                       <input type='text' class='form-control' name='activityname' value = '$name'placeholder='Activity Name' required></input>
-                </div>
-                <div class='form-group'>
-                <label for='activityName'>Activity Type</label>";
+                </div>";
 
         if ($isAdd) { // once you set the TYPE of the activity, you can't change it
-            $HTML .= "
-                              <select class='form-control' name='act_type'>
+            $HTML .= "<div class='col-mb-3'>
+                            <label for='activityName'>Activity Type</label>
+                            <select class='form-select'  name='act_type'>
                                   <option value='mathcode'>Mathcode</option>
                                   <option value='quiz'>Quiz</option>
-                              </select>";
+                              </select>
+                    </div>";
+
         } else {
-            $HTML .= "<input type='text' class='form-control' name='activitytype' value = '{$form[0]['act_type']} disabled></input>";
+            $HTML .= "<input type='text' class='form-control' name='activitytype' value = '{$form[0]['act_type']} disabled> </input>";
 
         }
 
         $HTML .= "
+                <div class='form-group'>
+                    <label for='act_prereq'>Prerequisites (comma separated, eg:  4,71,16 </label>
+                    <input type='text' class='form-control' name='act_seq' value='$prereq'></input>
                 </div>
 
                 <div class='form-group'>
                       <label for='activityDesc'>Activity Expectation</label>
-                      <textarea class='form-control' name='act_expect' rows='5' placeholder='Activity Description'>$expectation</textarea>
+                      <textarea class='form-control' name='act_expect' rows='5' placeholder='Activity Expectation'>$expectation</textarea>
                 </div>
 
                 <div class='form-group'>
@@ -678,7 +780,7 @@ class Views extends UnitTestCase
 
         $HTML .=
             "</div>
-                </div>";
+            </div>";
 
         return ($HTML);
 
@@ -695,11 +797,11 @@ class Views extends UnitTestCase
 
         <div class="form-group">
             <label for="inputEmail">Email address</label>
-            <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+            <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus />
         </div>
         <div class="form-group">
            <label for="inputPassword"">Password</label>
-           <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+           <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required />
         </div>
 
         <input class="btn btn-lg btn-primary btn-block" type="submit" value="Submit"></input>
@@ -744,13 +846,12 @@ class Views extends UnitTestCase
 
         $HTML .= '<div class="container">';
 
-      
         $HTML .=
             '<form class="form-register" action="index.php" method="post">';
 
         $HTML .=
             '<br><br><h3>REGISTER</h3>
-      
+
         <input type="hidden" name="p" value="register"></input>
 
         <label for="firstname">First Name</label>
@@ -774,6 +875,153 @@ class Views extends UnitTestCase
         </form>';
 
         $HTML .= '</div>';
+
+        return ($HTML);
+    }
+
+    public function activityFinder()
+    {
+        $a = new activities();
+
+    }
+
+    public function mathcodeEditor($uniq)
+    {
+
+        // this is the hidden form that uploads data to PHP
+        $HTML = "
+        <div style='display:none;'>
+            <form method='post' name='uploadPost' action='?saveContent'>
+                <textarea rows='1' id='tomseditor' ></textarea>
+                 <input type='submit' name='send' value='submit' />
+            </form>
+        </div>";
+
+        // and a function that drives the coode into the upload form
+        $HTML .= "
+        <script>
+            function uploadContent(){
+                let data = 'tesst data';
+                document.uploadPost.data.value = data;
+                document.forms['uploadPost'].submit();
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.addEventListener('load', reqListener);
+            function reqListener () {
+                console.log(this.responseText);
+            }
+
+            function AJAXuploadContent(){
+                // i can't access tinymce.get90 from typescript, so I call this guy to copy
+                // the text to 'tomseditor
+                //
+                // then I send an upload via AJAX so the content is saved (TS can't save it either)
+                //
+                // then I let typescript grab and process from tomseditor and push it back down
+
+                let text = tinymce.get('mathcode').getContent();    // get the text out of TinyMCE
+                console.log('text:',text);
+                document.getElementById('tomseditor').value = text   // pop it into a hidden textarea
+
+                let editorText = JSON.stringify(text)           // upload it via AJAX
+                console.log('editorText:',editorText);
+                console.log('about to try: ','ajax.php?p='+editorText)
+                xhr.open('POST', 'ajax.php?p='+editorText, true);
+
+                //Send the proper header information along with the request
+
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function() { // Call a function when the state changes.
+                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                        // alert ('Request finished. Do processing here.');
+                    }
+                }
+                xhr.send();
+            }
+        </script>
+        ";
+
+        $HTML .= "
+        <br><br><br><math id='testmath'></math><br>
+        <div class='navbar'>
+            <div style='float:right;padding-right:200px'>
+                <button id='save'>Save</button>
+            </div>
+            <div style='float:right'>
+                <button id='load'>Load</button>
+            </div>
+            <div style='float:right'>
+                <button id='run'>Run</button>
+            </div>
+            <div style='float:right'>
+                <button id='debug'>Debug</button>
+            </div>
+            <!-- <div style='float:right'>
+                <button id='tagcount'>count</button>
+            </div> -->
+            <div style='float:right'>
+            <!-- lots of CSS to change the name of this button -->
+            <input type='file' onchange='readFile(this)'></input>
+            </div>
+            <script>
+                function readFile(input) {
+                let file = input.files[0];
+                let reader = new FileReader();
+                reader.readAsText(file);
+                reader.onload = function() {
+                    document.getElementById('tomseditor').value = reader.result
+                };
+
+                reader.onerror = function() {
+                    console.log(reader.error);
+                };
+
+                }
+            </script>
+
+            <div style='float:right'>
+            <form action='./index.php'  onsubmit='copyeditor()' >
+                <input type='submit' id='PHPSave' value='PHP save' />
+                <input type='hidden' id='p2' name='p' value='save' />
+                <input type='hidden' id='payload' name='q' value='' />
+            </form>
+            </div>
+            <script>
+                console.log('linking PHPSave');
+                function copyeditor(){
+                    let payload = document.getElementById('tomseditor').value
+                    // alert(payload)
+                    document.getElementById('payload').value = payload
+                }
+            </script>
+
+            <div style='float:right'>
+            <button onclick='AJAXuploadContent()'>Click me AJAX</button>
+            <button onclick='uploadContent()'>Click me2</button>
+            </div>
+
+        </div>";
+
+        $HTML .= "
+        <div class='main' style='margin-top:30px'>
+            <p>If you’re using Chrome or Edge, enable “Experimental Web Platform features” on the chrome://flags page.</p>
+            <!-- lesson and editor, side by side-->
+            <div id='lesson'
+                style='border-style: solid;  border-block-color: black;border-width: 1px; float:left; width:50%'>
+            </div>
+            <div  style='border-style: solid;  border-block-color: black;border-width: 1px; float:left; width:50%; height:100%;'>
+                <div>
+
+                    <textarea rows='1000' id='mathcode' style='width:100%;margin:2px;padding:5px;'></textarea>
+                </div>
+            </div>
+
+        </div>
+
+        <script src='../../dist_editor/bundle.js'></script>
+
+        ";
 
         return ($HTML);
     }

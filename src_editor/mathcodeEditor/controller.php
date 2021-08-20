@@ -8,8 +8,10 @@ defined('_KELLER') or die('cannot access controller.php directly');
 function processrequest()
 {
 
+
     // we need views early, so we can post error messages
     $views = new Views();
+    $views->codeEditorPage = true;
 
     $HTML = '';
 
@@ -65,7 +67,6 @@ function processrequest()
             $HTML .= $views->login();
             break;
 
-
         case 'resetpassword': // this is a REQUEST to reset a password
             $users = new users();
             $users->resetPassword($_REQUEST);
@@ -74,8 +75,8 @@ function processrequest()
             $HTML .= $views->showAllCourses();
             break;
 
-
         case 'signin': // validate login
+            $users = new users();
             $ret = $users->validateLogin($_REQUEST); // returns the user record
 
             // printNice($ret);
@@ -87,21 +88,17 @@ function processrequest()
 
                 // a normal login
                 $_SESSION['user'] = strtolower($ret[0]['email']);
+                $_SESSION['team'] = $ret[0]['team'];
 
                 // we used to keep the 'role' in userDB, but now calculate it on
                 // the fly.  too many places to go wrong.
-                $_SESSION['role'] = 'user';
-
+                $_SESSION['role'] = 0;
 
                 // only way to become an admin is hard-coded
                 if (in_array(strtolower($_SESSION['user']), $GLOBALS['adminEmail'])) {
                     $_SESSION['role'] = 'admin';
                 }
-
-                $log = new log();
-                $log->writeLog('login', 0, $ret[0]['email'], 0, "role is '{$ret[0]['role']}'");
-
-                $HTML .= $views->dayTable();
+                $HTML .= $views->showAllCourses();
 
             }
             break;
@@ -121,30 +118,9 @@ function processrequest()
                 $ret = $users->validateLogin($_REQUEST); // returns the user record
                 $_SESSION['user'] = $ret[0]['email'];
                 $_SESSION['role'] = $ret[0]['role'];
-
-                // successfully registered
-                $log = new log();
-                $log->writeLog('register', 0, $ret[0]['email'], 0, 'confirmed rules and waiver');
-
-                $users = new users();
-                $user = $users->userName($_SESSION['user']);
-
-                $txt = "Welcome {$user['firstname']} {$user['lastname']}";
-
-                if ($user['ismember'] !== 1) {
-                    $txt .= "<br><br>We did not recognize you as a MEMBER from your email address.
-                            <br><br>If you ARE a member, then please send an email to &nbsp;&nbsp;<b>admin@30-up.com<b>&nbsp;&nbsp; and we'll get that fixed up.  Please tell us your BIRTHDAY (day and month only).";
-                } else {
-                    $txt .= "<br><br>We see that you are a member.";
-                }
-
-                $txt .= "<br><br>If your PARTNER is also a member and you use this email for both yourself and your partner, then please send us an email to &nbsp;&nbsp;<b>admin@30-up.com<b>&nbsp;&nbsp; with your partner's NAME and BIRTHDAY (day and month only).
-                        <br><br>We'll get you set up as quickly as we can.";
-
-                alertMessage($txt);
-
-                $HTML = $views->dayTable();
             }
+
+            $HTML .= $views->showAllCourses();
 
             break;
 
@@ -168,6 +144,7 @@ function processrequest()
                 'coursename' => $_REQUEST['coursename'],
                 'coursesummary' => $_REQUEST['coursesummary'],
                 'coursesequence' => !empty($_REQUEST['coursesequence']) ? intval($_REQUEST['coursesequence']) : 1000,
+                'team' => $_SESSION['team'],
             ];
             $course->insertArray($a);
             $HTML .= $views->showAllCourses();
@@ -241,8 +218,12 @@ function processrequest()
         ///////// activities //////////
         ///////////////////////////////
 
+        case 'showAllActivities':
+            $HTML .= $views->showAllActivities();
+            break;
+
         case 'showActivities':
-            $HTML .= $views->showAllActivities(intval($q));
+            $HTML .= $views->showActivitiesForTopic(intval($q));
             break;
 
         case 'addActivityForm': // q is the uniq of the course we are adding to
@@ -259,12 +240,14 @@ function processrequest()
             $activity = new Activities();
             $a = [
                 'topicuniq' => intval($_REQUEST['topicuniq']),
-                'Activityname' => $_REQUEST['activityname'],
-                'Activitysummary' => $_REQUEST['activitysummary'],
-                'Activitysequence' => !empty($_REQUEST['activitysequence']) ? intval($_REQUEST['Activitysequence']) : 1000,
+                'team' => $_SESSION['team'],
+                'activityname' => $_REQUEST['activityname'],
+                'act_type' => $_REQUEST['act_type'],
+                'act_expect' => $_REQUEST['act_expect'],
+                'act_seq' => !empty($_REQUEST['act_seq']) ? intval($_REQUEST['act_seq']) : 1000,
             ];
             $activity->insertArray($a);
-            $HTML .= $views->showAllActivities(intval($_REQUEST['topicuniq']));
+            $HTML .= $views->showActivitiesForTopic(intval($_REQUEST['topicuniq']));
             break;
 
         case 'updateActivityForm':
@@ -275,14 +258,20 @@ function processrequest()
                 'Activitysequence' => !empty($_REQUEST['Activitysequence']) ? intval($_REQUEST['Activitysequence']) : 1000,
             ];
             $activity->updateArray($a, "uniq = {$q}");
-            $HTML .= $views->showAllActivities(intval($q));
+            $HTML .= $views->showActivitiesForTopic(intval($q));
             break;
 
         case 'resequenceActivities':
             $activity = new Activities();
-            $activity->resequenceActivities();
-            $HTML .= $views->showAllActivities(intval($q));
+            $activity->resequenceActivities(intval($q));
+            $HTML .= $views->showActivitiesForTopic(intval($q));
             break;
+
+            case 'mathcodeEditor':
+                $HTML .= $views->mathcodeEditor(intval($q));
+                break;
+    
+
 
         case 'unittests':
             runUnitTests();
@@ -293,7 +282,6 @@ function processrequest()
             // populateOneTimeAttendees();
             $HTML .= $views->dayTable();
             break;
-
 
         default:
             // assertTrue(false, "did not expect to get here, with p ='$p' and q ='$q'");

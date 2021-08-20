@@ -14,26 +14,22 @@ class activities extends dbconnect
             $_SESSION['dbActivities'] = true;
 
             // act_desc is a very specific expectation, with example.
+            // act_prereq is 'n,n,n... where n is activity uniq
             $createString =
                 "CREATE TABLE IF NOT EXISTS `{$this->tableName}` (
               `uniq`          integer PRIMARY KEY AUTOINCREMENT NOT NULL ON CONFLICT FAIL,
               `topicuniq`     integer default 0,
-              `act_title`     text default '',
+              `team`          integer default 0,
+              `activityname`  text default '',
               `act_desc`      text default '',
               `act_seq`       text default '',
               `act_type`      integer default 0,
 
-              `domain`        integer default 0,
-              `subdomain1`    integer default 0,
-              `subdomain2`    integer default 0,
-              `subdomain3`    integer default 0,
-              `subdomain4`    integer default 0,
+              `act_expect`    text default '',
+              `act_prereq`    text default '',
 
-              `prereq1`       integer default 0,
-              `prereq2`       integer default 0,
-              `prereq3`       integer default 0,
-              `prereq4`       integer default 0,
-
+              `competency1` text default '',
+              `competency2` text default '',
               `content`       text,
 
               `datelastedit`    text
@@ -56,14 +52,29 @@ class activities extends dbconnect
         return ($ret);
     }
 
-    public function allActivities($q)
-    { // for a specic topic
-        assertTrue(is_integer($q));
+    public function allActivities($where='')  // eg: "topicuniq = 123"
+    { // for a specic topic, provide a  topicuniq
+        assertTrue(is_string($where));
 
-        $q = "select * from {$this->tableName} where topicuniq = $q order by act_seq";
-        $ret = $this->query($q);
-        return ($ret);
+        $qWhere = ($where=='') ?"where activities.team={$_SESSION['team']}" : "where $where and activities.team={$_SESSION['team']}";
+
+        $query = "select activities.*, topics.courseuniq, topics.topicname, courses.uniq,courses.coursename from activities left join topics on topics.uniq = activities.topicuniq  left join courses on topics.courseuniq = courses.uniq $qWhere order by courses.coursesequence,topics.topicsequence, activities.act_seq";
+        $ret = $this->query($query);
+        return($ret);
+    
+    }    
+
+    public function resequenceActivities($topicuniq)
+    { 
+        $index = 10;
+        $ret = $this->allActivities("topicuniq = $topicuniq");
+        foreach ($ret as $r) {
+            $q = "update {$this->tableName} set act_seq = $index where uniq = {$r['uniq']}";
+            $this->statement($q);
+            $index += 10;
+        }
     }
+
 }
 
 class courses extends dbconnect
@@ -79,6 +90,7 @@ class courses extends dbconnect
             $createString =
                 "CREATE TABLE IF NOT EXISTS `{$this->tableName}` (
                   `uniq`          integer PRIMARY KEY AUTOINCREMENT NOT NULL ON CONFLICT FAIL,
+                  `team`          integer default 0,
                   `coursename`     text default '',
                   `coursesummary`  text default '',
                   `coursesequence` integer
@@ -101,7 +113,7 @@ class courses extends dbconnect
 
     public function allCourses()
     {
-        $q = "select * from {$this->tableName} order by coursesequence";
+        $q = "select * from {$this->tableName} where team = {$_SESSION['team']} order by coursesequence";
         $ret = $this->query($q);
         return ($ret);
     }
@@ -189,13 +201,19 @@ class users extends dbconnect
 
         if (!isset($_SESSION['dbusers']) or $GLOBALS['debugMode']) {
 
-            // you might be a member, but EXPIRED if expireisodate passes
-            // 'memberdate' is no longer used (can't drop in SQLlite)
+            // we put a random string into `team` when you register
+            // a teammate has to INVITE you to join, knowing your email
+            // they set your random string to be the same as theirs    
+            //
+            // 'role' isn't used yet.  when it does get used, use binaries 
+            //  eg: admin = 1 teacher = 2, author = 4 so can create ACL()
+
             $createString =
                 "CREATE TABLE IF NOT EXISTS `{$this->tableName}` (
               `email`        text PRIMARY KEY NOT NULL ON CONFLICT FAIL,
+              `team`         integer,
               `password`     text,
-              `role`         text,
+              `role`         integer default 0,
               `firstname`    text,
               `lastname`     text,
               `phone`        text,
@@ -220,6 +238,7 @@ class users extends dbconnect
     { // 0-success, 1-already, 2-other
         // printNice('in register');
         $form['email'] = strtolower($form['email']); // put username into lowercase right away
+
         $stmt = "SELECT * FROM {$this->tableName} where email = " . $this->quote_string($form['email']);
         $ret = $this->query($stmt);
         // printNice($ret);
@@ -230,9 +249,14 @@ class users extends dbconnect
         $aArray = array();
         $aArray['email'] = strtolower($form['email']); // always lowercase
 
-        $aArray['role'] = in_array(strtolower($form['email']), $GLOBALS['adminEmail'], true) ? 'admin' : 'none';
+        $aArray['role'] = in_array(strtolower($form['email']), $GLOBALS['adminEmail'], true) ? 1 : 0;
         $aArray['firstname'] = $form['firstname'];
         $aArray['lastname'] = $form['lastname'];
+
+        $rand =  mt_rand();
+        $aArray['team'] = $rand;
+        $_SESSION['team'] = $rand;      // set it right away
+
         $aArray['phone'] = $form['phone'];
         $aArray['signeddate'] = date($GLOBALS['dateformat'], time());
         $aArray['password'] = crypt($form['password'], $this->salt);
@@ -376,7 +400,7 @@ class dbconnect extends UnitTestCase
 
     public function query($query)
     {
-        printNice('query :' . $query);
+        // printNice('query :' . $query);
         // $_SESSION['queries'][] = $query; // save a copy
 
         $return = array();

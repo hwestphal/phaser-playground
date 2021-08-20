@@ -20,6 +20,7 @@ module.exports = {
         path: path.join(__dirname, 'dist_editor'),
         publicPath: '/dist_editor/',
         filename: 'bundle.js',
+        library: 'mathcodeEditor',
     },
     devServer: {
         contentBase: path.join(__dirname, 'dist_editor'),

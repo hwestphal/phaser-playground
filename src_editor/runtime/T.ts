@@ -4,6 +4,7 @@ import { Scorm } from './SCORM_LOCAL'
 import { Runtime } from './runtime'
 
 
+
 // TODO remove this when ES2021 becomes available
 interface String {
     /**
@@ -35,12 +36,12 @@ export const config = {
     helpline: 'Discord',
     assetURI: 'http://localhost/baby/baby-playground/assets/'
 
-} 
+}
 
 
 export interface ITag {
     tag: string,   // always lowercase
-    params: {[key: string]: any},
+    params: { [key: string]: any },
     rawvalue: string,
     textvalue: string,
     speechvalue: string,
@@ -63,5 +64,15 @@ console.log('Starting runtime in T.ts')
 let t = new Runtime()
 
 
+export namespace mathcodeEditor {
+
+    // const lettersRegexp = /^[A-Za-z]+$/;
+    // const numberRegexp = /^[0-9]+$/;
+
+    function findme() {
+        console.log('you found me');
+    }
+
+}
 
 

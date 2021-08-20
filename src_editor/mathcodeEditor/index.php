@@ -9,7 +9,6 @@ $GLOBALS['version'] = '1.00';
 $GLOBALS['debugMode'] = true; // false for production
 $GLOBALS['forceCache'] = false; // reload files on EVERY transaction - for debugging only
 
-
 $purl = parse_url("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
 $port = '';if (isset($purl['port'])) {
     $port = ":{$purl['port']}";
@@ -23,11 +22,17 @@ require_once 'utilities.php';
 require_once 'models.php';
 require_once 'views.php';
 
+// every activity tries to include TWO competencies
+$GLOBALS['competencies'] = [
+    'number', 'measurement', 'estimation',
+    'algebra', 'functions', 'geometry', 'probability', 'statistics', 'discrete mathematics',
+    'types and operators', 'program structure', 'data structures', 'objects', // programming
+    'forces and movement'];
 
 $url = "http://{$purl['host']}$port{$purl['path']}";
 $GLOBALS['url'] = $url;
-$GLOBALS['phpfile'] = "$url"; 
-$GLOBALS['datapath'] = getcwd()."/coursedata/"; 
+$GLOBALS['phpfile'] = "$url";
+$GLOBALS['datapath'] = getcwd() . "/coursedata/";
 
 $GLOBALS['adminEmail'] = ['tom.berend@cheeseandcrackers.ca'];
 
@@ -56,7 +61,6 @@ $GLOBALS['report'] = '';
 
 $GLOBALS['logfilename'] = "data/" . date("Y-m-d", time()) . ".log";
 
-
 ///////////////////////////////////////////
 ///////////////////////////////////////////
 ///////////////////////////////////////////
@@ -72,7 +76,6 @@ $req = $_REQUEST; // make a copy of $_REQUEST
 $views = new Views();
 echo $views->htmlHeader(); // $HTML from runUnitTests();
 
-
 $HTML = '';
 
 // run unit tests even if not logged in yet     // oct2019
@@ -83,13 +86,13 @@ if (isset($_REQUEST['RunUnitTests'])) {
 $HTML .= $views->titleBar();
 $HTML .= $views->debugMsg();
 
-
 $temp = processrequest(); // do whatever (starts by loading data)
-$HTML .= $GLOBALS['errorString'];    // put this first
+$HTML .= $GLOBALS['errorString']; // put this first
 $HTML .= $temp;
 
-// $HTML .= $views->oldBody();
-$HTML .= $views->htmlFooter();
+$HTMLTester = new HTMLTester();
+$goodHTML = $HTMLTester->validate($HTML);
+
 
 echo $HTML;
 
