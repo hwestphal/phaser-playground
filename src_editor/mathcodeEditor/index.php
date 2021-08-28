@@ -21,13 +21,26 @@ require_once 'controller.php';
 require_once 'utilities.php';
 require_once 'models.php';
 require_once 'views.php';
+require_once 'steps.php';
 
-// every activity tries to include TWO competencies
+// every activity tries to include a competency and a curriculumStrand
+
 $GLOBALS['competencies'] = [
-    'number', 'measurement', 'estimation',
-    'algebra', 'functions', 'geometry', 'probability', 'statistics', 'discrete mathematics',
-    'types and operators', 'program structure', 'data structures', 'objects', // programming
-    'forces and movement'];
+    'Communications',
+    'Mathematising',
+    'Representation',
+    'Reasoning & Argument',
+    'Strategic Thinking',
+    'Using Language & Symbols',
+    'Tool Skills',
+    'Learning Skills'
+];
+
+
+$GLOBALS['curriculumStrands'] = [
+    'Algebra', 'Functions', 'Geometry', 'Probability', 'Statistics', 'Discrete math',
+    'Types & Operators', 'Program structure', // programming
+    'Forces and Movement'];
 
 $url = "http://{$purl['host']}$port{$purl['path']}";
 $GLOBALS['url'] = $url;
@@ -92,6 +105,9 @@ $HTML .= $temp;
 
 $HTMLTester = new HTMLTester();
 $goodHTML = $HTMLTester->validate($HTML);
+
+$HTML .= $views->htmlFooter();
+
 
 
 echo $HTML;

@@ -8,7 +8,6 @@ defined('_KELLER') or die('cannot access controller.php directly');
 function processrequest()
 {
 
-
     // we need views early, so we can post error messages
     $views = new Views();
     $views->codeEditorPage = true;
@@ -267,11 +266,43 @@ function processrequest()
             $HTML .= $views->showActivitiesForTopic(intval($q));
             break;
 
-            case 'mathcodeEditor':
-                $HTML .= $views->mathcodeEditor(intval($q));
-                break;
-    
+        ///////////////////////////////
+        ///////// activities //////////
+        ///////////////////////////////
 
+        case 'mathcodeEditor':
+            $HTML .= $views->mathcodeEditor(intval($q));
+            break;
+
+        case 'addStep':     // $q is the activityUnit, ['stepType'] is passed
+            $stepClass = $_REQUEST['stepType'].'Step'; // the name of the class we want
+            $stepObj = new $stepClass($q);   //TextStep, CodeStep, etc
+
+            $stepObj->loadStep(0,$q,$_REQUEST['stepType']);    // creates a new step of this type
+            $HTML .= $stepObj->drawInputForm();
+            break;
+
+           
+        case 'editStep':
+
+            $steps = new Steps();
+
+            $stepData = $steps->getStep($q);   // $q is the step uniq
+
+            $stepType = $stepData['steptype'];
+            $stepClass = $stepType.'Step'; // the name of the class we want
+            
+            $stepObj = new $stepClass($stepData['activityUniq'],$q);   //TextStep, CodeStep, etc
+            $stepObj->loadStep($q);    // loads data from existing 
+
+            $HTML = $textStep->drawInputForm();
+            break;
+
+
+
+        ///////////////////////////////
+        ///////////////////////////////
+        ///////////////////////////////
 
         case 'unittests':
             runUnitTests();

@@ -138,6 +138,8 @@ echo "<p>$r</p>";?>
 
     </div>
 
+    <script>function AJAXuploadContent(){};</script>
+
     <script src="bundle.js"></script>
 
 

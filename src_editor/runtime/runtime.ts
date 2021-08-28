@@ -180,7 +180,7 @@ class Editor {
 
         this.save.onclick = () => this.doSave();
         this.load.onclick = () => this.doLoad();
-        this.run.onclick = () => {AJAXuploadContent(); this.doRun()};
+        this.run.onclick = () => { eval('AJAXuploadContent();'); this.doRun()};
         this.debug.onclick = () => this.doDebug();
 
         this.lessonPage = new LessonPage()

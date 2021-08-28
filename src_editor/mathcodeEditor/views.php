@@ -5,7 +5,7 @@ defined('_KELLER') or die('cannot access views.php directly');
 class Views extends UnitTestCase
 {
 
-    var $codeEditorPage = true;
+    public $codeEditorPage = true;
 
     public function htmlHeader()
     {
@@ -16,22 +16,21 @@ class Views extends UnitTestCase
                         <title><b>MATHCODE Editor</b></title>
 
                         <!-- jquery  3.5.1 -->
-                        <script src='https://code.jquery.com/jquery-3.5.1.min.js'  crossorigin='anonymous'></script>
-                        <!--script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script-->
+                        <script src='../../lib/jquery-3.5.1.min.js'  crossorigin='anonymous'></script>
 
-
-                        <link rel='stylesheet' href='//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'>
-                        <script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script>
+                        <link rel='stylesheet' href='../../lib/jquery-ui.css' />
+                        <script src='../../lib/jquery-ui.js'></script>
 
                         <!-- bootstrap-5.1.0 -->
-                        <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css'>
-                        <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js'></script>
+                        <link rel='stylesheet' href='../../lib/bootstrap.min.css' />
+                        <script src='../../lib/bootstrap.min.js'></script>
 
                         <!-- tinyMCE -->
-                        <script src='https://cdn.tiny.cloud/1/rj9dbfq7jyvk2dec9zridnbc8qs622xo61ma9gmrta4c6t2g/tinymce/5/tinymce.min.js' referrerpolicy='origin'></script>
+                        <!--script src='https://cdn.tiny.cloud/1/rj9dbfq7jyvk2dec9zridnbc8qs622xo61ma9gmrta4c6t2g/tinymce/5/tinymce.min.js' referrerpolicy='origin'></script-->
+                        <script src='../../lib/tinymce.min.js' referrerpolicy='origin'></script>
 
                         <!-- our css -->
-                        <link rel='stylesheet' href='../../dist_editor/3d.css'>
+                        <link rel='stylesheet' href='../../dist_editor/3d.css' />
 
                     </head>
                     <body>"; //  onload='window.history.pushState(null, null, `index.php`);'>
@@ -101,7 +100,9 @@ class Views extends UnitTestCase
 
                   </script>
 
+                  <br><br><br>  <!-- get out from under the header -->
                     <div class='container-fluid'>
+
                     <div class='row'>
                     ";
         return ($HTML);
@@ -109,7 +110,7 @@ class Views extends UnitTestCase
 
     public function htmlFooter()
     {
-        $HTML = '</div></div></body></html>';
+        $HTML = '</body></html>';
         return ($HTML);
     }
 
@@ -146,7 +147,7 @@ class Views extends UnitTestCase
         $HTML .= '
 
             <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-color:blue;border-style:solid;">
-            <a href="#" class="navbar-left"><img src="logo.png" height="40px" style="margin-right:50px;" /></a>
+            <a href="#" class="navbar-left"><img src="logo.png" height="40px" style="margin-right:50px;"></img></a>
 
             <div class="container-fluid">
               <a class="navbar-brand" href="#">MathCode Editor</a>
@@ -173,7 +174,7 @@ class Views extends UnitTestCase
                     <a class="nav-link active" href="?p=login">Logout</a>
                 </li>';
 
-        if($this->codeEditorPage){     // only put up the run/save if
+        if ($this->codeEditorPage) { // only put up the run/save if
             $HTML .= '
             <li class="nav-item btn btn-sm" >
             </li>
@@ -210,11 +211,12 @@ class Views extends UnitTestCase
                   <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"></input>
                   <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
+              </div>  
               </div>
-            </div>
           </nav>
           ';
 
+        //   printNice(htmlspecialchars($HTML));
         return ($HTML);
     }
 
@@ -282,93 +284,6 @@ class Views extends UnitTestCase
         </div>';
 
         return ($HTML);
-    }
-
-    public function oldBody()
-    {
-
-        $HTML = '
-
-    <br><br><br><math id="testmath"></math><br>
-    <div class="navbar">
-        <div style="float:right;padding-right:200px">
-            <button id="save">Save</button>
-        </div>
-        <div style="float:right">
-            <button id="load">Load</button>
-        </div>
-        <div style="float:right">
-            <button id="debug">Debug</button>
-        </div>
-        <!-- <div style="float:right">
-            <button id="tagcount">count</button>
-        </div> -->
-        <div style="float:right">
-        <!-- lots of CSS to change the name of this button -->
-        <input type="file" onchange="readFile(this)">
-        </div>
-        <script>
-            function readFile(input) {
-            let file = input.files[0];
-            let reader = new FileReader();
-            reader.readAsText(file);
-            reader.onload = function() {
-                document.getElementById("tomseditor").value = reader.result
-            };
-
-            reader.onerror = function() {
-                console.log(reader.error);
-            };
-
-            }
-        </script>
-
-        <div style="float:right">
-        <form action="./index.php"  onsubmit="copyeditor()" >
-            <input type="submit" id="PHPSave" value="PHP save" />
-            <input type="hidden" id="p2" name="p" value="save" />
-            <input type="hidden" id="payload" name="q" value="" />
-        </form>
-        </div>
-        <script>
-            console.log("linking PHPSave");
-            function copyeditor(){
-                let payload = document.getElementById("tomseditor").value
-                // alert(payload)
-                document.getElementById("payload").value = payload
-            }
-        </script>
-
-        <div style="float:right">
-        <button onclick="alert("boo")">Click me</button>
-        </div>
-
-    </div>
-
-
-    <div class="main" style="margin-top:30px">
-        <p>If you’re using Chrome or Edge, enable “Experimental Web Platform features” on the chrome://flags page.</p>
-        <!-- lesson and editor, side by side-->
-        <div id="lesson"
-            style="border-style: solid;  border-block-color: black;border-width: 1px; float:left; width:50%;">
-        </div>
-        <div
-            style="border-style: solid;  border-block-color: black;border-width: 1px; float:left; width:50%; height:100%;">
-            <div>
-
-                <textarea rows="1000" id="tomseditor" style="width:100%;margin:2px;padding:5px;"></textarea>
-            </div>
-
-
-        </div>
-
-    </div>
-
-    <script src="bundle.js"></script>
-    ';
-
-        return ($HTML);
-
     }
 
     public function directory()
@@ -830,7 +745,7 @@ class Views extends UnitTestCase
 
                 <div class="form-group">
                 <label for="inputPassword"">New Password</label>
-                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required />
                 </div>
 
                 <input class="btn btn-lg btn-primary btn-block" type="submit" value="Submit"></input>
@@ -855,19 +770,19 @@ class Views extends UnitTestCase
         <input type="hidden" name="p" value="register"></input>
 
         <label for="firstname">First Name</label>
-        <input type="text" name="firstname" id="firstname" class="form-control" placeholder="First Name" required>
+        <input type="text" name="firstname" id="firstname" class="form-control" placeholder="First Name" required />
 
         <label for="lastname">Last Name</label>
-        <input type="text" name="lastname" id="lastname" class="form-control" placeholder="Last Name" required>
+        <input type="text" name="lastname" id="lastname" class="form-control" placeholder="Last Name" required />
 
         <label for="email">Email</label>
-        <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
+        <input type="email" name="email" id="email" class="form-control" placeholder="Email" required />
 
         <label for="phone">Phone</label>
-        <input type="phone" name="phone" id="phone" class="form-control" placeholder="Phone" required>
+        <input type="phone" name="phone" id="phone" class="form-control" placeholder="Phone" required />
 
         <label for="password">Password</label>
-        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required />
 
 
         <input class="btn btn-lg btn-primary btn-block" type="submit" value="Register"></input>
@@ -885,9 +800,113 @@ class Views extends UnitTestCase
 
     }
 
-    public function mathcodeEditor($uniq)
+    public function mathcodeEditor($activityUniq)
     {
 
+        $HTML = '';
+
+
+        $stepsDB = new Steps();
+        $steps = $stepsDB->getAllSteps($activityUniq);
+
+        $add = button('add', 'warning', 'addTopicForm', $activityUniq);
+        $resequence = button('resequence', 'primary', 'resequenceActivities', $activityUniq);
+
+        $HTML .= "<h3>Steps in <b>'something'</b>  $add $resequence</h3>";
+
+        foreach ($steps as $step) {
+
+            $HTML .=
+                "<div class='row'>
+                    <div class='col-6'>
+                        {$step['html']}
+                    </div>
+                    <div class='col-6'>";
+
+            // add badges for activities:
+                $badges = '';
+                foreach($GLOBALS['stepTypes'] as $stepType){
+                    $badges .= badge($stepType,'secondary','addStep',"$activityUniq&stepType=$stepType");
+            }    
+            // $HTML .= "<div style='border-style:solid;border-color:blue;'>Add: $badges</div>";
+            $HTML .= $badges;
+
+            // $HTML .= "<h3>Courses $add $resequence</h3>
+            $HTML .= "<table class='table'>
+                <thead>
+                  <tr>
+                    <th></th>   <!-- buttons -->
+                    <th>Sequence</th>
+                    <th>#</th>
+                    <th>Type</th>
+                    <th>Competency</th>
+                    <th>Curriculum</th>
+                    <th></th>   <!-- buttons -->
+                  </tr>
+                </thead>
+
+                <tbody>";
+
+            $edit = button('edit', 'primary', 'editCourseForm', $step['uniq']);
+            $delete = button('delete', 'danger', 'deleteCourseForm', $step['uniq'], true, "Delete this Course?");
+            // $open = button('open', 'success', 'showTopics', $step['uniq']);
+
+            $HTML .= "
+                  <tr>
+                    <td>$edit</td>   <!--buttons-->
+                    <th>{$step['stepsequence']}</th>
+                    <td>{$step['uniq']}</td>
+                    <td>{$step['steptype']}</td>
+                    <td>{$step['competency']}</td>
+                    <td>{$step['curriculum']}</td>
+                    <td>$delete</td>   <!--buttons-->
+                  </tr>";
+    
+        $HTML .= "
+                  </tbody>
+                </table> ";
+
+        $HTML .=
+            "</div> <!-- class = col-6 -->
+            </div>";
+        }
+         return($HTML);
+         
+         
+        // $HTML .= "<h3>Topics in <b>'$cname'</b>  $add $resequence</h3>
+        // <table class='table'>
+        // <thead>
+        //   <tr>
+        //     <th></th>   <!-- buttons -->
+        //     <th>Sequence</th>
+        //     <th>#</th>
+        //     <th>Name</th>
+        //     <th>Summary</th>
+        //     <th></th>   <!-- buttons -->
+        //   </tr>
+        // </thead>
+
+        // <tbody>";
+
+        // foreach ($ret as $r) {
+        //     $edit = button('edit', 'primary', 'editTopicForm', $r['uniq']);
+        //     $delete = button('delete', 'danger', 'updateTopicForm', $r['uniq'], true, "Delete this Topic?");
+        //     $open = button('open', 'success', 'showActivities', $r['uniq']);
+        //     $HTML .= "
+        //   <tr>
+        //     <td>$open</td>   <!--buttons-->
+        //     <th>{$r['topicsequence']}</th>
+        //     <td>{$r['uniq']}</td>
+        //     <td>{$r['topicname']}</td>
+        //     <td>{$r['topicexpectations']}</td>
+        //     <td>$edit&nbsp;$delete</td>   <!--buttons-->
+        //   </tr>";
+        // }
+        // $HTML .= "
+        //   </tbody>
+        // </table> ";
+
+        
         // this is the hidden form that uploads data to PHP
         $HTML = "
         <div style='display:none;'>
@@ -1007,8 +1026,10 @@ class Views extends UnitTestCase
         <div class='main' style='margin-top:30px'>
             <p>If you’re using Chrome or Edge, enable “Experimental Web Platform features” on the chrome://flags page.</p>
             <!-- lesson and editor, side by side-->
+
             <div id='lesson'
                 style='border-style: solid;  border-block-color: black;border-width: 1px; float:left; width:50%'>
+
             </div>
             <div  style='border-style: solid;  border-block-color: black;border-width: 1px; float:left; width:50%; height:100%;'>
                 <div>

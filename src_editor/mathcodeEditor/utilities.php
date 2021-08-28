@@ -296,10 +296,15 @@ class HTMLTester extends UnitTestCase
             // ok, now we have either 'td' or '/td'.   let's run a stack
             if (substr($cleanTag, 0, 1) == '/') {
                 $openTag = array_pop($stack);
-                if (('/' . $openTag['clean']) != $cleanTag) { // no match
-                    $goodHTML = false;
-                    assertTrue(false, "Unmatched closing tag '$cleanTag' (got '/{$openTag['clean']}' instead) at '" . htmlentities('<' . substr($string, $openTag['start'], 200)) . "'");
-                    break;
+                if (!empty($openTag)) {
+                    if (('/' . $openTag['clean']) != $cleanTag) { // no match
+                        $goodHTML = false;
+                        assertTrue(false, "Unmatched closing tag '$cleanTag' (got '/{$openTag['clean']}' instead) at '" . htmlentities('<' . substr($string, $openTag['start'], 200)) . "'");
+                        break;
+                    }
+                }else {
+                    assertTrue(false, "Too many closing tags '$cleanTag' (got '/{$openTag['clean']}' at ".'<span style="background-color:pink">'. htmlentities(substr($string, max(0,$openTag['start']-200), 200)). '</span>'. "' instead) at '" . htmlentities('<' . substr($string, $openTag['start'], 200)) . "'");
+
                 }
             } else {
                 $s = ($start - strlen($tag) - 1);
@@ -542,6 +547,3 @@ function alertMessage($message, $alertType = "danger") // primary, secondary, su
                 </div>";
 
 }
-
-
-
