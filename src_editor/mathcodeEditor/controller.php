@@ -133,8 +133,8 @@ function processrequest()
 
         case 'editCourseForm':
             $course = new courses();
-            $form = $course->showCourse(intval($q));
-            $HTML .= $views->addEditCoursesForm(false, $form[0]);
+            $form = $course->showCourse($q);
+            $HTML .= $views->addEditCourseForm(false, $form[0]);
             break;
 
         case 'saveCourseForm':
@@ -271,34 +271,38 @@ function processrequest()
         ///////////////////////////////
 
         case 'mathcodeEditor':
-            $HTML .= $views->mathcodeEditor(intval($q));
+            $HTML .= $views->mathcodeEditor($q);
             break;
 
-        case 'addStep':     // $q is the activityUnit, ['stepType'] is passed
-            $stepClass = $_REQUEST['stepType'].'Step'; // the name of the class we want
-            $stepObj = new $stepClass($q);   //TextStep, CodeStep, etc
+        case 'addStep': // $q is the activityUnit, ['stepType'] is passed
+            $stepClass = $_REQUEST['stepType'] . 'Step'; // the name of the class we want
+            $stepObj = new $stepClass($q); //TextStep, CodeStep, etc
 
-            $stepObj->loadStep(0,$q,$_REQUEST['stepType']);    // creates a new step of this type
+            $stepObj->loadStep(0, $q, $_REQUEST['stepType']); // creates a new step of this type
             $HTML .= $stepObj->drawInputForm();
             break;
 
-           
         case 'editStep':
 
             $steps = new Steps();
 
-            $stepData = $steps->getStep($q);   // $q is the step uniq
+            $stepData = $steps->getStep($q); // $q is the step uniq
 
             $stepType = $stepData['steptype'];
-            $stepClass = $stepType.'Step'; // the name of the class we want
-            
-            $stepObj = new $stepClass($stepData['activityUniq'],$q);   //TextStep, CodeStep, etc
-            $stepObj->loadStep($q);    // loads data from existing 
+            $stepClass = $stepType . 'Step'; // the name of the class we want
 
-            $HTML = $textStep->drawInputForm();
+            $stepObj = new $stepClass($stepData['activityuniq'], $q); //TextStep, CodeStep, etc
+            $stepObj->loadStep($q); // loads data from existing
+
+            $HTML = $stepObj->drawInputForm();
             break;
 
+        case 'resequenceSteps':
+            $steps = new Steps();
+            $steps->resequence($q); // send the $activityUniq
 
+            $HTML .= $views->mathcodeEditor($q);  // redraw the activity
+            break;
 
         ///////////////////////////////
         ///////////////////////////////

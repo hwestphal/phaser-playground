@@ -35,6 +35,8 @@ class Views extends UnitTestCase
                     </head>
                     <body>"; //  onload='window.history.pushState(null, null, `index.php`);'>
 
+        // notes for TINY MCE
+
         //===schema
         //The schema option enables you to switch between the HTML4 and HTML5
         // schema. This controls the valid elements and attributes that can be
@@ -110,7 +112,10 @@ class Views extends UnitTestCase
 
     public function htmlFooter()
     {
-        $HTML = '</body></html>';
+        $HTML = '';
+
+        $HTML .= "<script src='dist/bundle.app.js'></script>";
+        $HTML .= '</body></html>';
         return ($HTML);
     }
 
@@ -207,13 +212,14 @@ class Views extends UnitTestCase
         $HTML .= '
 
                   </ul>
+                </div>  
+                </div>
                 <form class="d-flex">
                   <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"></input>
                   <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
-              </div>  
-              </div>
           </nav>
+          
           ';
 
         //   printNice(htmlspecialchars($HTML));
@@ -810,7 +816,7 @@ class Views extends UnitTestCase
         $steps = $stepsDB->getAllSteps($activityUniq);
 
         $add = button('add', 'warning', 'addTopicForm', $activityUniq);
-        $resequence = button('resequence', 'primary', 'resequenceActivities', $activityUniq);
+        $resequence = button('resequence', 'primary', 'resequenceSteps', $activityUniq);
 
         $HTML .= "<h3>Steps in <b>'something'</b>  $add $resequence</h3>";
 
@@ -847,7 +853,7 @@ class Views extends UnitTestCase
 
                 <tbody>";
 
-            $edit = button('edit', 'primary', 'editCourseForm', $step['uniq']);
+            $edit = button('open', 'success', 'editStep', $step['uniq']);
             $delete = button('delete', 'danger', 'deleteCourseForm', $step['uniq'], true, "Delete this Course?");
             // $open = button('open', 'success', 'showTopics', $step['uniq']);
 

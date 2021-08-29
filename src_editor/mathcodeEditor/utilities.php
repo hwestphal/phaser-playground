@@ -226,6 +226,8 @@ function printNiceHelper($elem, $max_level = 10, $print_nice_stack = array(), $H
         $HTML .= "<font color=green>FALSE</font>";
     } elseif ($elem === "") {
         $HTML .= "<font color=green>EMPTY STRING</font>";
+    } elseif (is_integer($elem)) {
+        $HTML .= "<font color=blue>$elem</font>";
     } else {
         $HTML .= str_replace("\n", "<strong><font color=red>*</font></strong><br>\n", $elem);
     }
@@ -249,69 +251,87 @@ class HTMLTester extends UnitTestCase
         // this can be expensive, so don't run it in production
 
         $tagArray = explode('<', strtolower($string));
+        // printNice($tagArray);
+
+        // echo serialize($tagArray);      // now have the tags, eg: 'td>second element
+        // printNice($tagArray);
+        
         $start = 0;
+        $ptr = 0;
+        $stack = [];
 
-        //echo serialize($tagArray);      // now have the tags, eg: 'td>second element
+        for ($i=0;$i<count($tagArray);$i++){
+            $tag = $tagArray[$i];       // equiv to foreach($tagArray as $tag)
 
-        foreach ($tagArray as $tag) {
-            $start = $start + strlen($tag) + 1; // running pointer to where this tag ends
-
-            if (empty($tag)) { // explode() will create this extra element at the start of the array, not sure why
+            if (empty(ltrim(rtrim($tag)))) { // explode() will create this extra element at the start of the array, not sure why
                 continue;
             }
 
-            //echo $tag,",";
-            if (($ptr = strpos($tag, '>')) !== false) { // first clean out any 'content' between the tag end '>' and the beginning of the next tag
-                $cleanTag = substr($tag, 0, $ptr);
-            } else {
-                // something is wrong here, but i don't know what.  means we get an isolated '<'
+            assert(!empty($tag));   // only real tags now
+
+            // can just ignore tags that end in />
+            if(substr ( $tag , -2)=="/>"){
+                continue;
+            }
+
+            // ignore <br>, should be <br/> but don't care
+            if($tag == "br>"){
                 continue;
             }
 
             // KLUDGE - this allows <!-- comment --> but not spread over multiple brackets
-            if (strtolower(substr($cleanTag, 0, 1)) == '!') { // <br> is a special case...
+            if (strtolower(substr($tag, 0, 1)) == '!') { 
                 continue; // just ignore it
             }
 
-            if (strtolower(substr($cleanTag, 0, 2)) == 'br') { // <br> is a special case...
-                continue; // just ignore it
-            }
-            if (strtolower(substr($cleanTag, 0, 2)) == '/br') { // </br> is a special case...
-                continue; // just ignore it
-            }
+            // now either a start tag, or an end tag
+            if(substr($tag,0,1)!=='/'){     // start
+                array_push($stack,$tag);
+            }else{                      // end
+                // if it matches, just pop the stack
+                $end = min(strpos($tag,' ')-1,strpos($tag,'>')-1);
+                $tagType = substr($tag,1,$end);
 
-            //echo $cleanTag,",";
-            if (substr($cleanTag, strlen($cleanTag) - 1) == '/') { // means it was a <image /> self-closing tag
-                continue; // just ignore it
-            }
+                // printNice($stack);
 
-            //echo $cleanTag,",";
-            if ($ptr = strpos($tag, ' ')) { // now get rid of anything after a space (usually <a href=...)
-                $cleanTag = substr($cleanTag, 0, $ptr);
-            }
+                // if(count($stack)==0){
+                //     continue;
+                // }
 
-            // should have a clean tag now
-            //echo $cleanTag,"<br>";
+                $lastStack = $stack[count($stack)-1];
+                // add a space to the end of $tagType so <u and <ul are different
+                $tagType .= ' ';
 
-            // ok, now we have either 'td' or '/td'.   let's run a stack
-            if (substr($cleanTag, 0, 1) == '/') {
-                $openTag = array_pop($stack);
-                if (!empty($openTag)) {
-                    if (('/' . $openTag['clean']) != $cleanTag) { // no match
-                        $goodHTML = false;
-                        assertTrue(false, "Unmatched closing tag '$cleanTag' (got '/{$openTag['clean']}' instead) at '" . htmlentities('<' . substr($string, $openTag['start'], 200)) . "'");
-                        break;
+                $compare = substr($lastStack,0,strlen($tagType)-1).' ';
+                // printNice("Comparing '$lastStack' with '$compare' and '/$tagType'");
+
+                if( $compare == $tagType){
+                    // matches last stack, pop it off
+                    if(count($stack)>0){
+                    array_pop($stack);
+                    continue;
+                    } else{
+                        printNice("Stack Underflow at '$tag'");
+                        return;
                     }
-                }else {
-                    assertTrue(false, "Too many closing tags '$cleanTag' (got '/{$openTag['clean']}' at ".'<span style="background-color:pink">'. htmlentities(substr($string, max(0,$openTag['start']-200), 200)). '</span>'. "' instead) at '" . htmlentities('<' . substr($string, $openTag['start'], 200)) . "'");
-
+                }else{
+                    // trouble !!
+                    printNice("Mismatch '$lastStack':  '$compare' and '$tagType'");
+                    printNice($stack);
+                    return;
                 }
-            } else {
-                $s = ($start - strlen($tag) - 1);
-                $stack[] = array('clean' => $cleanTag, 'start' => $s);
+                //
+                
             }
-            //echo serialize($stack),"<br>";
+
+
         }
+
+        if(count($stack)!==0){
+            printNice('HTML Remainder !!');
+            printNice($stack);
+        }
+
 
     }
 
@@ -546,4 +566,17 @@ function alertMessage($message, $alertType = "danger") // primary, secondary, su
                     <b>$message</b>
                 </div>";
 
+}
+
+function formSelectList($aArray, $selected = '') // simple array ('a','b','c'), key is same as value
+
+{
+    // creates <option>something</option>
+    $HTML = '';
+    $HTML .= "<option></option>";   // an empty at the top
+    foreach ($aArray as $option) {
+        $s = ($selected == $option) ? " selected='selected' " : ''; // is this the current value?
+        $HTML .= "<option$s>$option</option>";
+    }
+    return($HTML);
 }

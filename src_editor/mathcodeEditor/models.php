@@ -240,7 +240,7 @@ class Steps extends dbconnect
 
     public function getStep($uniq)
     {
-        assertTrue(is_integer($uniq));
+        $uniq = intval($uniq);  // ensure that it is an int
 
         $ret = $this->query("Select * from {$this->tableName} where uniq = $uniq");
         assertTrue(count($ret) == 1);
@@ -250,11 +250,24 @@ class Steps extends dbconnect
 
     public function getAllSteps($activityUniq) 
     {
-        assertTrue(is_integer($activityUniq));
+        $activityUniq = intval($activityUniq);  // force to integer
 
         $query = "select * from steps where activityuniq = $activityUniq order by stepsequence";
         $ret = $this->query($query);
         return ($ret);
+    }
+
+    public function resequence($activityUniq)
+    {
+        $activityUniq = intval($activityUniq);  // force to integer
+
+        $index = 10;
+        $ret = $this->getAllSteps($activityUniq);
+        foreach ($ret as $r) {
+            $q = "update {$this->tableName} set stepsequence = $index where uniq = {$r['uniq']}";
+            $this->statement($q);
+            $index += 10;
+        }
     }
 
 }
