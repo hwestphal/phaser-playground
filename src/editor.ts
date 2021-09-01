@@ -1,7 +1,8 @@
 import * as monaco from "monaco-editor";
 import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
 // import lib_baby from "./extraLibs/baby.d.ts.txt";
-import lib_dom from "./extraLibs/lib.dom_mini.d.ts.txt";
+// import lib_dom from "./extraLibs/lib.dom_mini.d.ts.txt";
+import lib_dom from "./extraLibs/lib.dom.d.ts.txt";
 import lib_promise from "./extraLibs/lib.es2015.promise.d.ts.txt";
 
 import lib_es2015_collection from "./extraLibs/lib.es2015.collection.d.ts.txt"
@@ -86,10 +87,17 @@ export class Editor {
             inlineSources: true,
             noLib: true,
             sourceMap: false,
-            strict: true,
+            strict: false,
+
             noImplicitAny: false,
             strictNullChecks: false,
-            strictFunctionTypes: false,
+
+            noUnusedParameters:false,       // easier for beginners
+            noUnusedLocals:false,
+
+            strictFunctionTypes: true,
+            strictNullChecks:true,
+             
             allowUnreachableCode: true,
             allowUnusedLabels: true,
             noImplicitThis: true,
@@ -201,11 +209,12 @@ export class Editor {
 
 
     async transpile(scope: any = {}) {
-        console.log('in transpile()', scope)
+        // console.log('in transpile()', scope)
         const names = Object.keys(scope);
         const args = names.map((key) => scope[key]);
         const model = this.editor.getModel();   // typescript needs a typeguard to be happy
-        console.log('model from editor is', model)
+        // console.log('model from editor is', model)
+
         if (model !== null) {
             const resource = model.uri;
             const errors = monaco.editor.getModelMarkers({ resource })
@@ -219,7 +228,7 @@ export class Editor {
             const client = await worker(resource);
             const output = await client.getEmitOutput(resource.toString());
             const code = output.outputFiles[0].text as string;
-            console.log('code from editor is ', code)
+            // console.log('code from editor is ', code)
 
             // let string = "let vt = new vt52(); vt.print('hello world')npm nkkj; console.log('hello world')"
             // console.log('code from editor is ', string)

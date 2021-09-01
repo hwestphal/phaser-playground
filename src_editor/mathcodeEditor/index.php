@@ -6,8 +6,7 @@ define("_KELLER", false); // this is the only entry point to these programs
 
 $GLOBALS['version'] = '1.00';
 
-$GLOBALS['debugMode'] = true; // false for production
-$GLOBALS['forceCache'] = false; // reload files on EVERY transaction - for debugging only
+$GLOBALS['debugMode'] = false; // false for production
 
 $purl = parse_url("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
 $port = '';if (isset($purl['port'])) {
@@ -22,6 +21,7 @@ require_once 'utilities.php';
 require_once 'models.php';
 require_once 'views.php';
 require_once 'steps.php';
+require_once 'renderHtml.php';
 
 // every activity tries to include a competency and a curriculumStrand
 

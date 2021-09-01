@@ -8,6 +8,13 @@ defined('_KELLER') or die('cannot access controller.php directly');
 function processrequest()
 {
 
+    // $testText = "%title() My Title\n%p My _paragraph_\nhi _hi_ `hi` \n%cm My code\n\n%three\n";
+    // $HTML = mathCodeRenderHtml($testText);
+    // printNice($HTML);
+    
+
+
+
     // we need views early, so we can post error messages
     $views = new Views();
     $views->codeEditorPage = true;
@@ -274,11 +281,14 @@ function processrequest()
             $HTML .= $views->mathcodeEditor($q);
             break;
 
+
         case 'addStep': // $q is the activityUnit, ['stepType'] is passed
             $stepClass = $_REQUEST['stepType'] . 'Step'; // the name of the class we want
-            $stepObj = new $stepClass($q); //TextStep, CodeStep, etc
+            $stepObj = new $stepClass($q); // just the activity's uniq, default to new step
 
+            // loadStep with $uniq==0 is an add-record
             $stepObj->loadStep(0, $q, $_REQUEST['stepType']); // creates a new step of this type
+
             $HTML .= $stepObj->drawInputForm();
             break;
 
@@ -296,6 +306,19 @@ function processrequest()
 
             $HTML = $stepObj->drawInputForm();
             break;
+
+        case 'saveStepForm':
+
+            $steps = new Steps();
+            $stepClass = $_REQUEST['stepType'] . 'Step'; // the name of the class we want
+
+            printNice("new stepClass($q,{$_REQUEST['activityUniq']} ); //TextStep, CodeStep, etc");
+            $stepObj = new $stepClass($q,$_REQUEST['activityUniq'] ); //TextStep, CodeStep, etc
+            $stepObj->saveStep($q,$_REQUEST);
+
+            $HTML = $stepObj->drawInputForm();
+            break;
+
 
         case 'resequenceSteps':
             $steps = new Steps();
@@ -333,6 +356,8 @@ function processrequest()
     $a = new activities();
     $HTML .= $a->show();
     $a = new users();
+    $HTML .= $a->show();
+    $a = new steps();
     $HTML .= $a->show();
 
     return ($HTML);

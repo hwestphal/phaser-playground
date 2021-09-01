@@ -33,7 +33,7 @@ class Views extends UnitTestCase
                         <link rel='stylesheet' href='../../dist_editor/3d.css' />
 
                     </head>
-                    <body>"; //  onload='window.history.pushState(null, null, `index.php`);'>
+                    <body style='padding-top:4.5rem;'>"; //  onload='window.history.pushState(null, null, `index.php`);'>
 
         // notes for TINY MCE
 
@@ -151,10 +151,10 @@ class Views extends UnitTestCase
         $HTML = '';
         $HTML .= '
 
-            <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-color:blue;border-style:solid;">
-            <a href="#" class="navbar-left"><img src="logo.png" height="40px" style="margin-right:50px;"></img></a>
+            <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top" style="width:100%;border-color:blue;border-style:solid;">
 
             <div class="container-fluid">
+            <a href="#" class="navbar-left"><img src="logo.png" height="40px" style="margin-right:50px;"></img></a>
               <a class="navbar-brand" href="#">MathCode Editor</a>
 
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -212,17 +212,16 @@ class Views extends UnitTestCase
         $HTML .= '
 
                   </ul>
-                </div>  
+                </div>
                 </div>
                 <form class="d-flex">
                   <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"></input>
                   <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
           </nav>
-          
           ';
 
-        //   printNice(htmlspecialchars($HTML));
+         //   printNice(htmlspecialchars($HTML));
         return ($HTML);
     }
 
@@ -811,7 +810,6 @@ class Views extends UnitTestCase
 
         $HTML = '';
 
-
         $stepsDB = new Steps();
         $steps = $stepsDB->getAllSteps($activityUniq);
 
@@ -819,6 +817,14 @@ class Views extends UnitTestCase
         $resequence = button('resequence', 'primary', 'resequenceSteps', $activityUniq);
 
         $HTML .= "<h3>Steps in <b>'something'</b>  $add $resequence</h3>";
+
+        if (count($steps) == 0) { // add badges for activities on empty page
+            $badges = '';
+            foreach ($GLOBALS['stepTypes'] as $stepType) {
+                $badges .= badge($stepType, 'secondary', 'addStep', "$activityUniq&stepType=$stepType");
+            }
+            $HTML .= $badges;
+        }
 
         foreach ($steps as $step) {
 
@@ -830,10 +836,10 @@ class Views extends UnitTestCase
                     <div class='col-6'>";
 
             // add badges for activities:
-                $badges = '';
-                foreach($GLOBALS['stepTypes'] as $stepType){
-                    $badges .= badge($stepType,'secondary','addStep',"$activityUniq&stepType=$stepType");
-            }    
+            $badges = '';
+            foreach ($GLOBALS['stepTypes'] as $stepType) {
+                $badges .= badge($stepType, 'secondary', 'addStep', "$activityUniq&stepType=$stepType");
+            }
             // $HTML .= "<div style='border-style:solid;border-color:blue;'>Add: $badges</div>";
             $HTML .= $badges;
 
@@ -867,18 +873,17 @@ class Views extends UnitTestCase
                     <td>{$step['curriculum']}</td>
                     <td>$delete</td>   <!--buttons-->
                   </tr>";
-    
-        $HTML .= "
+
+            $HTML .= "
                   </tbody>
                 </table> ";
 
-        $HTML .=
-            "</div> <!-- class = col-6 -->
+            $HTML .=
+                "</div> <!-- class = col-6 -->
             </div>";
         }
-         return($HTML);
-         
-         
+        return ($HTML);
+
         // $HTML .= "<h3>Topics in <b>'$cname'</b>  $add $resequence</h3>
         // <table class='table'>
         // <thead>
@@ -912,7 +917,6 @@ class Views extends UnitTestCase
         //   </tbody>
         // </table> ";
 
-        
         // this is the hidden form that uploads data to PHP
         $HTML = "
         <div style='display:none;'>

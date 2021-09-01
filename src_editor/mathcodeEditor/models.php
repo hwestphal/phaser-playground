@@ -236,6 +236,7 @@ class Steps extends dbconnect
         // get the autoincrement value of the event
         $lastIndex = $this->query('select last_insert_rowid()');
         $uniq = $lastIndex[0][0];
+        return($uniq);
     }
 
     public function getStep($uniq)
@@ -587,7 +588,7 @@ class dbconnect extends UnitTestCase
         $UpdateString = "Update $this->tableName set $updates where $where";
         $this->statement($UpdateString);
 
-        printNice($UpdateString);
+        // printNice($UpdateString);
     }
 
     public function quote_string($dangerous)
