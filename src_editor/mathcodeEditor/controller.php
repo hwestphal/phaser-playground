@@ -8,12 +8,52 @@ defined('_KELLER') or die('cannot access controller.php directly');
 function processrequest()
 {
 
-    // $testText = "%title() My Title\n%p My _paragraph_\nhi _hi_ `hi` \n%cm My code\n\n%three\n";
-    // $HTML = mathCodeRenderHtml($testText);
-    // printNice($HTML);
-    
+//     $Parsedown = new Parsedown();
 
+//     $text = "It's very easy to make some words
+    //         **bold** and other words *italic* with Markdown.
+    //         You can even [link to Google!](http://google.com)
 
+// * Item 1
+    // * Item 2
+    //   * Item 2a
+    //   * Item 2b
+
+//   1. Item 1
+    //   1. Item 2
+    //   1. Item 3
+    //      1. Item 3a
+    //      1. Item 3b
+
+// As Kanye West said:
+
+// > We're living the future so
+    // > the present is our past.
+
+// http://github.com - automatic!
+    // [GitHub](http://github.com)
+
+// ```javascript
+    // function fancyAlert(arg) {
+    //   if(arg) {
+    //     $.facebox({div:'#foo'})
+    //   }
+    // }
+    // ```
+
+// ";
+
+//     $output = $Parsedown->text($text);
+    //     die;
+
+    // $competency = 'Reasoning';
+    // $curriculum = 'Functions';
+    // $JSONdata = '{"inParagraph":"0","title":"Test title","indentLevel":"","assistant":"","paragraph1":"this is the `text` in paragraph 1","paragraph2":"this is the ^text^ in paragraph 2. we have [modified | not modified|https:\/\/en.wikipedia.org\/wiki\/Main_Page]","paragraph3":"","paragraph4":"","proctorNotes":"","imageName":"fred.png","imageType":"Image","ccAuthor":"fred","ccSource":"fred@fred.com","ccOption":"CC BY-NC","ccVersion":"1.0","dnloadDate":"2021-09-01","ccComment":""}';
+
+    // $renderer = new RenderTextStep();
+    // $aOutput = $renderer->render($JSONdata,$competency,$curriculum);
+    // printNice($aOutput);
+    // die;
 
     // we need views early, so we can post error messages
     $views = new Views();
@@ -23,7 +63,7 @@ function processrequest()
 
     printNice($_REQUEST);
     printNice($_SESSION);
-    $_SESSION['queries'] = [];
+
 
     ////////////////////
     // dumpall();      // dump all databases for debugging
@@ -57,7 +97,12 @@ function processrequest()
     switch ($p) {
 
         case '': // usually the first page
+            printNice('','clearing the Session');
             if (!isset($_SESSION['user'])) { // no one is logged in
+                foreach (array_keys($_SESSION) as $key) {
+                    unset($_SESSION[$key]);
+                }
+
                 $HTML .= $views->login();
             } else {
                 $HTML .= $views->showAllCourses();
@@ -69,7 +114,11 @@ function processrequest()
         ///////////////////////////////
 
         case 'login': // login page
-            $_SESSION = []; //session_unset();
+            printNice('','clearing the Session');
+            foreach (array_keys($_SESSION) as $key) {
+                unset($_SESSION[$key]);
+            }
+
             $HTML .= $views->login();
             break;
 
@@ -281,12 +330,11 @@ function processrequest()
             $HTML .= $views->mathcodeEditor($q);
             break;
 
-
         case 'addStep': // $q is the activityUnit, ['stepType'] is passed
             $stepClass = $_REQUEST['stepType'] . 'Step'; // the name of the class we want
             $stepObj = new $stepClass($q); // just the activity's uniq, default to new step
 
-            // loadStep with $uniq==0 is an add-record
+            // with $uniq=0, this is an ADDSTEP
             $stepObj->loadStep(0, $q, $_REQUEST['stepType']); // creates a new step of this type
 
             $HTML .= $stepObj->drawInputForm();
@@ -294,37 +342,57 @@ function processrequest()
 
         case 'editStep':
 
-            $steps = new Steps();
-
-            $stepData = $steps->getStep($q); // $q is the step uniq
-
-            $stepType = $stepData['steptype'];
-            $stepClass = $stepType . 'Step'; // the name of the class we want
-
-            $stepObj = new $stepClass($stepData['activityuniq'], $q); //TextStep, CodeStep, etc
-            $stepObj->loadStep($q); // loads data from existing
-
-            $HTML = $stepObj->drawInputForm();
+            $HTML .= $views->editStep($q);
             break;
 
         case 'saveStepForm':
 
             $steps = new Steps();
-            $stepClass = $_REQUEST['stepType'] . 'Step'; // the name of the class we want
 
+            // read the step to find the steptype (yes, it might be in the form)
+            $step = $steps->getStep($q);
+            printNice($step, 'this is the record we are trying to update');
+
+            $stepClass = $step['steptype'] . 'Step'; // the name of the class we want
+
+            if (!class_exists($stepClass)) {
+                assertTrue(false, "Something wrong - can't find class '$stepClass'.  Look at REQUEST['steptype'], is it a valid step type?");
+                $HTML .= $views->showAllActivities();
+                break;
+            }
             printNice("new stepClass($q,{$_REQUEST['activityUniq']} ); //TextStep, CodeStep, etc");
-            $stepObj = new $stepClass($q,$_REQUEST['activityUniq'] ); //TextStep, CodeStep, etc
-            $stepObj->saveStep($q,$_REQUEST);
+            $stepObj = new $stepClass($q, $_REQUEST['activityUniq']); //TextStep, CodeStep, etc
+            $stepObj->saveStep($q, $_REQUEST);
 
-            $HTML = $stepObj->drawInputForm();
+            $HTML .= $views->editStep($q);
             break;
-
 
         case 'resequenceSteps':
             $steps = new Steps();
             $steps->resequence($q); // send the $activityUniq
 
-            $HTML .= $views->mathcodeEditor($q);  // redraw the activity
+            $HTML .= $views->mathcodeEditor($q); // redraw the activity
+            break;
+
+        case 'deleteStep':    
+            $steps = new Steps();
+            $steps->deleteStep($q); 
+
+            $HTML .= $views->mathcodeEditor($q); // redraw the activity
+            break;
+
+        //////// show and hide HTML for debugging
+
+        case 'hideHTML':
+            printNice("setting entities false");
+            $_SESSION['entities'] = false;
+            $HTML .= $views->editStep($q); // redraw the activity
+            break;
+
+        case 'showHTML':
+            printNice("setting entities true");
+            $_SESSION['entities'] = true;
+            $HTML .= $views->editStep($q); // redraw the activity
             break;
 
         ///////////////////////////////

@@ -12,23 +12,35 @@ $GLOBALS['jUserID'] = '';
 
 //runWithoutJoomla();   // uncomment to run without Joomla
 
-
-function runWithoutJoomla()
+class RenderTextStep extends UnitTestCase
 {
-    assertTrue(false, "The 'runWithoutJoomla' test should be commented out");
-    // assertTrue(false,$testText);
+    // this part mirrors the data record
+    public $HTML='';
+    public $utterance='';
+    public $code='';
 
-    $document = gameCodeRenderHtml($testText,'title');
-    return;
+    function __construct(){
+
+    }
+
+    function render($JSONdata,$competency,$curriculum){
+
+        unitTests();  // we ALWAYS run them
+
+
+        $ret = ['html'=>$this->HTML,'utter'=>$this->utterance,'code'=>$this->code];
+        return ($ret);
+    }    
+
+
 }
+
 
 
 
 function mathCodeRenderHtml($jText)
 {
  
-    unitTests();  // we ALWAYS run them
-
  
     $aLines = preProcessDocument($jText);
     printNice($aLines);
@@ -672,6 +684,8 @@ function unitTests()
         assertTrue($resultKeep === $sTest['resultKeep'], "From '{$sTest['test']}' we expected '{$sTest['resultKeep']}' but got '$resultKeep'");
         assertTrue($resultDisc === $sTest['resultDisc'], "From '{$sTest['test']}' we expected '{$sTest['resultDisc']}' but got '$resultDisc'");
     }
+
+    printNice('completed RenderTextStep unit tests');
 }
 
 

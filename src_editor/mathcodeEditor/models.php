@@ -10,7 +10,7 @@ class activities extends dbconnect
         parent::__construct();
         $this->tableName = 'activities';
 
-        if (!isset($_SESSION['dbActivities']) or $GLOBALS['debugMode']) {
+        if (!isset($_SESSION['dbActivities'])) {
             $_SESSION['dbActivities'] = true;
 
             // act_desc is a very specific expectation, with example.
@@ -85,7 +85,7 @@ class courses extends dbconnect
         parent::__construct();
         $this->tableName = 'courses';
 
-        if (!isset($_SESSION['dbCourses']) or $GLOBALS['debugMode']) {
+        if (!isset($_SESSION['dbCourses'])) {
             $_SESSION['dbCourses'] = true;
 
             $createString =
@@ -138,7 +138,7 @@ class topics extends dbconnect
         parent::__construct();
         $this->tableName = 'topics';
 
-        if (!isset($_SESSION['dbTopics']) or $GLOBALS['debugMode']) {
+        if (!isset($_SESSION['dbTopics'])) {
             $_SESSION['dbTopics'] = true;
 
             // topicexpectations is 'overall expectations' - typically a bullet point list
@@ -199,7 +199,7 @@ class Steps extends dbconnect
         parent::__construct();
         $this->tableName = 'steps';
 
-        if (!isset($_SESSION['dbSteps']) or $GLOBALS['debugMode']) {
+        if (!isset($_SESSION['dbSteps'])) {
             $_SESSION['dbSteps'] = true;
 
             // content is already preprocessed into HTML, ready to run
@@ -208,12 +208,16 @@ class Steps extends dbconnect
                   `uniq`          integer PRIMARY KEY AUTOINCREMENT NOT NULL ON CONFLICT FAIL,
                   `activityuniq`   integer,
                   `steptype`       text default '',
+                  `intent`         text default '',
                   `competency`     text default '',
                   `curriculum`     text default '',
                   `comments`       text default '',
                   `jsondata`       text default '',
-                  `html`           text default '',
-                  `stepsequence`   integer
+                  `indexterms`     text default '',
+                  `glossaryterms`  text default '',
+                  `stepsequence`   integer,
+                  `lastupdated`    integer
+
 
                    );";
 
@@ -231,6 +235,7 @@ class Steps extends dbconnect
         $a = [];
         $a['activityuniq'] = $activityUniq;
         $a['steptype'] = $stepType;
+        $a['lastupdated'] = time();
 
         $this->insertArray($a); // format it and write it out
         // get the autoincrement value of the event
@@ -239,12 +244,23 @@ class Steps extends dbconnect
         return($uniq);
     }
 
+    public function updateStep(int $uniq, array $a)
+    {
+        $a['lastupdated'] = time();
+
+        // printNice($a,'About to update Step');
+        $this->updateArray($a, "uniq = " . intval($uniq));
+        $changes = $this->changes();
+        assertTrue($changes==1,"Expected Step Update of uniq=$uniq to change a record, but got '$changes'");
+    }
+
+
     public function getStep($uniq)
     {
         $uniq = intval($uniq);  // ensure that it is an int
 
         $ret = $this->query("Select * from {$this->tableName} where uniq = $uniq");
-        assertTrue(count($ret) == 1);
+        assertTrue(count($ret) == 1, "asked to find step # $uniq, but can't find it");
 
         return ($ret[0]); // we filter off the record #
     }
@@ -271,6 +287,11 @@ class Steps extends dbconnect
         }
     }
 
+    public function deleteStep($uniq)
+    {
+        $this->query("delete from {$this->tableName} where uniq = $uniq");
+    }
+
 }
 
 class users extends dbconnect
@@ -281,7 +302,7 @@ class users extends dbconnect
         parent::__construct();
         $this->tableName = 'users';
 
-        if (!isset($_SESSION['dbusers']) or $GLOBALS['debugMode']) {
+        if (!isset($_SESSION['dbusers'])) {
 
             // we put a random string into `team` when you register
             // a teammate has to INVITE you to join, knowing your email
@@ -475,13 +496,18 @@ class dbconnect extends UnitTestCase
     public function statement($query)
     {
         // printNice($query);
+        $GLOBALS['queries'][] = $query; // save a copy
         $results = $this->db->query($query);
     }
 
+    public function changes(){
+        $changes = $this->db->changes();
+        return($changes);
+    }
     public function query($query)
     {
         // printNice('query :' . $query);
-        // $_SESSION['queries'][] = $query; // save a copy
+        $GLOBALS['queries'][] = $query; // save a copy
 
         $return = array();
         $results = $this->db->query($query);
@@ -544,7 +570,6 @@ class dbconnect extends UnitTestCase
             }
         }
         $insertString = "INSERT INTO " . $this->tableName . " (" . $cFields . ") VALUES (" . $cValues . ")";
-        printNice($insertString);
         return ($this->statement($insertString));
     }
 

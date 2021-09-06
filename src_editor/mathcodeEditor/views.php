@@ -29,8 +29,8 @@ class Views extends UnitTestCase
                         <!--script src='https://cdn.tiny.cloud/1/rj9dbfq7jyvk2dec9zridnbc8qs622xo61ma9gmrta4c6t2g/tinymce/5/tinymce.min.js' referrerpolicy='origin'></script-->
                         <script src='../../lib/tinymce.min.js' referrerpolicy='origin'></script>
 
-                        <!-- our css -->
-                        <link rel='stylesheet' href='../../dist_editor/3d.css' />
+                        <!-- our css NO!! ONLY USE BOOTSTRAP!! -->
+                        <!--link rel='stylesheet' href='../../dist_editor/3d.css' /-->
 
                     </head>
                     <body style='padding-top:4.5rem;'>"; //  onload='window.history.pushState(null, null, `index.php`);'>
@@ -102,7 +102,6 @@ class Views extends UnitTestCase
 
                   </script>
 
-                  <br><br><br>  <!-- get out from under the header -->
                     <div class='container-fluid'>
 
                     <div class='row'>
@@ -119,12 +118,13 @@ class Views extends UnitTestCase
         return ($HTML);
     }
 
-    public function titleBar()
+    public function titleBar($unitTestHTML)
     {
         $debug = '';
 
         if ($GLOBALS['debugMode']) {
-            $debug = '
+            $debug = $unitTestHTML;
+            $debug .= '
             <li class="nav-item active dropdown border"><a class="nav-link dropdown-toggle" data-toggle="dropdown" >Debug<span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link active" href="?RunUnitTests">Run Unit Tests</a></li>
@@ -179,17 +179,11 @@ class Views extends UnitTestCase
                     <a class="nav-link active" href="?p=login">Logout</a>
                 </li>';
 
-        if ($this->codeEditorPage) { // only put up the run/save if
-            $HTML .= '
-            <li class="nav-item btn btn-sm" >
-            </li>
-            <button class="btn-warning" id="run">Save&Run</button>
-                ';
-        }
-        ////////////// examples for navbar
-        // $HTML .= '
-        // <li class="nav-item">
-        //     <a class="nav-link active" aria-current="page" href="#">Home</a>
+        $HTML .= "
+                <li class='nav-item btn btn-sm' >
+                </li>
+                $unitTestHTML";
+
         //   </li>
         //   <li class="nav-item">
         //     <a class="nav-link" href="#">Link</a>
@@ -221,7 +215,7 @@ class Views extends UnitTestCase
           </nav>
           ';
 
-         //   printNice(htmlspecialchars($HTML));
+        //   printNice(htmlspecialchars($HTML));
         return ($HTML);
     }
 
@@ -250,44 +244,6 @@ class Views extends UnitTestCase
         }
         $HTML .= '</table>';
         $HTML .= '<hr>';
-        return ($HTML);
-    }
-
-    public function loginScreen()
-    {
-
-        $HTML = '<div class="container">
-                    <form action="?login" method="post">
-                        <div class="form-group row">
-                            <label for="lgFormGroupInput" class="col-sm-2 col-form-label col-form-label-lg">Email</label>
-                            <div class="col-sm-5">
-                            <input type="email" class="form-control form-control-lg" name="loginemail" placeholder="you@example.com">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="smFormGroupInput" class="col-sm-2 col-form-label col-form-label-lg">Password</label>
-                            <div class="col-sm-5">
-                            <input type="password" class="form-control form-control-lg" name="loginpassword" placeholder="password">
-                            </div>
-                        </div>
-
-                    <br><br>
-
-                    <!-- the default button is the FIRST button.   I want the default to be the Login.   So I have
-                         THREE buttons, and the first one is HIDDEN.  It is the default action if you just hit ENTER.  -->
-
-                    <button style="visibility: hidden;" type="submit" name="loginverify"></button>;
-
-                    <button style="float:left;margin-right:400px;" type="submit" class="btn btn-warning" name="logincreate">Create New Account</button>
-                    <button style="float:left;" type="submit" class="btn btn-primary" name="loginverify">Log In</button>;
-
-                    </form>
-                </div>';
-
-        $HTML .= '<br><br><div class="alert alert-info" role="alert">
-        <b>THIS SITE HAS ONLY BEEN TESTED WITH THE CHROME BROWSER.  IT WILL NOT WORK PROPERLY WITH MICROSOFT EDGE.</b>
-        </div>';
-
         return ($HTML);
     }
 
@@ -322,30 +278,32 @@ class Views extends UnitTestCase
 
         $HTML .=
             "<div class='container'>
-        <div class='row'>";
+                <div class='row'>";
 
         $HTML .=
             "<form>
-            $return
-            <div class='form-group'>
-                  <label for='courseName'>Course Name</label>
-                  <input type='text' class='form-control' name='coursename' value = '$name'placeholder='Course Name' required></input>
-            </div>
-            <div class='form-group'>
-                  <label for='courseSummary'>Course Summary</label>
-                  <textarea class='form-control' name='coursesummary' rows='5' placeholder='Course Summary'>$summary</textarea>
-            </div>
-            <div class='form-group'>
-                <label for='courseSequence'>Sequence #</label>
-                <input type='number' class='form-control' name='coursesequence' value='$sequence'></input>
-            </div>
-            <button type='submit' class='btn btn-primary'>Submit</button>
-        </form>";
+                $return
+                <div class='form-group'>
+                    <label for='courseName'>Course Name</label>
+                    <input type='text' class='form-control' name='coursename' value = '$name'placeholder='Course Name' required></input>
+                </div>
+                <div class='form-group'>
+                    <label for='courseSummary'>Course Summary</label>
+                    <textarea class='form-control' name='coursesummary' rows='5' placeholder='Course Summary'>$summary</textarea>
+                </div>
+                <div class='form-group'>
+                    <label for='courseSequence'>Sequence #</label>
+                    <input type='number' class='form-control' name='coursesequence' value='$sequence'></input>
+                </div>
+                <button type='submit' class='btn btn-primary'>Submit</button>
+            </form>";
 
         $HTML .=
             "</div>
             </div>";
 
+        $HTMLTester = new HTMLTester();
+        $HTMLTester->validate($HTML);
         return ($HTML);
 
     }
@@ -380,6 +338,7 @@ class Views extends UnitTestCase
 
         <tbody>";
 
+        $edit = $delete = $open = '';
         foreach ($ret as $r) {
             $edit = button('edit', 'primary', 'editCourseForm', $r['uniq']);
             $delete = button('delete', 'danger', 'updateCourseForm', $r['uniq'], true, "Delete this Course?");
@@ -391,13 +350,15 @@ class Views extends UnitTestCase
             <td>{$r['uniq']}</td>
             <td>{$r['coursename']}</td>
             <td>{$r['coursesummary']}</td>
-            <td>$edit&nbsp;$delete</td>   <!--buttons-->
+            <td>$edit $delete</td>   <!--buttons-->
           </tr>";
         }
         $HTML .= "
           </tbody>
         </table> ";
 
+        $HTMLTester = new HTMLTester();
+        $HTMLTester->validate($HTML);
         return $HTML;
     }
 
@@ -412,10 +373,10 @@ class Views extends UnitTestCase
 
         $courses = new courses();
         $course = $courses->showCourse($courseuniq);
-        printNice($courseuniq);
-        printNice($course);
+        // printNice($courseuniq);
+        // printNice($course);
 
-        printNice($form);
+        // printNice($form);
 
         $return = '<input type="hidden" name="p" value="saveTopicForm"></input>';
         $name = '';
@@ -466,6 +427,8 @@ class Views extends UnitTestCase
             "</div>
             </div>";
 
+        $HTMLTester = new HTMLTester();
+        $HTMLTester->validate($HTML);
         return ($HTML);
 
     }
@@ -717,11 +680,11 @@ class Views extends UnitTestCase
 
         <div class="form-group">
             <label for="inputEmail">Email address</label>
-            <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus />
+            <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus></input>
         </div>
         <div class="form-group">
            <label for="inputPassword"">Password</label>
-           <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required />
+           <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required></input>
         </div>
 
         <input class="btn btn-lg btn-primary btn-block" type="submit" value="Submit"></input>
@@ -813,18 +776,19 @@ class Views extends UnitTestCase
         $stepsDB = new Steps();
         $steps = $stepsDB->getAllSteps($activityUniq);
 
-        $add = button('add', 'warning', 'addTopicForm', $activityUniq);
+        $add = button('add:', 'warning',);
         $resequence = button('resequence', 'primary', 'resequenceSteps', $activityUniq);
 
-        $HTML .= "<h3>Steps in <b>'something'</b>  $add $resequence</h3>";
+        $HTML .= "<h3>Steps in <b>'something'</b>  $resequence</h3>";
 
-        if (count($steps) == 0) { // add badges for activities on empty page
-            $badges = '';
-            foreach ($GLOBALS['stepTypes'] as $stepType) {
-                $badges .= badge($stepType, 'secondary', 'addStep', "$activityUniq&stepType=$stepType");
-            }
-            $HTML .= $badges;
+        // add badges for activities:
+        $newStep = "<div class='row'><div class='col-6'></div><div class='col-6'>$add ";
+        foreach ($GLOBALS['stepTypes'] as $stepType) {
+            $newStep .= button($stepType, 'secondary', 'addStep', "$activityUniq&stepType=$stepType");
+            $newStep .= ' ';
         }
+        $newStep .= "</div></div>";
+        $HTML .= $newStep;
 
         foreach ($steps as $step) {
 
@@ -835,13 +799,6 @@ class Views extends UnitTestCase
                     </div>
                     <div class='col-6'>";
 
-            // add badges for activities:
-            $badges = '';
-            foreach ($GLOBALS['stepTypes'] as $stepType) {
-                $badges .= badge($stepType, 'secondary', 'addStep', "$activityUniq&stepType=$stepType");
-            }
-            // $HTML .= "<div style='border-style:solid;border-color:blue;'>Add: $badges</div>";
-            $HTML .= $badges;
 
             // $HTML .= "<h3>Courses $add $resequence</h3>
             $HTML .= "<table class='table'>
@@ -860,7 +817,7 @@ class Views extends UnitTestCase
                 <tbody>";
 
             $edit = button('open', 'success', 'editStep', $step['uniq']);
-            $delete = button('delete', 'danger', 'deleteCourseForm', $step['uniq'], true, "Delete this Course?");
+            $delete = button('delete', 'danger', 'deleteStep', $step['uniq'], true, "Delete this Step?");
             // $open = button('open', 'success', 'showTopics', $step['uniq']);
 
             $HTML .= "
@@ -882,6 +839,7 @@ class Views extends UnitTestCase
                 "</div> <!-- class = col-6 -->
             </div>";
         }
+
         return ($HTML);
 
         // $HTML .= "<h3>Topics in <b>'$cname'</b>  $add $resequence</h3>
@@ -1057,4 +1015,24 @@ class Views extends UnitTestCase
         return ($HTML);
     }
 
+    public function editStep($uniq)
+    {
+        $steps = new Steps();
+
+        $stepData = $steps->getStep($uniq); // $q is the step uniq
+
+        $stepType = $stepData['steptype'];
+
+        if(empty($stepType)){
+            assertTrue(false,'Something went wrong here');
+            $stepType = 'Text';
+        }
+
+        $stepClass = $stepType . 'Step'; // the name of the class we want
+
+        $stepObj = new $stepClass($stepData['activityuniq']); //TextStep, CodeStep, etc
+        $stepObj->loadStep($uniq); // loads data from existing
+
+        return ($stepObj->drawInputForm());
+    }
 }

@@ -12,17 +12,21 @@ class AbstractStep extends UnitTestCase
     public $uniq;
     public $activityUniq;
     public $stepType;
+    public $intent;
     public $competency;
     public $curriculum;
     public $comments;
-    public $sequence;
+    public $indexterms;
+    public $glossaryterms;
+
+    public $stepsequence;
 
     // also JSONdata which is stored in $_SESSION['JSONdata']
     // also HTML  which is generated as needed
 
-    // for load and save operations  -  these are for ALL object
+    // for load and save operations  -  these are for ALL objects
     public $nAFields = ['activityUniq'];
-    public $sAFields = ['stepType', 'competency', 'curriculum', 'comments'];
+    public $sAFields = ['intent', 'stepType', 'competency', 'curriculum', 'comments', 'indexterms', 'glossaryterms'];
 
     // every step needs to populate
     //
@@ -40,41 +44,47 @@ class AbstractStep extends UnitTestCase
             assertTrue(in_array($stepType, $GLOBALS['stepTypes']), "'$stepType' is not a stepType for this course");
             assertTrue($activityUniq !== 0, "must provide activityUniq if adding a step");
 
+            $this->uniq = $stepsDB->createStep($this->activityUniq, $stepType);
+
+            $this->intent = '';
             $this->stepType = $stepType;
             $this->activityUniq = $activityUniq;
 
-            $this->uniq = $stepsDB->createStep($this->activityUniq, $stepType);
             $this->competency = '';
             $this->curriculum = '';
+            $this->indexterms = '';
+            $this->glossaryterms = '';
             $this->comments = '';
 
             $_SESSION['JSONdata'] = '';
 
         } else {
 
-            assertTrue(!empty($stepType), "Existing step, surely we know what it is");
-
             $ret = $stepsDB->getStep($uniq);
-
-            assertTrue($stepType == $ret['steptype'], "Existing stepType is '{$ret['steptype']}', doesn't match requested type '$stepType'");
 
             $this->uniq = $ret['uniq'];
             $this->activityUniq = $ret['activityuniq']; // stuff in the db is always lowercase
+            $this->intent = $ret['intent'];
             $this->stepType = $ret['steptype'];
             $this->competency = $ret['competency'];
             $this->curriculum = $ret['curriculum'];
+            $this->indexterms = $ret['indexterms'];
+            $this->glossaryterms = $ret['glossaryterms'];
             $this->comments = $ret['comments'];
 
+            if (!isset($_SESSION['JSONdata'])) {
+                $_SESSION['JSONdata'] = '';
+            }
             $this->unpackFromJSON($_SESSION['JSONdata']);
-            $this->generateHTML(); // just in case
+            $this->html = $this->generateHTML();
 
         }
 
         if (!empty($this->competency)) { // competency is allowed to be empty
-            assertTrue(in_array($this->competency, $GLOBALS['competencies']), 'not a competency for this course');
+            assertTrue(in_array($this->competency, $GLOBALS['competencies']), "'{$this->competency}' not a competency for this course");
         }
         if (!empty($this->curriculum)) { // curriculum strand is allowed to be empty
-            assertTrue(in_array($this->curriculum, $GLOBALS['curriculumStrands']), 'not a curriulumStrand for this course');
+            assertTrue(in_array($this->curriculum, $GLOBALS['curriculumStrands']), "'{$this->curriculum}' not a curriulumStrand for this course");
         }
     }
 
@@ -130,16 +140,43 @@ class AbstractStep extends UnitTestCase
 
         $HTML .=
             "<div class='form-group'>
-              <label for='courseSequence'>Sequence</label>
-              <input type='number' class='form-control' name='actsequence' value='$this->sequence'></input>
+              <label for='stepeSequence'>Sequence</label>
+              <input type='number' class='form-control' name='stepsequence' value='$this->stepsequence'></input>
           </div>";
 
         $HTML .= "</div>";
 
+        
+        
+        $HTML .= "<div class='row'><div class='col-6'>";
+        
+        $HTML .= "<div class='form-inline'>
+        <label for='indexterms'>Index Terms (separate with commas)</label>  
+        <input type='text' class='form-control' name='indexterms' value='{$this->indexterms}'></input>
+        </div>";
+
+        $HTML .= "</div><div class='col-6'>";
+
+        $HTML .= "<div class='form-inline'>
+        <label for='glossaryterms'>Glossary Terms (separate with commas)</label>  
+        <input type='text' class='form-control' name='glossaryterms' value='{$this->glossaryterms}'></input>
+        </div>";
+        
+        $HTML .= "</div>";
+
+
+        
         $HTML .= "<div class='row'>";
 
         $HTML .= "<div class='form-inline'>
-                <label for='comments'>Private comments, TODOs, etc</label>
+                <label for='intent'>Intent of this Step</label>
+                <input type='text' class='form-control' name='intent' value='{$this->intent}'></input>
+                </div>";
+
+        $HTML .= "</row><div class='row'>";
+
+        $HTML .= "<div class='form-inline'>
+                <label for='comments'>Reviewer comments, TODOs, etc</label>
                 <textarea class='form-control' name='comments' rows='2' >{$this->comments}</textarea>
                 </div>";
 
@@ -176,13 +213,9 @@ class AbstractStep extends UnitTestCase
         }
 
         $_SESSION['JSONdata'] = $this->packIntoJson($form); // get the specific fields for this step into $_SESSION['JSONdata']
-
         $a['jsondata'] = $_SESSION['JSONdata'];
-        $a['html'] = $this->generateHTML();
 
-        printNice("about to update uniq $uniq");
-        printNice($a);
-        $steps->updateArray($a, "uniq = " . intval($uniq));
+        $steps->updateStep(intval($uniq), $a);
 
     }
 
@@ -220,7 +253,7 @@ class AbstractStep extends UnitTestCase
             if (isset($oJson->$f)) {
                 $this->$f = $oJson->$f;
             } else {
-                printNice("$f is not defined in JSON object, but in field array.  $json");
+                printNice("$f is not defined in JSON object, but in field array. Was it added?  $json");
             }
         }
     }
@@ -235,7 +268,7 @@ class AbstractStep extends UnitTestCase
 // Declare the interface template
 interface StepTemplate
 {
-    public function __construct($activityUniq, $uniq);
+    public function __construct($activityUniq);
     public function drawInputForm();
     public function generateHTML();
 }
@@ -254,7 +287,7 @@ class TextStep extends AbstractStep implements StepTemplate
     var $assistant = '';
     var $paragraph1 = '', $paragraph2 = '', $paragraph3 = '', $paragraph4 = '';
     var $proctorNotes = '';
-    var $imageName = '', $imageType = '', $inParagraph = 0, $imageAlt = '';
+    var $imageName = '', $imageType = '', $imagePara = '', $imageAlt = '';
     var $ccAuthor = '', $ccSource = '', $ccOption = '', $ccVersion = '-', $dnloadDate = '', $ccComment = '';
 
     // Title: The title of the image.
@@ -263,15 +296,16 @@ class TextStep extends AbstractStep implements StepTemplate
     // License: The type of Creative Commons license it is available under,
 
     // for load and save operations  -  these are for THIS object only
-    var $nFields = ['inParagraph'];
+    var $nFields = [];
     var $sFields = ['title', 'indentLevel', 'assistant', 'paragraph1', 'paragraph2', 'paragraph3', 'paragraph4',
-        'proctorNotes', 'imageName', 'imageType', 'inParagraph', 'imageAlt',
+        'proctorNotes', 'imageName', 'imageType', 'imageAlt', 'imagePara',
         'ccAuthor', 'ccSource', 'ccOption',
         'ccVersion', 'dnloadDate', 'ccComment'];
 
-    function __construct($activityUniq, $uniq = 0)
+    function __construct($activityUniq)
     {
-        $this->loadStep($uniq, $activityUniq, 'Text'); // add if $uniq==0
+        $this->activityUniq = $activityUniq;
+        // $this->loadStep($uniq, $activityUniq, 'Text'); // add if $uniq==0
     }
 
     function drawInputForm()
@@ -279,28 +313,34 @@ class TextStep extends AbstractStep implements StepTemplate
         $HTML = '';
 
         // divide the page into two sides
-        $HTML .=
-            "<div class='row'>
-            <div class='col'>
+        $this->html = $this->generateHTML();
+
+        // buttons at the top show or hide the native HTML
+        if ($GLOBALS['debugMode']) {
+            // set $entities to true to see HTML source
+            if (isset($_SESSION['entities']) and $_SESSION['entities']) {
+                // true, so show entities, offer 'hide html' button
+                $entities = true;
+                $button = button('hide HTML', 'danger', 'hideHTML', $this->uniq);
+            } else {
+                // false (or undefined) so show HTML, offer to show HTML entities
+                $entities = false;
+                $button = button('show HTML', 'warning', 'showHTML', $this->uniq);
+            }
+            $HTML .= "<div class='row'><div class='col-1'>$button</div></div>";
+        }
+
+        $HTML .= "<div class='row'><div class='col-6'>
                 <div id='lesson'>
-                   <h2>TextStep</h2>
+                {$this->html}
                 </div>
-            </div><div class='col'>";
+            </div><div class='col-6'>";
 
         // the hard work is all on the second side
         $HTML .=
         "<form action='?saveStepForm'>" . $this->formStandards();
 
         $HTML .= "<div class='row'>"; // full row for the title
-
-        // the title / subtitle of this sections
-        $HTML .=
-            "<div class='form-group'>
-                <label for='title'>Title / Subtitle</label>
-                <input class='form-control' type='text' name='title' value='{$this->title}'></input>
-                </div>";
-
-        $HTML .= "</div><div class='row'>";
 
         $HTML .= "<div class='col-1'>";
 
@@ -314,7 +354,7 @@ class TextStep extends AbstractStep implements StepTemplate
                  </select>
               </div>";
 
-        $HTML .= "</div><div class='col-2'>";
+        $HTML .= "</div><div class='col-1'>";
 
         // the dropdown for selecting assistant: standard / history, etc
         $options = formSelectList(['None', 'History', 'Science', 'Mindset'], $this->assistant);
@@ -325,6 +365,18 @@ class TextStep extends AbstractStep implements StepTemplate
                        $options
                        </select>
                     </div>";
+
+        $HTML .= "</div><div class='col-10'>";
+
+        // the title / subtitle of this sections
+        $HTML .=
+            "<div class='form-group'>
+                <label for='title'>Title / Subtitle</label>
+                <input class='form-control' type='text' name='title' value='{$this->title}'></input>
+                </div>";
+
+        $HTML .= "</div><div class='row'>";
+
         $HTML .= "</div><div class='col-2'>";
 
         // the dropdown for selecting image type
@@ -339,19 +391,43 @@ class TextStep extends AbstractStep implements StepTemplate
 
         $HTML .= "</div><div class='col-1'>";
 
+        $options = formSelectList(['1', '2', '3', '4'], $this->imagePara);
         $HTML .=
             "<div class='form-inline'>
-             <label for='inParagraph'>Para#</label>
-             <input type='number' class='form-control' name='inParagraph' value='{$this->inParagraph}'></input>
-          </div>";
+                             <label>Attach</label>
+                             <select class='form-control' name='imagePara' value = '{$this->imagePara}' >
+                             $options
+                             </select>
+                          </div>";
 
-        $HTML .= "</div><div class='col-6'>";
+        $HTML .= "</div>"; // end of col,
+
+        $HTML .= "<div class='col-3'>";
 
         $HTML .=
             "<div class='form-inline'>
-             <label for='Image/Video Name'>Image Name or Video URL</label>
-             <input type='text' class='form-control' name='imageName' value='{$this->imageName}'></input>
-          </div>";
+                     <label for='Image/Video Name'>Image Name or Video URL</label>
+                     <input type='text' class='form-control' name='imageName' value='{$this->imageName}'></input>
+                  </div>";
+
+        $HTML .= "</div><div class='col-4'>";
+
+        $HTML .=
+            "<div class='form-inline'>
+                     <label>Alt Text</label>
+                     <input type='text' class='form-control' name='imageAlt' value='{$this->imageAlt}'></input>
+                  </div>";
+
+        $HTML .= "</div>"; // end of col,
+
+        $HTML .= "<div class='col-2'>";
+
+        $HTML .=
+            "<div class='form-inline'>
+                <p></p>
+                  </div>";
+
+        $HTML .= "</div>"; // end of col,
 
         $HTML .= "</div></div>"; // end of col, end of row
 
@@ -361,15 +437,18 @@ class TextStep extends AbstractStep implements StepTemplate
                 <div style='padding:5px; border-color:lightblue;border-style:solid;'>";
 
         $HTML .= "<div class='row'>";
-        $HTML .= "<p>If you can’t trace the creator or terms of use, DO NOT USE that image. 
+        $HTML .= "<p>If you can’t trace the creator or terms of use, DO NOT USE this image.
                      CC versions below 4.0 are used by <a href='https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3844180'>CopyLeft Trolls</a>.
                      Consider keeping evidence, perhaps a screenshot, of the original site. </p>";
 
         $HTML .= "</div>
                 <div class='row'>";
 
+        $HTML .= "</div>
+                <div class='row'>";
+
         $HTML .= "<div class='col-2'>";
-        $options = formSelectList(['CC BY', 'CC BY-SA', 'CC BY-NC', 'CC BY-ND', 'CC BY-ND-NC', 'CC0', 'Public Domain', 'My Own', 'Paid Stock'], $this->ccOption);
+        $options = formSelectList(['CC BY', 'CC BY-SA', 'CC BY-NC', 'CC BY-ND', 'CC BY-ND-NC', 'CC0', 'By Permission', 'Public Domain', 'My Own', 'Paid Stock'], $this->ccOption);
         $HTML .=
             "<div class='form-inline'>
                  <label for='curriculum'>CC Option</label>
@@ -380,7 +459,7 @@ class TextStep extends AbstractStep implements StepTemplate
 
         $HTML .= "</div><div class='col-1'>";
 
-        $options = formSelectList(['1.0', '2.0', '2.1', '2.5', '3.0', '4.0'], $this->ccVersion);
+        $options = formSelectList(['4.0', '3.0', '2.5', '2.1', '2.0', '1.0'], $this->ccVersion);
         $HTML .=
             "<div class='form-inline'>
                  <label for='ccVersion'>Version</label>
@@ -428,16 +507,16 @@ class TextStep extends AbstractStep implements StepTemplate
         $HTML .= "</div></div>"; // end of cc box
         $HTML .=
             "<div class='form-group'>
-            <br><textarea class='form-control' name='paragraph1' rows='4' placeholder='Paragraph 1'>{$this->paragraph1}</textarea>
-            <br><textarea class='form-control' name='paragraph2' rows='4' placeholder='Paragraph 2'>{$this->paragraph2}</textarea>
-            <br><textarea class='form-control' name='paragraph3' rows='4' placeholder='Paragraph 3'>{$this->paragraph3}</textarea>
-            <br><textarea class='form-control' name='paragraph4' rows='4' placeholder='Paragraph 4'>{$this->paragraph4}</textarea>
+            <br><textarea class='form-control' name='paragraph1' rows='5' placeholder='Paragraph 1'>{$this->paragraph1}</textarea>
+            <br><textarea class='form-control' name='paragraph2' rows='5' placeholder='Paragraph 2'>{$this->paragraph2}</textarea>
+            <br><textarea class='form-control' name='paragraph3' rows='5' placeholder='Paragraph 3'>{$this->paragraph3}</textarea>
+            <br><textarea class='form-control' name='paragraph4' rows='5' placeholder='Paragraph 4'>{$this->paragraph4}</textarea>
 
-            <br><textarea class='form-control' name='proctorNotes' rows='4' placeholder='Proctor Notes'>{$this->proctorNotes}</textarea>
+            <br><textarea class='form-control' name='proctorNotes' rows='5' placeholder='Proctor Notes'>{$this->proctorNotes}</textarea>
 
             </div>";
-            
-            $HTML .= "</div>";
+
+        $HTML .= "</div>";
 
         $HTML .= "</form>";
 
@@ -471,9 +550,30 @@ class TextStep extends AbstractStep implements StepTemplate
         return ($HTML);
     }
 
-    function generateHTML()
+    function generateHTML($entities = false) // if $entities, then show HTML source
+
     {
-        return 'heml';
+        $Parsedown = new Parsedown();
+        $HTML = '';
+
+        $HTML .= "<div class='row'>
+                    <div class='col-1'>";
+        $HTML .= "    <img src='assets/images/speaker.png' height='35px'></img>";
+        $HTML .= "  </div>
+                    <div class='col-11'>";
+
+        foreach (['paragraph1', 'paragraph2', 'paragraph3', 'paragraph4'] as $para) {
+            $markdown = $Parsedown->text($this->$para);
+            $HTML .= (($entities) ? htmlentities($markdown) : $markdown);
+        }
+
+        $HTML .= "    </div>
+                   </div>";
+
+        $HTMLTester = new HTMLTester();
+        $HTMLTester->validate($HTML);
+        return ($HTML);
+
     }
 }
 
@@ -484,10 +584,9 @@ class TextStep extends AbstractStep implements StepTemplate
 class CodeStep extends AbstractStep implements StepTemplate
 {
 
-    public function __construct($activityUniq, $uniq = 0)
+    public function __construct($activityUniq)
     {
         $this->activityUniq = $activityUniq;
-        $this->loadStep($uniq, 'Code');
 
     }
 

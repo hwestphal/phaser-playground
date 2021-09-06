@@ -17,8 +17,14 @@ function runUnitTests()
     $GLOBALS['assertions'] = 0;
     $GLOBALS['fails'] = 0;
 
-    $o = new accounts();
-    $o->runTests(); // SQLlite3 wrapper class
+    parseDownUnitTests();
+    $GLOBALS['tests'] += 1;
+
+    $o = new HTMLTester();
+    $o->runTests();
+
+    // $o = new accounts();
+    // $o->runTests(); // SQLlite3 wrapper class
 
     // $o = new accountLog();
     // $o->runTests();    // SQLlite3 wrapper class
@@ -26,13 +32,13 @@ function runUnitTests()
     // $o = new passwords();
     // $o->runTests();    // SQLlite3 wrapper class
 
-    $o = new Views();
-    $o->runTests(); // SQLlite3 wrapper class
+    // $o = new Views();
+    // $o->runTests(); // SQLlite3 wrapper class
 
     // we can step through manually, or simply run all of them and check the asserts
-    require_once 'testaging.php';
-    $o = new testAging();
-    $o->runTests();
+    // require_once 'testaging.php';
+    // $o = new testAging();
+    // $o->runTests();
 
     $HTML = finalReport();
     return ($HTML);
@@ -85,12 +91,12 @@ function finalReport()
         $span = "<span style=\"padding: 8px; margin-top: 1em; background-color: red; color: white;\">";
     }
 
-    $HTML = "<br /><br />" . $span;
+    $HTML = "<br><br>" . $span;
     $HTML .= " <strong>{$GLOBALS['tests']}</strong> tests,";
     $HTML .= "  <strong>{$GLOBALS['assertions']}</strong> assertions,";
-    $HTML .= "  <strong>{$GLOBALS['fails']}</strong> fails</span>";
-    $HTML .= " <br \>{$GLOBALS['errorString']}";
-
+    $HTML .= "  <strong>{$GLOBALS['fails']}</strong> fails";
+    $HTML .= " </span>";
+    // $HTML .= " <br>{$GLOBALS['errorString']}";
     return ($HTML);
 }
 
@@ -129,7 +135,7 @@ function assertTrue($assertion, $comment = "Assert Failed")
     return ($assertion); // allows chained assertions
 }
 
-function printNice($elem)
+function printNice($elem, $message = '')
 {
     if (!$GLOBALS['debugMode']) {
         return;
@@ -147,7 +153,7 @@ function printNice($elem)
         }
     }
 
-    $HTML .= "-->" . printNiceHelper($elem);
+    $HTML .= "--><span style='color:blue;'>$message</span>" . printNiceHelper($elem);
     echo $HTML;
 }
 
@@ -228,8 +234,10 @@ function printNiceHelper($elem, $max_level = 10, $print_nice_stack = array(), $H
         $HTML .= "<font color=green>EMPTY STRING</font>";
     } elseif (is_integer($elem)) {
         $HTML .= "<font color=blue>$elem</font>";
+    } elseif (is_string($elem)) {
+        $HTML .= htmlentities(str_replace("\n", "<strong><font color=red>*</font></strong><br>\n", $elem));
     } else {
-        $HTML .= str_replace("\n", "<strong><font color=red>*</font></strong><br>\n", $elem);
+        $HTML .= $elem;
     }
     return ($HTML);
 }
@@ -240,8 +248,20 @@ class HTMLTester extends UnitTestCase
 
     public function testHTMLTester()
     {
+
+        $string = "<html><body></body></html>";
+        assertTrue($this->validate($string), $string);
+
+        $string = "<html><body><span /></body></html>";
+        assertTrue($this->validate($string), $string);
+
+        // $string = "<html><body><span>missing</body></html>"; // BAD - needs </span>
+        // assertTrue(!$this->validate($string),$string);
+
         $string = "<html><body><table><tr><td>first element</td><td>second element<img stuff here /></td></tr></table></body></html>";
-        return ($this->validate($string)); // assertions are already in the validation
+        assertTrue($this->validate($string));
+
+        return (true);
     }
 
     public function validate($string)
@@ -255,42 +275,47 @@ class HTMLTester extends UnitTestCase
 
         // echo serialize($tagArray);      // now have the tags, eg: 'td>second element
         // printNice($tagArray);
-        
+
         $start = 0;
         $ptr = 0;
         $stack = [];
 
-        for ($i=0;$i<count($tagArray);$i++){
-            $tag = $tagArray[$i];       // equiv to foreach($tagArray as $tag)
+        for ($i = 0; $i < count($tagArray); $i++) {
+
+            $tag = $tagArray[$i]; // equiv to foreach($tagArray as $tag)
 
             if (empty(ltrim(rtrim($tag)))) { // explode() will create this extra element at the start of the array, not sure why
                 continue;
             }
 
-            assert(!empty($tag));   // only real tags now
+            assert(!empty($tag)); // only real tags now
 
             // can just ignore tags that end in />
-            if(substr ( $tag , -2)=="/>"){
+            if (substr($tag, -2) == "/>") {
                 continue;
             }
 
-            // ignore <br>, should be <br/> but don't care
-            if($tag == "br>"){
+            // ignore <br>, should be <br /> but don't care
+            if (substr($tag, 0, 3) == "br>") {
                 continue;
             }
 
             // KLUDGE - this allows <!-- comment --> but not spread over multiple brackets
-            if (strtolower(substr($tag, 0, 1)) == '!') { 
+            if (strtolower(substr($tag, 0, 1)) == '!') {
                 continue; // just ignore it
             }
 
+            // if we get here, we are interested
+            // printNice($tag, '$tag not ignored');
+
             // now either a start tag, or an end tag
-            if(substr($tag,0,1)!=='/'){     // start
-                array_push($stack,$tag);
-            }else{                      // end
+            if (substr($tag, 0, 1) !== '/') { // start
+                // printNice("pushing '$tag'");
+                array_push($stack, $tag);
+            } else { // end
                 // if it matches, just pop the stack
-                $end = min(strpos($tag,' ')-1,strpos($tag,'>')-1);
-                $tagType = substr($tag,1,$end);
+                $end = min(strpos($tag, ' ') - 1, strpos($tag, '>') - 1);
+                $tagType = substr($tag, 1, $end);
 
                 // printNice($stack);
 
@@ -298,40 +323,44 @@ class HTMLTester extends UnitTestCase
                 //     continue;
                 // }
 
-                $lastStack = $stack[count($stack)-1];
+                $lastStack = $stack[count($stack) - 1];
                 // add a space to the end of $tagType so <u and <ul are different
                 $tagType .= ' ';
 
-                $compare = substr($lastStack,0,strlen($tagType)-1).' ';
+                $compare = substr($lastStack, 0, strlen($tagType) - 1) . ' ';
                 // printNice("Comparing '$lastStack' with '$compare' and '/$tagType'");
 
-                if( $compare == $tagType){
+                if ($compare == $tagType) {
                     // matches last stack, pop it off
-                    if(count($stack)>0){
-                    array_pop($stack);
-                    continue;
-                    } else{
-                        printNice("Stack Underflow at '$tag'");
-                        return;
+                    if (count($stack) > 0) {
+                        array_pop($stack);
+                        continue;
+                    } else {
+                        assertTrue(false, "Stack Underflow at '$tag'");
+                        return (false);
                     }
-                }else{
+                } else {
                     // trouble !!
-                    printNice("Mismatch '$lastStack':  '$compare' and '$tagType'");
-                    printNice($stack);
-                    return;
+                    assertTrue(false, "Mismatch: top of stack is '$lastStack', trying to close '$tagType'");
+
+                    for ($j = $i; $j < min($i + 5, count($tagArray)); $j++) {
+                        printNice($tagArray[$j], 'we are about to look at...');
+                    }
+
+                    printNice($stack, 'current stack');
+                    return (false);
                 }
                 //
-                
+
             }
 
-
+            return (true); // everything is good
         }
 
-        if(count($stack)!==0){
+        if (count($stack) !== 0) {
             printNice('HTML Remainder !!');
             printNice($stack);
         }
-
 
     }
 
@@ -472,9 +501,14 @@ function Button($text, $color, $p = '', $q = '', $solid = true, $onClick = '')
     $buttonClass = "btn btn-" . (($solid) ? '' : 'outline-') . "$color btn-sm";
 
     if (empty($p)) {
-        return "<a class='$buttonClass' role='button' $confirm>$text</a>";
+        $ret = "<a class='$buttonClass' role='button' $confirm >$text</a>";
     }
-    return "<a href='?p=$p&q=$q' class='$buttonClass' role='button' $confirm>$text</a>";
+    $ret = "<a href='?p=$p&q=$q' class='$buttonClass' role='button' $confirm >$text</a>";
+
+    $HTMLTester = new HTMLTester();
+    $HTMLTester->validate($ret);
+    return ($ret);
+
 }
 
 function badge($text, $color, $p = '', $q = '', $solid = true, $onClick = '')
@@ -568,15 +602,30 @@ function alertMessage($message, $alertType = "danger") // primary, secondary, su
 
 }
 
-function formSelectList($aArray, $selected = '') // simple array ('a','b','c'), key is same as value
+function formSelectList($aArray, $selected = '', $blank = true) // simple array ('a','b','c'), key is same as value
 
 {
     // creates <option>something</option>
     $HTML = '';
-    $HTML .= "<option></option>";   // an empty at the top
+
+    if ($blank) { // default is true
+        if ($selected == '' or (!in_array($selected, $aArray))) {
+            // blank at top should be selected
+            $HTML .= "<option selected='selected'></option>"; // an empty at the top
+        } else {
+            $HTML .= "<option></option>"; // an empty at the top
+        }
+    } else {  // user has made a selection - can we find it?
+        if (!in_array($selected, $aArray)) {
+            // we don't have a blank, and we don't have a default
+            $selected = $aArray[0]; // use the first value
+        }
+    }
+
+    // now build the selection list
     foreach ($aArray as $option) {
         $s = ($selected == $option) ? " selected='selected' " : ''; // is this the current value?
         $HTML .= "<option$s>$option</option>";
     }
-    return($HTML);
+    return ($HTML);
 }

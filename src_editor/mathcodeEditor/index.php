@@ -6,7 +6,8 @@ define("_KELLER", false); // this is the only entry point to these programs
 
 $GLOBALS['version'] = '1.00';
 
-$GLOBALS['debugMode'] = false; // false for production
+$GLOBALS['debugMode'] = true; // false for production
+$GLOBALS['debugSQL'] = true; // false for production
 
 $purl = parse_url("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
 $port = '';if (isset($purl['port'])) {
@@ -21,7 +22,9 @@ require_once 'utilities.php';
 require_once 'models.php';
 require_once 'views.php';
 require_once 'steps.php';
-require_once 'renderHtml.php';
+// require_once 'renderHtml.php';
+require_once 'Parsedown.php';
+
 
 // every activity tries to include a competency and a curriculumStrand
 
@@ -74,6 +77,9 @@ $GLOBALS['report'] = '';
 
 $GLOBALS['logfilename'] = "data/" . date("Y-m-d", time()) . ".log";
 
+
+
+
 ///////////////////////////////////////////
 ///////////////////////////////////////////
 ///////////////////////////////////////////
@@ -91,12 +97,13 @@ echo $views->htmlHeader(); // $HTML from runUnitTests();
 
 $HTML = '';
 
-// run unit tests even if not logged in yet     // oct2019
-if (isset($_REQUEST['RunUnitTests'])) {
-    $HTML .= runUnitTests();
+// run unit tests even if not logged in yet   
+$unitTestHTML = '';
+if ($GLOBALS['debugMode'] or isset($_REQUEST['RunUnitTests'])) {
+    $unitTestHTML .= runUnitTests();
 }
 
-$HTML .= $views->titleBar();
+$HTML .= $views->titleBar($unitTestHTML);
 $HTML .= $views->debugMsg();
 
 $temp = processrequest(); // do whatever (starts by loading data)
@@ -108,7 +115,7 @@ $goodHTML = $HTMLTester->validate($HTML);
 
 $HTML .= $views->htmlFooter();
 
-
+printNice($GLOBALS['queries']);
 
 echo $HTML;
 
