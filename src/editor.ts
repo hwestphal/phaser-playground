@@ -16,6 +16,8 @@ import lib_es2019_string from "./extraLibs/lib.es2019.string.d.ts.txt"
 import lib_es2020_bigint from "./extraLibs/lib.es2020.bigint.d.ts.txt"
 import lib_es2021_string from "./extraLibs/lib.es2021.string.d.ts.txt"
 
+import lib_es2099 from "./extraLibs/lib.es2099.d.ts.txt"
+
 
 // let known = [2]
 
@@ -90,7 +92,6 @@ export class Editor {
             strict: false,
 
             noImplicitAny: false,
-            strictNullChecks: false,
 
             noUnusedParameters:false,       // easier for beginners
             noUnusedLocals:false,
@@ -105,44 +106,14 @@ export class Editor {
             target: monaco.languages.typescript.ScriptTarget.ES2020,
         });
 
-        monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-            target: monaco.languages.typescript.ScriptTarget.ES2020,
-            allowNonTsExtensions: true,
-            noLib: true,                        // don't bring in everything
-        });
+        // monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+        //     target: monaco.languages.typescript.ScriptTarget.ES2020,
+        //     allowNonTsExtensions: true,
+        //     noUnusedLocals:false,
+        //     noLib: true,                        // don't bring in everything
+        // });
 
 
-        // don't want all of DOM, but I DO want console.log() and similar
-        // let lib_baby_plus = lib_baby + `
-        interface Array<T> {                // otherwise array(10).fill(0) doesn't work
-            fill(value: T): Array<T>;
-        }
-        
-        interface Console {
-            memory: any;
-            assert(condition?: boolean, ...data: any[]): void;
-            clear(): void;
-            count(label?: string): void;
-            countReset(label?: string): void;
-            debug(...data: any[]): void;
-            dir(item?: any, options?: any): void;
-            dirxml(...data: any[]): void;
-            error(...data: any[]): void;
-            exception(message?: string, ...optionalParams: any[]): void;
-            group(...data: any[]): void;
-            groupCollapsed(...data: any[]): void;
-            groupEnd(): void;
-            info(...data: any[]): void;
-            log(...data: any[]): void;
-            table(tabularData?: any, properties?: string[]): void;
-            time(label?: string): void;
-            timeEnd(label?: string): void;
-            timeLog(label?: string, ...data: any[]): void;
-            timeStamp(label?: string): void;
-            trace(...data: any[]): void;
-            warn(...data: any[]): void;
-        }
-        
         var console: Console;
         
    
@@ -162,6 +133,7 @@ export class Editor {
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2020_bigint)
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2021_string)
 
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2099)      // stuff that Typescript hasn't provided
 
 
         this.editor = monaco.editor.create(this.el, {

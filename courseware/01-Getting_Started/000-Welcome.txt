@@ -47,7 +47,9 @@ We'll teach you computer programming, show you some good practices, and give you
 <p>To get there, we are going to teach you a #ton# of math and physics.  You are going to pretend you don't notice, because it looks like we are teaching you how to create computer graphics.  But you should pay attention to the math, it's the most portable skill you will learn here.  
 
 <break>
-<p>On a computer screen, you don't just 'paint' a color. You set up a model of material with certain properties, and surround it with models of lights with other properties.  Then you run billions of calculations to combine the natural colors, reflections and highlights, glow, and background lighting into something you can project pixel-by-pixel.
+<p(img=rgb.jpg)>On a computer screen, you don't just 'paint' a color. The hardware only knows about 'red', 'green', and 'blue' ('RGB').
+
+<p>You set up a model of material with certain properties, and surround it with models of lights with other properties.  Then you run billions of calculations to combine the natural colors, reflections and highlights, glow, and background lighting into something you can project pixel-by-pixel.
 
 <p>The software that does that is called a 'Shader'.  We're going to write one.  But to do that will require a deep-dive into Geometry, Linear Equations, Trigonometry, Algebra, Calculus, Vectors, and Matrices.  There's no magic, everything you see on your screen is done with math.
 

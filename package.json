@@ -5,6 +5,8 @@
     "comment01": "npm watch is at localhost/baby...., NOT at :8080",
     "build": "rm -rf dist/ && tsc --noEmit && webpack --config webpack.player.config.js",
     "watch": "webpack --watch --config webpack.player.config.js",
+    "copy2moodle": "mkdir -p ../../moodle/mod/mathcode/dist && cp -R dist/*.* ../../moodle/mod/mathcode/dist && cp lib/*.* ../../moodle/mod/mathcode/dist",
+
     "comment02": "==== run the editor",
     "buildeditor": "rm -rf dist_editor && webpack --config webpack.editor.config.js && npm run copyeditor",
     "watcheditor": "webpack --watch --config webpack.editor.config.js",
