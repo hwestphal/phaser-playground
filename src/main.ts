@@ -5,6 +5,9 @@
 
 
 import { Editor } from "./editor";
+import { OnClickSay } from "./onClickSay"
+// import { XMLHttpRequest } from 'xmlhttprequest-ts'
+
 
 
 // not sure if this is useful
@@ -32,11 +35,62 @@ class Main {
 
     template = "let app = new Baby()"
 
+    static onClickSay: OnClickSay      // we'll put an instance here
+
+
+
+
+    /** Attaches the mathcode API to the window object so that you can discover it */
+    static attachMathCode() {   // NB - STATIC !!!
+        // let onClickSay: OnClickSay
+
+        (window as any).MathcodeAPI = {
+            version: '1.0',
+            onClickSay: (utterID: string, voiceN = 0) => {
+                let sayThis = document.getElementById(utterID)?.innerHTML
+                if (!sayThis) {     // might be null
+                    this.writeMoodleLog('log', { 'datacode':-1, 'data01': `could not find HTML ID '${utterID}'`})
+                } else {
+
+                    this.writeMoodleLog('log', { 'datacode':1000, '`data01':utterID, 'data02': sayThis.substring(0,30) })
+
+                    if (!this.onClickSay)
+                        this.onClickSay = new OnClickSay()
+
+                    // this.onClickSay = new OnClickSay()
+                    this.onClickSay.onClickSay('this is a test',voiceN)
+                }
+            }
+            // (window as any).API_1484_11 = new LMSAPI();   // SCORM 2004
+        }
+    }
+
+
+    static writeMoodleLog(action: string, payload: object) {
+
+        console.log('in writeMoodleLog')
+        let xhr = new XMLHttpRequest();
+        // let formData = new FormData(); // Currently empty
+
+        // formData.append('action', 'log')
+        // formData.append('payload', 'this is a payload from Typescript')
+
+        xhr.open("POST", "ajax.php", true);
+        //Send the proper header information along with the request
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send('action=log&payload=this is_a_payload_from_Typescript');
+    }
+
 
     constructor() {
 
         console.log('in Main.constructor()')
-        
+
+        Main.onClickSay = new OnClickSay()
+
+        /** Attaches the mathcode API to the window object so that you can discover it */
+        Main.attachMathCode();
+
         const State = {
             inputModel: null,
             outputModel: null,
@@ -63,8 +117,8 @@ class Main {
         // let code = `app.floor(30,30,5);let cube = app.cube().color('blue').move('up',1)`
         // let app = new Baby(code)
 
-        this.download.onclick = () => this.editor.download("game.ts");
-        this.upload.onclick = () => this.editor.upload();
+        // this.download.onclick = () => this.editor.download("game.ts");
+        // this.upload.onclick = () => this.editor.upload();
 
         this.run.onclick = async () => {
             console.log('clicked RUN')
@@ -113,6 +167,7 @@ class Main {
         this.pause.disabled = true;
         // this.fullscreen.disabled = true;
     }
+
 }
 
 

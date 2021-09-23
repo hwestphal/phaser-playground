@@ -5,19 +5,22 @@ export class OnClickSay {
     synth = window.speechSynthesis
     synthRunning = false // don't want two instances
     synthCancelled = false // if cancelled then don't restart
-    voices: any
+    voices: any[]
 
-    constructor(){
+    constructor() {
         this.loadVoicesWhenAvailable()
-
+        console.log('onClickSay constructor()')
     }
 
     // we need to load the voices before we can use them
     loadVoicesWhenAvailable() {
         this.voices = this.synth.getVoices()
+        this.voices.forEach(voice => console.log(voice))
+
+
+        console.log(this.voices)
         if (this.voices.length !== 0) {
             // console.log('voices already loaded')
-            // console.log('voices', voices)
         } else {
             // console.log('loading voices')
             setTimeout(() => {
@@ -28,6 +31,8 @@ export class OnClickSay {
 
     onClickSay(utterance: string) {
         console.log('arrived in onClickSay', utterance)
+        console.log('am i in the right place?')
+        
         if (this.voices === undefined) {
             alert('Speech not ready yet, still loading voices.')
             return
@@ -36,6 +41,10 @@ export class OnClickSay {
         //     this.synthCancelled = true
         //     return
         // }
+        console.log('voices:',this.voices)
+        this.voices.forEach(voice => console.log(voice))
+
+
         this.synthCancelled = false
         this.speakResponse(utterance)
         //
@@ -63,7 +72,7 @@ export class OnClickSay {
     // https://stackoverflow.com/questions/21947730/chrome-speech-synthesis-with-longer-texts
 
     sayit() {
-        
+
 
         if (!this.synthRunning) {
             this.synthCancelled = true

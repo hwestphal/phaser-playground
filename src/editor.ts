@@ -67,6 +67,7 @@ import lib_es2099 from "./extraLibs/lib.es2099.d.ts.txt"
 // run a snippet without user input, then you STILL give it to the editor to run.
 
 
+
 export class Editor {
 
     editor: monaco.editor.IStandaloneCodeEditor
@@ -93,12 +94,12 @@ export class Editor {
 
             noImplicitAny: false,
 
-            noUnusedParameters:false,       // easier for beginners
-            noUnusedLocals:false,
+            noUnusedParameters: false,       // easier for beginners
+            noUnusedLocals: false,
 
             strictFunctionTypes: true,
-            strictNullChecks:true,
-             
+            strictNullChecks: true,
+
             allowUnreachableCode: true,
             allowUnusedLabels: true,
             noImplicitThis: true,
@@ -115,8 +116,8 @@ export class Editor {
 
 
         var console: Console;
-        
-   
+
+
         // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_baby_plus, "lib.baby.d.ts");
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es5, "lib.es5.d.ts");
         // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom, "lib.dom_mini.d.ts");
@@ -178,6 +179,7 @@ export class Editor {
         };
         input.click();
     }
+
 
 
     async transpile(scope: any = {}) {

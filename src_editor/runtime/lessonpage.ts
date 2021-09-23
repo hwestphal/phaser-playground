@@ -3,7 +3,7 @@ import { ITag } from './T'
 
 // import *  as ts from 'typescript'
 // import { drillByName } from './canvas'
-import { OnClickSay } from './onClickSay'
+// import { OnClickSay } from './onClickSay.ts.movedtoSRC'
 // import { EditorInstance } from './editorInstance'
 // import { LessonFactory, drillMathDispatch } from './drillMath'
 import *  as Prism from 'prismjs'

@@ -178,10 +178,10 @@ class Editor {
         this.run = document.getElementById('run') as HTMLButtonElement
         this.debug = document.getElementById('debug') as HTMLButtonElement
 
-        this.save.onclick = () => this.doSave();
-        this.load.onclick = () => this.doLoad();
-        this.run.onclick = () => { eval('AJAXuploadContent();'); this.doRun()};
-        this.debug.onclick = () => this.doDebug();
+        // this.save.onclick = () => this.doSave();
+        // this.load.onclick = () => this.doLoad();
+        // this.run.onclick = () => { eval('AJAXuploadContent();'); this.doRun()};
+        // this.debug.onclick = () => this.doDebug();
 
         this.lessonPage = new LessonPage()
 
