@@ -46,39 +46,45 @@ class Main {
 
         (window as any).MathcodeAPI = {
             version: '1.0',
-            onClickSay: (utterID: string, voiceN = 0) => {
-                let sayThis = document.getElementById(utterID)?.innerHTML
+
+            // MathcodeAPI.onClickSay("u00051",voice,"step","activity","topic")
+            onClickSay: (utterID: string, voiceN: number, step: number, activity: number, topic: number) => {
+                // console.log(`onClickSay: (utterID: ${utterID}, voiceN: ${voiceN}, step: ${step}, activity: ${activity}, topic: ${topic})`)
+
+                let sayThis = document.getElementById(utterID)  // : HTMLElement or null 
                 if (!sayThis) {     // might be null
-                    this.writeMoodleLog('log', { 'datacode':-1, 'data01': `could not find HTML ID '${utterID}'`})
+                    this.writeMoodleLog({ 'action': 'log', 'datacode': -1, 'data01': `could not find HTML ID '${utterID}'`, 'step': step, 'activity': activity, 'topic': topic })
                 } else {
 
-                    this.writeMoodleLog('log', { 'datacode':1000, '`data01':utterID, 'data02': sayThis.substring(0,30) })
+                    this.writeMoodleLog({ 'action': 'log', 'datacode': 1000, 'data01': utterID, 'data02': sayThis.innerHTML.substring(0, 30), 'step': step, 'activity': activity, 'topic': topic })
 
                     if (!this.onClickSay)
                         this.onClickSay = new OnClickSay()
 
                     // this.onClickSay = new OnClickSay()
-                    this.onClickSay.onClickSay('this is a test',voiceN)
+                    this.onClickSay.onClickSay(sayThis.innerHTML, voiceN)
                 }
             }
-            // (window as any).API_1484_11 = new LMSAPI();   // SCORM 2004
         }
     }
 
 
-    static writeMoodleLog(action: string, payload: object) {
+    static writeMoodleLog(payload: object) {
 
-        console.log('in writeMoodleLog')
+        console.log('in writeMoodleLog', payload)
+
+        let JsonData = JSON.stringify(payload)
+        console.log('JsonData:', JsonData)
+
         let xhr = new XMLHttpRequest();
         // let formData = new FormData(); // Currently empty
 
-        // formData.append('action', 'log')
-        // formData.append('payload', 'this is a payload from Typescript')
-
         xhr.open("POST", "ajax.php", true);
         //Send the proper header information along with the request
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.send('action=log&payload=this is_a_payload_from_Typescript');
+        // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.setRequestHeader("Content-type", "application/json");
+
+        xhr.send(JsonData);
     }
 
 

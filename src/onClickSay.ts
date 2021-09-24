@@ -31,7 +31,7 @@ export class OnClickSay {
     }
 
     onClickSay(utterance: string, voiceN: number = 0) {
-        console.log('arrived in onClickSay', utterance)
+        // console.log('arrived in onClickSay', utterance)
         if (this.voices === undefined) {
             alert('Speech not ready yet, still loading voices.')
             return
