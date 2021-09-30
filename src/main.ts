@@ -64,7 +64,30 @@ class Main {
                     // this.onClickSay = new OnClickSay()
                     this.onClickSay.onClickSay(sayThis.innerHTML, voiceN)
                 }
-            }
+            },
+
+            // student clicks into reflection, have they finished all challenges?
+            readyToReflect: (step:number,activity:number,topic:number)=> {
+                console.log(`readyToReflect: (${step}:number,${activity}:number,${topic}:number)`)
+                // if NOT ready, then use 1001, data01 describes what is missing
+                this.writeMoodleLog({ 'action': 'readyToReflect', 'datacode': 1001, 'data01': 'code challenge', 'step': step, 'activity': activity, 'topic': topic })
+                // if ready, then use 1002.  and set a flag so don't have to check again
+                this.writeMoodleLog({ 'action': 'readyToReflect', 'datacode': 1002, 'step': step, 'activity': activity, 'topic': topic })
+
+
+                alert('checking whether you are reading to finish '+step.toString())
+            },
+
+
+            // MathcodeAPI.completeStep("00051","step","activity","topic")
+            completeStep: (utterID: string, step: number, activity: number, topic: number) => {
+                alert('complete step')
+                return(false)  // whetherh we can go ahead
+                // verify required challenges are done
+                // log the completion
+            },
+            
+
         }
     }
 
