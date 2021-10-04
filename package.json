@@ -24,15 +24,15 @@
         "expose-loader": "^1.0.3",
         "file-loader": "^6.0.0",
         "http-server": "^0.12.3",
-        "monaco-editor": "^0.27.0",
-        "monaco-editor-webpack-plugin": "^4.1.2",
-        "prismjs": "^1.24.1",
+        "monaco-editor": "^0.28.1",
+        "monaco-editor-webpack-plugin": "^4.2.0",
+        "prismjs": "^1.25.0",
         "raw-loader": "^4.0.2",
         "style-loader": "^1.2.1",
         "ts-loader": "^8.0.14",
-        "typescript": "^4.3.5",
+        "typescript": "^4.4.3",
         "webpack": "^4.46.0",
-        "webpack-cli": "^3.3.12"
+        "webpack-cli": "^4.8.0"
     },
     "devDependencies": {
         "@gamestdio/scorm": "^0.1.3",
