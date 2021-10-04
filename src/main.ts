@@ -6,6 +6,9 @@
 
 import { Editor } from "./editor";
 import { OnClickSay } from "./onClickSay"
+import *  as Prism from 'prismjs'
+import { asciiMath, testAsciiMath } from './ASCIIMathML'
+
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
 
@@ -67,26 +70,31 @@ class Main {
             },
 
             // student clicks into reflection, have they finished all challenges?
-            readyToReflect: (step:number,activity:number,topic:number)=> {
-                console.log(`readyToReflect: (${step}:number,${activity}:number,${topic}:number)`)
-                // if NOT ready, then use 1001, data01 describes what is missing
-                this.writeMoodleLog({ 'action': 'readyToReflect', 'datacode': 1001, 'data01': 'code challenge', 'step': step, 'activity': activity, 'topic': topic })
-                // if ready, then use 1002.  and set a flag so don't have to check again
-                this.writeMoodleLog({ 'action': 'readyToReflect', 'datacode': 1002, 'step': step, 'activity': activity, 'topic': topic })
+            readyToReflect: (step: number, activity: number, topic: number): boolean => {
+                // console.log(`readyToReflect: (${step}:number,${activity}:number,${topic}:number)`)
 
+                // this version is neutered
+                let readyToReflect = true  // TODO:  look it up in the page
 
-                alert('checking whether you are reading to finish '+step.toString())
+                if (!readyToReflect) {
+                    // if NOT ready, then use 1001, data01 describes what is missing
+                    this.writeMoodleLog({ 'action': 'readyToReflect', 'datacode': 1001, 'data01': 'code challenge', 'step': step, 'activity': activity, 'topic': topic })
+                    alert('checking whether you are reading to finish ' + step.toString())
+                } else {
+                    // if ready, then use 1002.  and set a flag so don't have to check again
+                    this.writeMoodleLog({ 'action': 'readyToReflect', 'datacode': 1002, 'step': step, 'activity': activity, 'topic': topic })
+                }
+                return readyToReflect
             },
 
 
             // MathcodeAPI.completeStep("00051","step","activity","topic")
-            completeStep: (utterID: string, step: number, activity: number, topic: number) => {
-                alert('complete step')
-                return(false)  // whetherh we can go ahead
-                // verify required challenges are done
-                // log the completion
+            completeStep: (id: string, step: number, activity: number, topic: number) => {
+                // alert('complete step')
+                this.writeMoodleLog({ 'action': 'completeStep', 'datacode': 1005, 'step': step, 'activity': activity, 'topic': topic })
+                return (true)  // whetherh we can go ahead
             },
-            
+
 
         }
     }
@@ -116,6 +124,8 @@ class Main {
         console.log('in Main.constructor()')
 
         Main.onClickSay = new OnClickSay()
+        this.expandCodestr()   // not static, so use 'this'
+
 
         /** Attaches the mathcode API to the window object so that you can discover it */
         Main.attachMathCode();
@@ -195,6 +205,32 @@ class Main {
         this.pause.innerText = "Pause";
         this.pause.disabled = true;
         // this.fullscreen.disabled = true;
+    }
+
+    expandCodestr() {
+        console.log('about to expand CODESTR blocks')
+        let elements = document.getElementsByClassName('codestr')
+        for (let i = 0; i < elements.length; i++) {   // HTMLElements not iterable ?!?
+            let codestrElement = elements[i] as HTMLElement
+            let codestr = codestrElement.dataset.code
+            console.log('before', codestrElement,codestr)
+            
+            if (codestr) {      // might be undefined
+
+
+                // PHP specialcharacters() converts five elements, we must switch them back
+                codestr = codestr.replaceAll(`&amp;`, `&`)
+                codestr = codestr.replaceAll(`&quot;`, `&`)
+                codestr = codestr.replaceAll(`&#039;`, `'`)
+                codestr = codestr.replaceAll(`&lt;`, `<`)
+                codestr = codestr.replaceAll(`&gt;`, `>`)
+
+                console.log('after', codestr)
+
+                // and write back into the page
+                elements[i].innerHTML = Prism.highlight(codestr, Prism.languages.javascript, 'javascript');
+            }
+        }
     }
 
 }
