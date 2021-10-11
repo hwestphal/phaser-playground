@@ -1,4 +1,6 @@
 import * as monaco from "monaco-editor";
+import * as JXG from "jsxgraph"
+
 import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
 // import lib_baby from "./extraLibs/baby.d.ts.txt";
 // import lib_dom from "./extraLibs/lib.dom_mini.d.ts.txt";
@@ -17,6 +19,94 @@ import lib_es2020_bigint from "./extraLibs/lib.es2020.bigint.d.ts.txt"
 import lib_es2021_string from "./extraLibs/lib.es2021.string.d.ts.txt"
 
 import lib_es2099 from "./extraLibs/lib.es2099.d.ts.txt"
+// import lib_jsxgraph from  "./extraLibs/jsxgraph.d.ts.txt"
+
+let x = JXG
+/*
+type attributes = {
+    // point
+    name?: string
+    size?: number
+    face?: 'o' | '[]' | 'x' | '+' | '^' | 'v' | '>' | '<' | '<>'
+    fixed?: boolean    // cannot be dragged  (also for lines)
+
+    // line
+    firstArrow?: boolean | object   // eg: {type:4 size:8}
+    lastArrow?: boolean | object
+    straightFirst?: boolean  // extend past first point
+    straightLast?: boolean   // extend past last point
+    strokeColor?: string
+    strokeWidth?: number
+    strokeColorOpacity?: number   // between 0 and 1
+    dash?: number            // 0:solid, 1:dotted, 2-5: short,medium,long dashes   
+    highlightStrokeColor?: string  // for mouse-over
+    traced?: boolean
+
+    // polygon
+    fillColor?: string
+
+    // board
+    boundingbox?: number[]
+    axis?: boolean,
+    showCopyright?: boolean   // LGPL and MIT, but still copyright
+    showNavigation?: boolean
+    showClearTraces?: boolean
+
+    // arrow
+    label?: object    // eg: {position:top}
+    withLabel?: boolean
+
+    // intersection
+    trace?: boolean
+    color?: string
+
+    // slider
+    snapWidth?: number
+
+}
+type JSXElement = {
+    X: () => number | number
+    Y: () => number | number
+    Value: () => number | number
+    moveTo: (location: any, mSec?: number) => void
+    L: () => number   // length
+}
+
+
+
+type Board = {      // JSG.Board - manages properties of a board
+    create(elementType: 'angle' | 'arc' | 'arrow' | 'axis' | 'bisector' | 
+                'button' | 'cardinalspline' | 'chart' | 'checkbox' | 'circle' |
+                'circumcircle' | 'circumcirclearc' | 'circumcirclesector' | 'conic' |
+                'curve' | 'curveddifference' | 'curveintersection' | 'curveunion' |
+                'ellipse' | 'functiongraph' | 'glider' | 'grid' | 'group' |
+                'hatch' | 'hyperbola' | 'image' | 'input' | 'integral' | 'intersection' | 
+                'line' | 'metapostspline' | 'midpoint' | 'mirrorelement' | 'normal' | 
+                'perpendicular' | 'plot' | 'point' | 'polygon' | 'polygonalchain' | 
+                'regularpolygon' | 'reflection' | 'riemannsum' | 'sector' | 'segment' | 'semicircle' |
+                'slider' | 'slopetriangle' | 'stepfunction' | 'tangent' | 
+                'tapemeasure' | 'text' | 'ticks' | 'tracecurve' | 'transform' | 
+                'turtle',
+
+        coordinates: any[], attributes?: object): JSXElement
+    defaultAxes: any
+}
+
+
+
+declare namespace JXG {
+    class JSXGraph {
+        static initBoard(HTML_ID: string, attributes: attributes): Board;
+    }
+    class Options {
+        static label: any
+        static text: any
+        static line: any
+    }
+    function addEvent(a:any,eventType:string,c:()=>void,d:any):any
+}
+
+*/
 
 
 // let known = [2]
@@ -76,6 +166,8 @@ export class Editor {
     storageKey: string
     safeDelay: number
 
+    systemCode = ''     // hidden stuff that goes into all editors
+    prefixCode = ''     // hidden stuff for THIS instance of the editor
 
     constructor(el: HTMLElement, initFile: string) {
 
@@ -135,7 +227,22 @@ export class Editor {
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2021_string)
 
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2099)      // stuff that Typescript hasn't provided
+        // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_jsxgraph)      // stuff that Typescript hasn't provided
 
+
+        this.systemCode = 
+`
+console.log('systemcode: i have defined foo1')
+let foo1 = 5
+`        
+        this.prefixCode = 
+`
+console.log('prefixCode: i have defined foo2')
+let foo2 = 'string'
+`        
+
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(this.systemCode)
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(this.prefixCode)
 
         this.editor = monaco.editor.create(this.el, {
             automaticLayout: true,
@@ -198,10 +305,15 @@ export class Editor {
                 alert(errors)    // 
                 return
             }
+
             const worker = await monaco.languages.typescript.getTypeScriptWorker();
             const client = await worker(resource);
             const output = await client.getEmitOutput(resource.toString());
-            const code = output.outputFiles[0].text as string;
+   
+            let code = ''
+            code += this.systemCode + "\r\n"
+            code += this.prefixCode + "\r\n"
+            code += output.outputFiles[0].text as string;
             // console.log('code from editor is ', code)
 
             // let string = "let vt = new vt52(); vt.print('hello world')npm nkkj; console.log('hello world')"

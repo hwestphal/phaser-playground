@@ -8,6 +8,7 @@ import { Editor } from "./editor";
 import { OnClickSay } from "./onClickSay"
 import *  as Prism from 'prismjs'
 import { asciiMath, testAsciiMath } from './ASCIIMathML'
+import {JXG} from 'jsxgraph'
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
@@ -49,6 +50,11 @@ class Main {
 
         (window as any).MathcodeAPI = {
             version: '1.0',
+
+            loader: ()=>{
+                console.log('MathcodeAPI.loader()')
+                console.log('MathcodeAPI.loader successful')
+            },
 
             // MathcodeAPI.onClickSay("u00051",voice,"step","activity","topic")
             onClickSay: (utterID: string, voiceN: number, step: number, activity: number, topic: number) => {
@@ -235,6 +241,7 @@ class Main {
 
 }
 
-
 let main = new Main()
+// let JXGlocal = JXG.JSXGraph   // make sure it links in
+
 
