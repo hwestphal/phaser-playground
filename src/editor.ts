@@ -1,5 +1,16 @@
+/****  I had to add this to babylon.module.d.ts
+ * 
+ * 
+interface OffscreenCanvas extends HTMLCanvasElement{}
+interface MouseWheelEvent extends PointerEvent{}
+interface OffscreenCanvasRenderingContext2D extends CanvasRenderingContext2D{}
+ *
+ */
+
+
 import * as monaco from "monaco-editor";
 import * as JXG from "jsxgraph"
+import * as BABYLON from 'babylonjs';
 
 import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
 // import lib_baby from "./extraLibs/baby.d.ts.txt";
@@ -22,6 +33,8 @@ import lib_es2099 from "./extraLibs/lib.es2099.d.ts.txt"
 // import lib_jsxgraph from  "./extraLibs/jsxgraph.d.ts.txt"
 
 let x = JXG
+let y = BABYLON
+
 /*
 type attributes = {
     // point
@@ -176,6 +189,10 @@ export class Editor {
         this.storageKey = ''
         this.safeDelay = 5000
 
+
+
+
+
         monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
             allowNonTsExtensions: true,
             inlineSourceMap: true,
@@ -199,12 +216,15 @@ export class Editor {
             target: monaco.languages.typescript.ScriptTarget.ES2020,
         });
 
-        // monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-        //     target: monaco.languages.typescript.ScriptTarget.ES2020,
-        //     allowNonTsExtensions: true,
-        //     noUnusedLocals:false,
-        //     noLib: true,                        // don't bring in everything
-        // });
+        monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+            noSemanticValidation: true,
+            noSyntaxValidation: true
+          });
+
+        monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+            target: monaco.languages.typescript.ScriptTarget.ES2020,
+            noLib: true,                        // don't bring in everything
+        });
 
 
         var console: Console;
@@ -306,6 +326,7 @@ let foo2 = 'string'
                 return
             }
 
+            
             const worker = await monaco.languages.typescript.getTypeScriptWorker();
             const client = await worker(resource);
             const output = await client.getEmitOutput(resource.toString());

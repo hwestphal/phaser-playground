@@ -8,6 +8,7 @@
         "importHelpers": true,
         "allowJs": true,
         "sourceMap": false,
+        "noUnusedLocals": false,
         "lib": [
             "dom",
             "ESNext.String"
