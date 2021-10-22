@@ -1,12 +1,20 @@
-/****  I had to add this to babylon.module.d.ts
+/****  I had to add this to node_modules/babylonjs/babylon.module.d.ts
+ * issue is latest version of typescript vs latest version of babylon
  * 
  * 
 interface OffscreenCanvas extends HTMLCanvasElement{}
 interface MouseWheelEvent extends PointerEvent{}
 interface OffscreenCanvasRenderingContext2D extends CanvasRenderingContext2D{}
- *
- */
+type NavigatorUserMediaSuccessCallback = any 
+type NavigatorUserMediaErrorCallback = any
+type MSGesture = any
+interface WebGLObject {}
+declare var WebGLObject: {
+    prototype: WebGLObject;
+    new(): WebGLObject;
+};
 
+*/
 
 import * as monaco from "monaco-editor";
 import * as JXG from "jsxgraph"
