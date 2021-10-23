@@ -1,0 +1,48 @@
+const BABYLON = (window as any).BABYLON
+const JXG = (window as any).JXG
+
+const canvas = document.getElementById("canvas")!; // Get the canvas element
+
+let board = JXG.JSXGraph.initBoard('canvasdiv', { boundingbox: [-10, 10, 10, -10], axis: true })
+let p = board.create('point', [-3, 1]);
+let p2 = board.create('point', [3, 1], { name: 'X', size: 5 });
+
+// two points, A is draggable,  B.X is bound to A
+let a = board.create('point',[0,0], {name:'A', size:3})
+let b = board.create('point',[()=>a.X()/2, 1], {name:'B', face:'[]', size:3})
+let c = board.create('point',[3,3], {name:'C'})
+
+
+// let ctx = (canvas as HTMLCanvasElement).getContext("2d")!;
+// ctx.beginPath();
+// ctx.arc(95, 50, 40, 0, 2 * Math.PI);
+// ctx.stroke();
+
+
+// const engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
+
+// // Add your code here matching the playground format
+// const createScene = function () {
+
+//     const scene = new BABYLON.Scene(engine);
+
+//     BABYLON.MeshBuilder.CreateBox("box", {})
+    
+//     const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0));
+//     camera.attachControl(canvas, true);
+//     new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+//     return scene;
+// };
+
+// const scene = createScene(); //Call the createScene function
+
+// // Register a render loop to repeatedly render the scene
+// engine.runRenderLoop(function () {
+//     scene.render();
+// });
+
+// // // Watch for browser/canvas resize events
+// // window.addEventListener("resize", function () {
+// //     engine.resize();
+// // });

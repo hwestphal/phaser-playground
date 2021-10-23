@@ -1,0 +1,83 @@
+type attributes = {
+    // point
+    name?: string
+    size?: number
+    face?: 'o' | '[]' | 'x' | '+' | '^' | 'v' | '>' | '<' | '<>'
+    fixed?: boolean    // cannot be dragged  (also for lines)
+
+    // line
+    firstArrow?: boolean | object   // eg: {type:4 size:8}
+    lastArrow?: boolean | object
+    straightFirst?: boolean  // extend past first point
+    straightLast?: boolean   // extend past last point
+    strokeColor?: string
+    strokeWidth?: number
+    strokeColorOpacity?: number   // between 0 and 1
+    dash?: number            // 0:solid, 1:dotted, 2-5: short,medium,long dashes   
+    highlightStrokeColor?: string  // for mouse-over
+    traced?: boolean
+
+    // polygon
+    fillColor?: string
+
+    // board
+    boundingbox?: number[]
+    axis?: boolean,
+    showCopyright?: boolean   // LGPL and MIT, but still copyright
+    showNavigation?: boolean
+    showClearTraces?: boolean
+
+    // arrow
+    label?: object    // eg: {position:top}
+    withLabel?: boolean
+
+    // intersection
+    trace?: boolean
+    color?: string
+
+    // slider
+    snapWidth?: number
+
+}
+ 
+
+
+type JSXElement = {
+    X: () => number | number
+    Y: () => number | number
+    Value: () => number | number
+    moveTo: (location: any, mSec?: number) => void
+    L: () => number   // length
+}
+
+type Board = {      // JSG.Board - manages properties of a board
+    create(elementType: 'angle' | 'arc' | 'arrow' | 'axis' | 'bisector' | 
+    'button' | 'cardinalspline' | 'chart' | 'checkbox' | 'circle' |
+    'circumcircle' | 'circumcirclearc' | 'circumcirclesector' | 'conic' |
+    'curve' | 'curveddifference' | 'curveintersection' | 'curveunion' |
+    'ellipse' | 'functiongraph' | 'glider' | 'grid' | 'group' |
+    'hatch' | 'hyperbola' | 'image' | 'input' | 'integral' | 'intersection' | 
+    'line' | 'metapostspline' | 'midpoint' | 'mirrorelement' | 'normal' | 
+    'perpendicular' | 'plot' | 'point' | 'polygon' | 'polygonalchain' | 
+    'regularpolygon' | 'reflection' | 'riemannsum' | 'sector' | 'segment' | 'semicircle' |
+    'slider' | 'slopetriangle' | 'stepfunction' | 'tangent' | 
+    'tapemeasure' | 'text' | 'ticks' | 'tracecurve' | 'transform' | 
+    'turtle',
+
+        coordinates: any[], attributes?: attributes): JSXElement
+    defaultAxes: any
+}
+
+
+
+declare namespace JXG {
+    export class JSXGraph {
+        static initBoard(HTML_ID: string, attributes: attributes): Board;
+    }
+    export class Options {
+        static label: any
+        static text: any
+        static line: any
+    }
+    function addEvent(a:any,eventType:string,c:()=>void,d:any):any
+}

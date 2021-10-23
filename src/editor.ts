@@ -38,96 +38,17 @@ import lib_es2020_bigint from "./extraLibs/lib.es2020.bigint.d.ts.txt"
 import lib_es2021_string from "./extraLibs/lib.es2021.string.d.ts.txt"
 
 import lib_es2099 from "./extraLibs/lib.es2099.d.ts.txt"
-// import lib_jsxgraph from  "./extraLibs/jsxgraph.d.ts.txt"
+import lib_jsx_tiny from  "./extraLibs/jsx_tiny.d.ts.txt"
 
 let x = JXG
 let y = BABYLON
-
-/*
-type attributes = {
-    // point
-    name?: string
-    size?: number
-    face?: 'o' | '[]' | 'x' | '+' | '^' | 'v' | '>' | '<' | '<>'
-    fixed?: boolean    // cannot be dragged  (also for lines)
-
-    // line
-    firstArrow?: boolean | object   // eg: {type:4 size:8}
-    lastArrow?: boolean | object
-    straightFirst?: boolean  // extend past first point
-    straightLast?: boolean   // extend past last point
-    strokeColor?: string
-    strokeWidth?: number
-    strokeColorOpacity?: number   // between 0 and 1
-    dash?: number            // 0:solid, 1:dotted, 2-5: short,medium,long dashes   
-    highlightStrokeColor?: string  // for mouse-over
-    traced?: boolean
-
-    // polygon
-    fillColor?: string
-
-    // board
-    boundingbox?: number[]
-    axis?: boolean,
-    showCopyright?: boolean   // LGPL and MIT, but still copyright
-    showNavigation?: boolean
-    showClearTraces?: boolean
-
-    // arrow
-    label?: object    // eg: {position:top}
-    withLabel?: boolean
-
-    // intersection
-    trace?: boolean
-    color?: string
-
-    // slider
-    snapWidth?: number
-
-}
-type JSXElement = {
-    X: () => number | number
-    Y: () => number | number
-    Value: () => number | number
-    moveTo: (location: any, mSec?: number) => void
-    L: () => number   // length
-}
 
 
 
 type Board = {      // JSG.Board - manages properties of a board
     create(elementType: 'angle' | 'arc' | 'arrow' | 'axis' | 'bisector' | 
-                'button' | 'cardinalspline' | 'chart' | 'checkbox' | 'circle' |
-                'circumcircle' | 'circumcirclearc' | 'circumcirclesector' | 'conic' |
-                'curve' | 'curveddifference' | 'curveintersection' | 'curveunion' |
-                'ellipse' | 'functiongraph' | 'glider' | 'grid' | 'group' |
-                'hatch' | 'hyperbola' | 'image' | 'input' | 'integral' | 'intersection' | 
-                'line' | 'metapostspline' | 'midpoint' | 'mirrorelement' | 'normal' | 
-                'perpendicular' | 'plot' | 'point' | 'polygon' | 'polygonalchain' | 
-                'regularpolygon' | 'reflection' | 'riemannsum' | 'sector' | 'segment' | 'semicircle' |
-                'slider' | 'slopetriangle' | 'stepfunction' | 'tangent' | 
-                'tapemeasure' | 'text' | 'ticks' | 'tracecurve' | 'transform' | 
-                'turtle',
+    'button' | 'cardinalspline' | 'chart' | 'checkbox' | 'circle' |string):any}
 
-        coordinates: any[], attributes?: object): JSXElement
-    defaultAxes: any
-}
-
-
-
-declare namespace JXG {
-    class JSXGraph {
-        static initBoard(HTML_ID: string, attributes: attributes): Board;
-    }
-    class Options {
-        static label: any
-        static text: any
-        static line: any
-    }
-    function addEvent(a:any,eventType:string,c:()=>void,d:any):any
-}
-
-*/
 
 
 // let known = [2]
@@ -255,7 +176,7 @@ export class Editor {
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2021_string)
 
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2099)      // stuff that Typescript hasn't provided
-        // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_jsxgraph)      // stuff that Typescript hasn't provided
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_jsx_tiny)    // my simply remix of the upper level call
 
 
         this.systemCode = 
@@ -347,7 +268,22 @@ let foo2 = 'string'
 
             // let string = "let vt = new vt52(); vt.print('hello world')npm nkkj; console.log('hello world')"
             // console.log('code from editor is ', string)
-            eval(code)
+            // eval(code)
+
+
+            let f = new Function(code)
+            f()
+
+
+            // return () => new Function(src).call(window, args);
+            // // } else {
+            //     return () => { alert("no source"); };  // have to return something if typeguard fails
+
+
+
+
+
+
 
 
             // new Function(src) is a safer form of eval().  
