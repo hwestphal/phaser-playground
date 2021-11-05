@@ -17,7 +17,7 @@ declare var WebGLObject: {
 */
 
 import * as monaco from "monaco-editor";
-import * as JXG from "jsxgraph"
+// import * as JXG from "jsxgraph"
 import * as BABYLON from 'babylonjs';
 
 import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
@@ -40,7 +40,7 @@ import lib_es2021_string from "./extraLibs/lib.es2021.string.d.ts.txt"
 import lib_es2099 from "./extraLibs/lib.es2099.d.ts.txt"
 import lib_jsx_tiny from  "./extraLibs/jsx_tiny.d.ts.txt"
 
-let x = JXG
+// let x = JXG
 let y = BABYLON
 
 

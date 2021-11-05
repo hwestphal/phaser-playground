@@ -8,7 +8,7 @@ import { Editor } from "./editor";
 import { OnClickSay } from "./onClickSay"
 import *  as Prism from 'prismjs'
 import { asciiMath, testAsciiMath } from './ASCIIMathML'
-import {JXG} from 'jsxgraph'
+// import {JXG} from 'jsxgraph'
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
