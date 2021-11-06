@@ -16,8 +16,10 @@ declare var WebGLObject: {
 
 */
 
+
+
 import * as monaco from "monaco-editor";
-import * as JXG from "jsxgraph"
+import * as JXG from "./jsx"      // really just a minimal definition
 import * as BABYLON from 'babylonjs';
 
 import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
@@ -38,16 +40,12 @@ import lib_es2020_bigint from "./extraLibs/lib.es2020.bigint.d.ts.txt"
 import lib_es2021_string from "./extraLibs/lib.es2021.string.d.ts.txt"
 
 import lib_es2099 from "./extraLibs/lib.es2099.d.ts.txt"
-import lib_jsx_tiny from  "./extraLibs/jsx_tiny.d.ts.txt"
+import lib_jsx_tiny from "./extraLibs/jsx_tiny.d.ts.txt"
+import { RuntimeAnimation } from "babylonjs/Animations/runtimeAnimation";
 
-let x = JXG
+let x = JXG         // just to make sure webpack loads them
 let y = BABYLON
 
-
-
-type Board = {      // JSG.Board - manages properties of a board
-    create(elementType: 'angle' | 'arc' | 'arrow' | 'axis' | 'bisector' | 
-    'button' | 'cardinalspline' | 'chart' | 'checkbox' | 'circle' |string):any}
 
 
 
@@ -110,6 +108,8 @@ export class Editor {
 
     systemCode = ''     // hidden stuff that goes into all editors
     prefixCode = ''     // hidden stuff for THIS instance of the editor
+    editorCode = ''
+    commandCode = ''
 
     constructor(el: HTMLElement, initFile: string) {
 
@@ -117,8 +117,6 @@ export class Editor {
         this.initFile = initFile
         this.storageKey = ''
         this.safeDelay = 5000
-
-
 
 
 
@@ -148,7 +146,7 @@ export class Editor {
         monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
             noSemanticValidation: true,
             noSyntaxValidation: true
-          });
+        });
 
         monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
             target: monaco.languages.typescript.ScriptTarget.ES2020,
@@ -178,17 +176,20 @@ export class Editor {
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2099)      // stuff that Typescript hasn't provided
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_jsx_tiny)    // my simply remix of the upper level call
 
+        // this stuff has to go into the EVAL, since it doesn't see otherwise
+        // WARNING - it must be JAVASCRIPT
 
-        this.systemCode = 
-`
+        this.systemCode =
+            `
 console.log('systemcode: i have defined foo1')
 let foo1 = 5
-`        
-        this.prefixCode = 
+const JXG = window.JXG   // (window as any).JXG
 `
+        this.prefixCode =
+            `
 console.log('prefixCode: i have defined foo2')
 let foo2 = 'string'
-`        
+`
 
         monaco.languages.typescript.typescriptDefaults.addExtraLib(this.systemCode)
         monaco.languages.typescript.typescriptDefaults.addExtraLib(this.prefixCode)
@@ -214,6 +215,7 @@ let foo2 = 'string'
     }
 
     download(fileName: string) {
+        console.log('clicked on upload')
         const data = new Blob([this.editor.getValue()], { type: "text/plain" });
         if (this.initFile) {
             window.URL.revokeObjectURL(this.initFile);
@@ -226,6 +228,7 @@ let foo2 = 'string'
     }
 
     upload() {
+        console.log('clicked on upload')
         const input = document.createElement("input");
         input.type = "file";
         input.onchange = () => {
@@ -236,6 +239,9 @@ let foo2 = 'string'
         input.click();
     }
 
+    command(fileName: string) {
+        console.log('clicked on command')
+    }
 
 
     async transpile(scope: any = {}) {
@@ -255,40 +261,55 @@ let foo2 = 'string'
                 return
             }
 
-            
+
             const worker = await monaco.languages.typescript.getTypeScriptWorker();
             const client = await worker(resource);
             const output = await client.getEmitOutput(resource.toString());
-   
-            let code = ''
-            code += this.systemCode + "\r\n"
-            code += this.prefixCode + "\r\n"
-            code += output.outputFiles[0].text as string;
-            // console.log('code from editor is ', code)
-
-            // let string = "let vt = new vt52(); vt.print('hello world')npm nkkj; console.log('hello world')"
-            // console.log('code from editor is ', string)
-            // eval(code)
+            this.editorCode = output.outputFiles[0].text as string;
+            this.runCode()      // and run the whole mess
+        }
+    }
 
 
-            let f = new Function(code)
-            f()
+    runCode() {
+
+        let code = ''
+        code += this.systemCode + "\r\n"
+        code += this.prefixCode + "\r\n"
+        code += this.editorCode + "\r\n"
+        code += this.commandCode + "\r\n"
+
+        // console.log('code from editor is ', code)
+
+        // let string = "let vt = new vt52(); vt.print('hello world')npm nkkj; console.log('hello world')"
+        // console.log('code from editor is ', string)
+        // eval(code)
 
 
-            // return () => new Function(src).call(window, args);
-            // // } else {
-            //     return () => { alert("no source"); };  // have to return something if typeguard fails
+        let f = new Function(code)
+        f()
+    }
+
+
+}
+
+
+
+
+
+// new Function(src) is a safer form of eval().  
+// code = `app.floor(30,30,5);let cube = app.cube().color('blue').move('up',1)`
+// var app = new Baby(code)
+
+// return () => new Function(src).call(window, args);
+// // } else {
+//     return () => { alert("no source"); };  // have to return something if typeguard fails
 
 
 
 
 
 
-
-
-            // new Function(src) is a safer form of eval().  
-            // code = `app.floor(30,30,5);let cube = app.cube().color('blue').move('up',1)`
-            // var app = new Baby(code)
 
 
             // new Function(src) is a safer form of eval().  
@@ -312,11 +333,6 @@ let foo2 = 'string'
             // f.call(app)
             //     return () => new Function(src).call(window, args);
             // } else {
-            return () => { alert("no source"); };  // have to return something if typeguard fails
-        }
-    }
-
-}
 
 
 

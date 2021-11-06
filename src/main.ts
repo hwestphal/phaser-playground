@@ -8,7 +8,7 @@ import { Editor } from "./editor";
 import { OnClickSay } from "./onClickSay"
 import *  as Prism from 'prismjs'
 import { asciiMath, testAsciiMath } from './ASCIIMathML'
-import {JXG} from 'jsxgraph'
+// import *  as JXG from 'jsxgraph/distrib'
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
@@ -35,6 +35,7 @@ class Main {
     run: HTMLButtonElement
     stop: HTMLButtonElement
     pause: HTMLButtonElement
+    command: HTMLButtonElement
     // fullscreen: HTMLButtonElement
 
     template = "let app = new Baby()"
@@ -155,50 +156,56 @@ class Main {
         this.run = document.getElementById("run") as HTMLButtonElement;
         this.stop = document.getElementById("stop") as HTMLButtonElement;
         this.pause = document.getElementById("pause") as HTMLButtonElement;
+        this.command = document.getElementById("command") as HTMLButtonElement;
         // this.fullscreen = document.getElementById("fullscreen") as HTMLButtonElement;
 
 
-        // // new Function(src) is a safer form of eval().  
-        // let code = `app.floor(30,30,5);let cube = app.cube().color('blue').move('up',1)`
-        // let app = new Baby(code)
 
-        // this.download.onclick = () => this.editor.download("game.ts");
-        // this.upload.onclick = () => this.editor.upload();
+        this.download.onclick = () => this.editor.download("game.ts");
+        this.upload.onclick = () => this.editor.upload();
 
         this.run.onclick = async () => {
             console.log('clicked RUN')
-            this.download.disabled = true;
-            this.upload.disabled = true;
-            this.run.disabled = false;  // was true
-            this.stop.disabled = false;
-            this.pause.disabled = false;
+            // this.run.disabled = false;  // was true
+            // this.stop.disabled = false;
+            // this.pause.disabled = false;
+            // this.command.disabled = false;
             // this.fullscreen.disabled = false;
             try {
                 // const fn = await this.editor.transpile(this.game.scope);
                 //this.editorDiv.hidden = true;
-                let f = this.editor.transpile()
+                this.editor.transpile()
+                this.editor.runCode()
 
-                // this.game.run(fn);
             } catch (e) {   // transpile error.  show it in an alert
                 alert(e);
                 this.resetButtons();
             }
         };
-        this.stop.onclick = () => {
-            try {
-                //TODO: implement stop
-                // this.game.stop();
-            } finally {
-                this.editorDiv.hidden = false;
-                this.resetButtons();
-            }
-        };
-        this.pause.onclick = () => {
+        // this.stop.onclick = () => {
+        //     try {
+        //         //TODO: implement stop
+        //         // this.game.stop();
+        //     } finally {
+        //         this.editorDiv.hidden = false;
+        //         this.resetButtons();
+        //     }
+        // };
+        // this.pause.onclick = () => {
+        //     // const paused = this.game.paused;
+        //     // this.game.paused = !paused;
+        //     // this.pause.innerText = paused ? "Pause" : "Continue";
+        //     // this.fullscreen.disabled = !paused;
+        // };
+ 
+        this.command.onclick = () => {
+            console.log('clicked command')
             // const paused = this.game.paused;
             // this.game.paused = !paused;
             // this.pause.innerText = paused ? "Pause" : "Continue";
             // this.fullscreen.disabled = !paused;
         };
+ 
         // this.fullscreen.onclick = () => this.game.fullScreen = true;
 
     }
@@ -207,9 +214,9 @@ class Main {
         this.download.disabled = false;
         this.upload.disabled = false;
         this.run.disabled = false;
-        this.stop.disabled = true;
-        this.pause.innerText = "Pause";
-        this.pause.disabled = true;
+        // this.stop.disabled = true;
+        // this.pause.innerText = "Pause";
+        // this.pause.disabled = true;
         // this.fullscreen.disabled = true;
     }
 

@@ -1,3 +1,7 @@
+export module JXG{
+
+
+
 type attributes = {
     // point
     name?: string
@@ -126,30 +130,30 @@ declare namespace JXG {
 
 
 
-JXG.Options.label.autoPosition = true;
-// JXG.Options.text.useMathJax = true;
-JXG.Options.text.fontSize = 20;
+// JXG.Options.label.autoPosition = true;
+// // JXG.Options.text.useMathJax = true;
+// JXG.Options.text.fontSize = 20;
 
-let mathml: string = `<math display="block">
-<mrow>
-  <mi>x</mi>
-  <mo>+</mo>
-  <msup>
-    <mi>y</mi>
-    <mfrac>
-      <mn>2</mn>
-      <mrow>
-        <mi>k</mi>
-        <mo>+</mo>
-        <mn>1</mn>
-      </mrow>
-    </mfrac>
-  </msup>
-</mrow>
-</math>`
+// let mathml: string = `<math display="block">
+// <mrow>
+//   <mi>x</mi>
+//   <mo>+</mo>
+//   <msup>
+//     <mi>y</mi>
+//     <mfrac>
+//       <mn>2</mn>
+//       <mrow>
+//         <mi>k</mi>
+//         <mo>+</mo>
+//         <mn>1</mn>
+//       </mrow>
+//     </mfrac>
+//   </msup>
+// </mrow>
+// </math>`
 
 
-var board = JXG.JSXGraph.initBoard("box", { boundingbox: [-5, 5, 5, -5], axis: true, showNavigation: false, showCopyright: false });
+// var board = JXG.JSXGraph.initBoard("box", { boundingbox: [-5, 5, 5, -5], axis: true, showNavigation: false, showCopyright: false });
 
 // var p = board.create('point', [-3,-3], {name:'p'});
 // var q = board.create('point', [0, 2], {name:'q'});
@@ -244,15 +248,16 @@ var board = JXG.JSXGraph.initBoard("box", { boundingbox: [-5, 5, 5, -5], axis: t
 
 
 
-// Create a checkbox element at position [0,3].
-var checkbox = board.create('checkbox', [0, 3, 'Change Y'], {});
-var p = board.create('point', [
-    function(){ return 0.5;}, // X-coordinate
-    function() {
-        let y = 0.5;
-        if (checkbox.Value()) {
-            y += 0.5;
-        }
-        return y;
-    }]);
+// // Create a checkbox element at position [0,3].
+// var checkbox = board.create('checkbox', [0, 3, 'Change Y'], {});
+// var p = board.create('point', [
+//     function(){ return 0.5;}, // X-coordinate
+//     function() {
+//         let y = 0.5;
+//         if (checkbox.Value()) {
+//             y += 0.5;
+//         }
+//         return y;
+//     }]);
 
+}
