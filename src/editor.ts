@@ -19,11 +19,6 @@ declare var WebGLObject: {
 
 
 import * as monaco from "monaco-editor";
-<<<<<<< HEAD
-import * as JXG from "./jsx"      // really just a minimal definition
-=======
-// import * as JXG from "jsxgraph"
->>>>>>> 650db6381f522c9dc8d65b14d76d0b75618ab4d1
 import * as BABYLON from 'babylonjs';
 
 import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
@@ -47,11 +42,7 @@ import lib_es2099 from "./extraLibs/lib.es2099.d.ts.txt"
 import lib_jsx_tiny from "./extraLibs/jsx_tiny.d.ts.txt"
 import { RuntimeAnimation } from "babylonjs/Animations/runtimeAnimation";
 
-<<<<<<< HEAD
-let x = JXG         // just to make sure webpack loads them
-=======
-// let x = JXG
->>>>>>> 650db6381f522c9dc8d65b14d76d0b75618ab4d1
+// let x = JXG         // just to make sure webpack loads them
 let y = BABYLON
 
 
