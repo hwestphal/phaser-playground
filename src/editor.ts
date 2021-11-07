@@ -41,6 +41,7 @@ import lib_es2021_string from "./extraLibs/lib.es2021.string.d.ts.txt"
 import lib_es2099 from "./extraLibs/lib.es2099.d.ts.txt"
 import lib_jsx_tiny from "./extraLibs/jsx_tiny.d.ts.txt"
 import { RuntimeAnimation } from "babylonjs/Animations/runtimeAnimation";
+import { Log } from "./utilities";
 
 // let x = JXG         // just to make sure webpack loads them
 let y = BABYLON
@@ -264,13 +265,23 @@ let foo2 = 'string'
             const worker = await monaco.languages.typescript.getTypeScriptWorker();
             const client = await worker(resource);
             const output = await client.getEmitOutput(resource.toString());
+            const sourceCode = await client.getScriptText(resource.toString())
+
+            const line = this.editor.getPosition()!.lineNumber
+            const col = this.editor.getPosition()!.column;
+            
+            console.log(sourceCode)
+            Log.write({ 'action': 'editorRun', 'datacode': Log.EditorRun, data01:sourceCode, data02:line.toString(), data03:col.toString()})
+            
             this.editorCode = output.outputFiles[0].text as string;
-            this.runCode()      // and run the whole mess
+            this.runEditorCode()      // and run the whole mess
         }
+
+        // if model is null, do nothing
     }
 
 
-    runCode() {
+    runEditorCode() {
 
         let code = ''
         code += this.systemCode + "\r\n"
@@ -282,8 +293,9 @@ let foo2 = 'string'
 
         // let string = "let vt = new vt52(); vt.print('hello world')npm nkkj; console.log('hello world')"
         // console.log('code from editor is ', string)
-        // eval(code)
-
+        
+        // eval() is crazy dangerous because it runs in the local context
+        // Function() is a bit safer, but not much
 
         let f = new Function(code)
         f()

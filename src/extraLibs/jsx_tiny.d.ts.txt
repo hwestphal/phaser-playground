@@ -70,9 +70,12 @@ type Board = {      // JSG.Board - manages properties of a board
 
 
 
+
 declare namespace JXG {
     export class JSXGraph {
         static initBoard(HTML_ID: string, attributes: attributes): Board;
+        static freeBoard(Board):Board;
+        static registerElement(element:JSXElement)
     }
     export class Options {
         static label: any

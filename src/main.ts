@@ -8,6 +8,7 @@ import { Editor } from "./editor";
 import { OnClickSay } from "./onClickSay"
 import *  as Prism from 'prismjs'
 import { asciiMath, testAsciiMath } from './ASCIIMathML'
+import {Log} from './utilities'
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
@@ -62,10 +63,10 @@ class Main {
 
                 let sayThis = document.getElementById(utterID)  // : HTMLElement or null 
                 if (!sayThis) {     // might be null
-                    this.writeMoodleLog({ 'action': 'log', 'datacode': -1, 'data01': `could not find HTML ID '${utterID}'`, 'step': step, 'activity': activity, 'topic': topic })
+                    Log.write({ 'action': 'log', 'datacode': Log.Error, 'data01': `could not find HTML ID '${utterID}'`, 'step': step, 'activity': activity, 'topic': topic })
                 } else {
 
-                    this.writeMoodleLog({ 'action': 'log', 'datacode': 1000, 'data01': utterID, 'data02': sayThis.innerHTML.substring(0, 30), 'step': step, 'activity': activity, 'topic': topic })
+                    Log.write({ 'action': 'log', 'datacode': Log.ClickSpeaker, 'data01': utterID, 'data02': sayThis.innerHTML.substring(0, 30), 'step': step, 'activity': activity, 'topic': topic })
 
                     if (!this.onClickSay)
                         this.onClickSay = new OnClickSay()
@@ -84,11 +85,11 @@ class Main {
 
                 if (!readyToReflect) {
                     // if NOT ready, then use 1001, data01 describes what is missing
-                    this.writeMoodleLog({ 'action': 'readyToReflect', 'datacode': 1001, 'data01': 'code challenge', 'step': step, 'activity': activity, 'topic': topic })
+                    Log.write({ 'action': 'readyToReflect', 'datacode': 1001, 'data01': 'code challenge', 'step': step, 'activity': activity, 'topic': topic })
                     alert('checking whether you are reading to finish ' + step.toString())
                 } else {
                     // if ready, then use 1002.  and set a flag so don't have to check again
-                    this.writeMoodleLog({ 'action': 'readyToReflect', 'datacode': 1002, 'step': step, 'activity': activity, 'topic': topic })
+                    Log.write({ 'action': 'readyToReflect', 'datacode': Log.ReadyToReflect, 'step': step, 'activity': activity, 'topic': topic })
                 }
                 return readyToReflect
             },
@@ -97,7 +98,7 @@ class Main {
             // MathcodeAPI.completeStep("00051","step","activity","topic")
             completeStep: (id: string, step: number, activity: number, topic: number) => {
                 // alert('complete step')
-                this.writeMoodleLog({ 'action': 'completeStep', 'datacode': 1005, 'step': step, 'activity': activity, 'topic': topic })
+                Log.write({ 'action': 'completeStep', 'datacode': Log.CompleteStep, 'step': step, 'activity': activity, 'topic': topic })
                 return (true)  // whetherh we can go ahead
             },
 
@@ -105,24 +106,6 @@ class Main {
         }
     }
 
-
-    static writeMoodleLog(payload: object) {
-
-        console.log('in writeMoodleLog', payload)
-
-        let JsonData = JSON.stringify(payload)
-        console.log('JsonData:', JsonData)
-
-        let xhr = new XMLHttpRequest();
-        // let formData = new FormData(); // Currently empty
-
-        xhr.open("POST", "ajax.php", true);
-        //Send the proper header information along with the request
-        // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.setRequestHeader("Content-type", "application/json");
-
-        xhr.send(JsonData);
-    }
 
 
     constructor() {
@@ -174,7 +157,7 @@ class Main {
                 // const fn = await this.editor.transpile(this.game.scope);
                 //this.editorDiv.hidden = true;
                 this.editor.transpile()
-                this.editor.runCode()
+                this.editor.runEditorCode()
 
             } catch (e) {   // transpile error.  show it in an alert
                 alert(e);
@@ -249,5 +232,9 @@ class Main {
 
 let main = new Main()
 // let JXGlocal = JXG.JSXGraph   // make sure it links in
+
+
+
+
 
 
