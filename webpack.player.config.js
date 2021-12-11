@@ -1,10 +1,13 @@
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const smp = new SpeedMeasurePlugin()
 
+const { VueLoaderPlugin } = require("vue-loader");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 const path = require('path');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
-module.exports =  smp.wrap({
+module.exports = smp.wrap({
     // devtool: 'inline-source-map',
     devtool: 'eval-source-map',
 
@@ -17,6 +20,17 @@ module.exports =  smp.wrap({
     module: {
         rules: [
             {
+                test: /\.vue$/,
+                use: "vue-loader"
+            },
+            {
+                test: /\.png$/,
+                use: {
+                    loader: "url-loader",
+                    options: { limit: 8192 }
+                }
+            },
+            {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader']
             },
@@ -26,7 +40,7 @@ module.exports =  smp.wrap({
             },
             {
                 test: /\.tsx?$/,
-                use: { loader: 'ts-loader',   options: { transpileOnly: true }},
+                use: { loader: 'ts-loader', options: { transpileOnly: true } },
                 exclude: /node_modules/,
             },
             {
@@ -54,7 +68,14 @@ module.exports =  smp.wrap({
     // },
 
     resolve: {
-        extensions: ['.ts', '.tsx', '.js']
+        extensions: ['.ts', '.tsx', '.js'],
+        alias: {
+            // this isn't technically needed, since the default `vue` entry for bundlers
+            // is a simple `export * from '@vue/runtime-dom`. However having this
+            // extra re-export somehow causes webpack to always invalidate the module
+            // on the first HMR update and causes the page to reload.
+            vue: "@vue/runtime-dom"
+        }
     },
 
 
@@ -66,8 +87,18 @@ module.exports =  smp.wrap({
     },
     plugins: [
         new MonacoWebpackPlugin(),
+        new VueLoaderPlugin(),
+        new MiniCssExtractPlugin({
+          filename: "[name].css"
+        })
     ],
     devServer: {
-        contentBase: './'
-    }
+        contentBase: './',
+        inline: true,
+        hot: true,
+        stats: "minimal",
+        overlay: true,
+        injectClient: false,
+        disableHostCheck: true
+        }
 })

@@ -13,6 +13,15 @@ import {Log} from './utilities'
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
+import { createApp } from "vue";
+import App from "./App.vue";
+
+createApp(App).mount("#app");
+
+
+
+
+
 
 
 // not sure if this is useful
@@ -62,7 +71,7 @@ class Main {
             onClickSay: (utterID: string, voiceN: number, step: number, activity: number, topic: number) => {
                 // console.log(`onClickSay: (utterID: ${utterID}, voiceN: ${voiceN}, step: ${step}, activity: ${activity}, topic: ${topic})`)
 
-                let sayThis = document.getElementById(utterID)  // : HTMLElement or null 
+                let sayThis = document.getElementById(utterID)  // : HTMLElement or null
                 if (!sayThis) {     // might be null
                     Log.write({ 'action': 'log', 'datacode': Log.Error, 'data01': `could not find HTML ID '${utterID}'`, 'step': step, 'activity': activity, 'topic': topic })
                 } else {
@@ -180,7 +189,7 @@ class Main {
         //     // this.pause.innerText = paused ? "Pause" : "Continue";
         //     // this.fullscreen.disabled = !paused;
         // };
- 
+
         this.command.onclick = () => {
             console.log('clicked command')
             // const paused = this.game.paused;
@@ -188,7 +197,7 @@ class Main {
             // this.pause.innerText = paused ? "Pause" : "Continue";
             // this.fullscreen.disabled = !paused;
         };
- 
+
         // this.fullscreen.onclick = () => this.game.fullScreen = true;
 
     }
@@ -210,7 +219,7 @@ class Main {
             let codestrElement = elements[i] as HTMLElement
             let codestr = codestrElement.dataset.code
             console.log('before', codestrElement,codestr)
-            
+
             if (codestr) {      // might be undefined
 
 

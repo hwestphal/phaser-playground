@@ -19,6 +19,7 @@ type attributes = {
 
     // polygon
     fillColor?: string
+    fillOpacity?:number
 
     // board
     boundingbox?: number[]
@@ -69,7 +70,11 @@ type Board = {      // JSG.Board - manages properties of a board
 }
 
 
+type math ={
 
+    brd1.create('text',[-6,-3,function(){ return 'Sum='+(JXG.Math.Numerics.riemannsum(f,s.Value(),'left',a.Value(),b.Value())).toFixed(4); }]);
+
+}
 
 declare namespace JXG {
     export class JSXGraph {
@@ -82,5 +87,9 @@ declare namespace JXG {
         static text: any
         static line: any
     }
+    export class Math{
+        static Numerics: any
+    }
+    
     function addEvent(a:any,eventType:string,c:()=>void,d:any):any
 }
