@@ -1,0 +1,7 @@
+declare class VT52 {
+    constructor(canvasID: string ='canvas');
+
+    print(text: string, color?: string): Promise<void>;
+}
+
+

@@ -8,7 +8,8 @@ import { Editor } from "./editor";
 import { OnClickSay } from "./onClickSay"
 import *  as Prism from 'prismjs'
 import { asciiMath, testAsciiMath } from './ASCIIMathML'
-import {Log} from './utilities'
+import { Log } from './utilities'
+import { VT52 } from './vt52'
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
@@ -53,15 +54,27 @@ class Main {
 
 
 
+    static attachMathCode() {
+        (window as any).Mathcode = {
+            version: '1.0',
+
+            VT52: () => {
+                console.log('Mathcode.loader()')
+                console.log('Mathcode.loader successful')
+                return new VT52()
+            },
+        }
+    }
+
 
     /** Attaches the mathcode API to the window object so that you can discover it */
-    static attachMathCode() {   // NB - STATIC !!!
+    static attachMathCodeAPI() {   // NB - STATIC !!!
         // let onClickSay: OnClickSay
 
         (window as any).MathcodeAPI = {
             version: '1.0',
 
-            loader: ()=>{
+            loader: () => {
                 console.log('MathcodeAPI.loader()')
                 console.log('MathcodeAPI.loader successful')
             },
@@ -127,6 +140,7 @@ class Main {
 
         /** Attaches the mathcode API to the window object so that you can discover it */
         Main.attachMathCode();
+        Main.attachMathCodeAPI();
 
         const State = {
             inputModel: null,
@@ -217,7 +231,7 @@ class Main {
         for (let i = 0; i < elements.length; i++) {   // HTMLElements not iterable ?!?
             let codestrElement = elements[i] as HTMLElement
             let codestr = codestrElement.dataset.code
-            console.log('before', codestrElement,codestr)
+            console.log('before', codestrElement, codestr)
 
             if (codestr) {      // might be undefined
 
@@ -240,6 +254,7 @@ class Main {
 }
 
 let main = new Main()
+
 // let JXGlocal = JXG.JSXGraph   // make sure it links in
 
 
