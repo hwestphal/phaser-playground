@@ -143,7 +143,7 @@ export class TerminalJS {
             }
 
             if (promptType === PROMPT_CONFIRM && e.code !== 'Enter') {
-                if (e.code !== 'KeyY' && e.code !== 'KeyN') { // PROMPT_CONFIRM accept only "Y" and "N" 
+                if (e.code !== 'KeyY' && e.code !== 'KeyN') { // PROMPT_CONFIRM accept only "Y" and "N"
                     this._inputLine.textContent = inputField.value = '';
                     return;
                 }
@@ -177,7 +177,7 @@ export class TerminalJS {
                     } else {
                         callback(inputValue);
                     }
-                    this.html.removeChild(inputField); // remove input field in the end of each callback	
+                    this.html.removeChild(inputField); // remove input field in the end of each callback
                     this.scrollBottom(); // scroll to the bottom of the terminal
                 }
 
@@ -225,7 +225,7 @@ export class TerminalJS {
     }
 
     setTextSize(size: string) {
-        this._output.style.fontSize = size);
+        this._output.style.fontSize = size;
         this._input.style.fontSize = size;
         return this;
     }

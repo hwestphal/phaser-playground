@@ -142,6 +142,11 @@ import { ThinEngine } from "babylonjs/Engines/thinEngine"
 export const dynamicX = 1048     // the slightly unusual 1048 resolution enables the VT52 mode  (1024 plus one more)
 export const dynamicY = 1048
 
+// PROMPT_TYPE
+const PROMPT_INPUT = 1
+const PROMPT_PASSWORD = 2
+const PROMPT_CONFIRM = 3
+
 const VT52pixelX = 13
 const VT52pixelY = 31
 
@@ -162,10 +167,17 @@ type printable = {
 export class VT52 {
 
     ctx: CanvasRenderingContext2D
-    printBuffer: printable[] = []
 
-    displayCharBuffer: number[]
-    displayColorBuffer: string[]
+
+    // we use statics because the student might restart and restart his program
+    // we don't want a new buffer each time, we want to clear and reuse the old one
+
+    static printBuffer: printable[] = []   // even if multiple versions of VT52
+    static intervalID: any  // ID of background timer
+
+    static displayCharBuffer: number[]
+    static displayColorBuffer: string[]
+
     cursorX: number = 0
     cursorY: number = 0
 
@@ -176,10 +188,9 @@ export class VT52 {
     inputBuffer: string = ''
 
     cursorSuppress = false      // suppress flashingcursor (for graphics?)
-    halfSeconds = 0
+    halfSeconds = 0  // force cursor right away
     cursorOn = true // used for state of flashing cursor
 
-    intervalID: any  // ID of background timer
     constructor(canvasID: string = 'canvas') {
 
 
@@ -190,18 +201,16 @@ export class VT52 {
             this.ctx = container.getContext('2d')!
             if (!this.ctx) {
                 throw `Could not find attach canvas context to HTML ID '${canvasID}'`;
-            } else {
-                this.ctx.moveTo(0, 0);
-                this.ctx.lineTo(200, 100);
-                this.ctx.stroke();
             }
         }
-        this.displayCharBuffer = Array(VT52rows * VT52cols).fill(32)        // space chars
-        this.displayColorBuffer = Array(VT52rows * VT52cols).fill('green')
+        VT52.displayCharBuffer = Array(VT52rows * VT52cols).fill(32)        // space chars
+        VT52.displayColorBuffer = Array(VT52rows * VT52cols).fill('green')
+        VT52.printBuffer = []   // clear anything left over
         this.drawScreen()
 
         // finally, add a 'tick' observer to keep this vt52 running in the background
-        this.intervalID = setInterval(() => {
+        clearInterval(VT52.intervalID)
+        VT52.intervalID = setInterval(() => {
             this.printDaemon();
             this.cursorDaemon();
         }, 32)   // 30 frames a second?
@@ -214,37 +223,34 @@ export class VT52 {
 
     }
 
-    setCursor(x: number, y: number) {
-        this.cursorX = x
-        this.cursorY = y
-    }
 
 
     cursorDaemon() {
         if (this.cursorSuppress)        // maybe we don't want cursor at all
             return
 
-        let halfSeconds = Math.floor(new Date().getTime() / 500)  // half-seconds since Jan 1, 1970
-        if (halfSeconds !== this.halfSeconds) {
+        let halfSeconds = new Date().getTime()  // microseconds since Jan 1, 1970
+        if (halfSeconds > this.halfSeconds) {
             // time to twiddle the cursor
-            // if (this.cursorOn){
-            //     this.drawScreen()  // this will erase it
-            // } else {
-            let charString: string = '_'
-            this.ctx.fillStyle = this.cursorOn ? 'white' : 'black'
-            this.ctx.fillText(charString, this.cursorX * VT52pixelX, this.cursorY * VT52pixelY + VT52vOffset)
-            // }
+            if (this.cursorOn) {
+                this.drawScreen()  // this will draw or erase the cursor, and everything else
+            } else {
+                let charString: string = '_'
+                this.ctx.fillStyle = this.cursorOn ? 'white' : 'black'
+                this.ctx.fillText(charString, this.cursorX * VT52pixelX, this.cursorY * VT52pixelY + VT52vOffset)
+                // a call to drawScreen() will erase the cursor, but it reappears quickly
+            }
 
 
             // set up for next cycle
             this.cursorOn = !this.cursorOn
-            this.halfSeconds = halfSeconds // don't want to hear from you for a while
+            this.halfSeconds = halfSeconds + 500 // don't want to hear from you for a while
         }
     }
 
     printDaemon() {
-        if (this.printBuffer.length > 0) {
-            let p = this.printBuffer.shift()!
+        if (VT52.printBuffer.length > 0) {
+            let p = VT52.printBuffer.shift()!
             this.printChar(p.char, p.color)
 
             // refresh the VT52 screen buffer
@@ -257,11 +263,31 @@ export class VT52 {
         }
     }
 
-    print(text: string, color: string) {
-        // process the string into the printBuffer queue, that's all
-        text.split('').forEach((char) => this.printBuffer.push({ char: char.charCodeAt(0), color: color }))
-        
+
+    ///////////////////////////////////////
+    /////// public methods ////////////////
+    ///////////////////////////////////////
+
+    print(text: string = '', color: string = 'green') {
+        this.printString(text, color)  // use printString to load the queue
+        VT52.printBuffer.push({ char: 10, color: color })  // and add a newline
     }
+
+    /** print, leave the cursor at the end of the text */
+    printString(text: string = '', color: string = 'green') {
+        // process the string into the printBuffer queue, that's all
+        text.split('').forEach((char) => VT52.printBuffer.push({ char: char.charCodeAt(0), color: color }))
+    }
+
+    /** position the cursor on the screen */
+    setCursor(x: number, y: number) {
+        this.cursorX = x
+        this.cursorY = y
+    }
+
+
+
+
 
     // full refresh of VT52 screen.
     drawScreen() {
@@ -273,8 +299,8 @@ export class VT52 {
         for (let j = 0; j < VT52rows; j++) {
             for (let i = 0; i < VT52cols; i++) {
 
-                let charCode = this.displayCharBuffer[j * VT52cols + i]
-                let charColor = this.displayColorBuffer[j * VT52cols + i]
+                let charCode = VT52.displayCharBuffer[j * VT52cols + i]
+                let charColor = VT52.displayColorBuffer[j * VT52cols + i]
 
                 // if (charCode === 0) {
                 // // a null shows as a small blue rectangle
@@ -296,8 +322,8 @@ export class VT52 {
         if (charCode === 10) {  // force CRLF
             this.printCRLF()
         } else {
-            this.displayCharBuffer[VT52cols * this.cursorY + this.cursorX] = charCode
-            this.displayColorBuffer[VT52cols * this.cursorY + this.cursorX] = charColor
+            VT52.displayCharBuffer[VT52cols * this.cursorY + this.cursorX] = charCode
+            VT52.displayColorBuffer[VT52cols * this.cursorY + this.cursorX] = charColor
             this.cursorX += 1   // horizontal cursor position
             if (this.cursorX >= VT52cols) {
                 this.printCRLF()
@@ -306,14 +332,14 @@ export class VT52 {
         }
     }
 
-    printCRLF() {
+    printCRLF() {   // basic print+CRLF, NOT EXPOSED TO USER
         // console.log(`printCRLF at ${this.cursorX},${this.cursorY}`)
         if (this.cursorY === (VT52rows - 1)) {
             // we are on the bottom line, so scroll up
-            for (let i = VT52cols; i < this.displayCharBuffer.length; i++) {    // starting at 80 (second line)
-                this.displayCharBuffer[i - VT52cols] = this.displayCharBuffer[i]
-                this.displayColorBuffer[i - VT52cols] = this.displayColorBuffer[i]
-                // this.displayCharBuffer[i] = 32
+            for (let i = VT52cols; i < VT52.displayCharBuffer.length; i++) {    // starting at 80 (second line)
+                VT52.displayCharBuffer[i - VT52cols] = VT52.displayCharBuffer[i]
+                VT52.displayColorBuffer[i - VT52cols] = VT52.displayColorBuffer[i]
+                // this.displayCharBuffer[i] = 32   // clear as we scroll
                 // this.displayColorBuffer[i] = 'green'
             }
             this.cursorX = 0   // cursorY remains the bottom row
@@ -322,8 +348,8 @@ export class VT52 {
             let firstCol = ((VT52rows - 1) * VT52cols) - 1
             for (let i = 0; i < VT52cols; i++) {
                 // console.log ('clearing VT52',i+firstCol)
-                this.displayCharBuffer[i + firstCol] = 32 // space char
-                this.displayColorBuffer[i + firstCol] = 'green'
+                VT52.displayCharBuffer[i + firstCol] = 32 // space char
+                VT52.displayColorBuffer[i + firstCol] = 'green'
             }
         } else {
             // just drop the cursor to the next line

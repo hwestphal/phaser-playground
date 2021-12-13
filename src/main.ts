@@ -6,7 +6,6 @@
 
 import { Editor } from "./editor";
 import { OnClickSay } from "./onClickSay"
-import {TerminalJS } from './terminal'
 import *  as Prism from 'prismjs'
 import { asciiMath, testAsciiMath } from './ASCIIMathML'
 import { Log } from './utilities'
