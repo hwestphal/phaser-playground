@@ -208,6 +208,9 @@ export class Editor {
             language: "typescript",
             scrollBeyondLastLine: false,
             value: window.localStorage.getItem(this.storageKey) || this.initFile,
+            minimap: {
+                enabled: false
+            }
         });
         let safeTimeout: number;
         this.editor.onDidChangeModelContent(() => {

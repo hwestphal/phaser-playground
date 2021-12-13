@@ -194,14 +194,18 @@ export class VT52 {
     constructor(canvasID: string = 'canvas') {
 
 
-        let container = document.getElementById(canvasID) as HTMLCanvasElement
-        if (!container) {
+        let canvas = document.getElementById(canvasID) as HTMLCanvasElement
+        if (!canvas) {
             throw `Could not find HTML ID '${canvasID}'`;
         } else {
-            this.ctx = container.getContext('2d')!
+            this.ctx = canvas.getContext('2d')!
             if (!this.ctx) {
                 throw `Could not find attach canvas context to HTML ID '${canvasID}'`;
             }
+            var scale = 1;
+            canvas.width = 1048 * scale;
+            canvas.height = 740 * scale;
+
         }
         VT52.displayCharBuffer = Array(VT52rows * VT52cols).fill(32)        // space chars
         VT52.displayColorBuffer = Array(VT52rows * VT52cols).fill('green')
@@ -230,19 +234,15 @@ export class VT52 {
             return
 
         let halfSeconds = new Date().getTime()  // microseconds since Jan 1, 1970
+
+        // time to twiddle the cursor.  it is NOT in the display buffer
+        let charString = '_'
+        this.ctx.fillStyle = this.cursorOn ? 'white' : 'black'
+        this.ctx.fillText(charString, this.cursorX * VT52pixelX, this.cursorY * VT52pixelY + VT52vOffset)
+        // a call to drawScreen() will erase the cursor, but it reappears quickly
+
+        // set up for next cycle
         if (halfSeconds > this.halfSeconds) {
-            // time to twiddle the cursor
-            if (this.cursorOn) {
-                this.drawScreen()  // this will draw or erase the cursor, and everything else
-            } else {
-                let charString: string = '_'
-                this.ctx.fillStyle = this.cursorOn ? 'white' : 'black'
-                this.ctx.fillText(charString, this.cursorX * VT52pixelX, this.cursorY * VT52pixelY + VT52vOffset)
-                // a call to drawScreen() will erase the cursor, but it reappears quickly
-            }
-
-
-            // set up for next cycle
             this.cursorOn = !this.cursorOn
             this.halfSeconds = halfSeconds + 500 // don't want to hear from you for a while
         }
@@ -250,17 +250,21 @@ export class VT52 {
 
     printDaemon() {
         if (VT52.printBuffer.length > 0) {
-            let p = VT52.printBuffer.shift()!
-            this.printChar(p.char, p.color)
 
-            // refresh the VT52 screen buffer
-            this.drawScreen()
-
-        } else {
-            // there may be a Promise waiting for this to finish
-            // if resolve() is not undefined, then fire it and set it undefined
-            this.vt52print()
+            // try several chars per clock tick (but 30 frames, so it can still be slow)
+            for (let i = 0; i < 10; i++) {
+                let p = VT52.printBuffer.shift()!
+                this.printChar(p.char, p.color)
+            }
         }
+        // refresh the VT52 screen buffer
+        this.drawScreen()
+
+        // } else {
+        //     // there may be a Promise waiting for this to finish
+        //     // if resolve() is not undefined, then fire it and set it undefined
+        //     this.vt52print()
+        // }
     }
 
 
@@ -268,7 +272,7 @@ export class VT52 {
     /////// public methods ////////////////
     ///////////////////////////////////////
 
-    print(text: string = '', color: string = 'green') {
+    print(text: string = '', color: string = 'black') {
         this.printString(text, color)  // use printString to load the queue
         VT52.printBuffer.push({ char: 10, color: color })  // and add a newline
     }
@@ -297,21 +301,17 @@ export class VT52 {
         this.ctx.beginPath()    // reset after clear
 
         for (let j = 0; j < VT52rows; j++) {
+            let jXcols = j * VT52cols  // i hate to multiply so often
             for (let i = 0; i < VT52cols; i++) {
 
-                let charCode = VT52.displayCharBuffer[j * VT52cols + i]
-                let charColor = VT52.displayColorBuffer[j * VT52cols + i]
+                let charCode = VT52.displayCharBuffer[jXcols + i]
+                let charColor = VT52.displayColorBuffer[jXcols + i]
 
-                // if (charCode === 0) {
-                // // a null shows as a small blue rectangle
-                // this.ctx.fillStyle = 'blue'
-                // this.ctx.fillRect(i * VT52pixelX + 4, j * VT52pixelY + 6, 2, 2)
-                // } else {
-                // // console.log('charCode', j, i, charCode)
-                let charString: string = String.fromCharCode(charCode)
-                this.ctx.fillStyle = charColor
-                this.ctx.fillText(charString, i * VT52pixelX, j * VT52pixelY + VT52vOffset)
-                // }
+                if (charCode !== 0) { // don't draw white on white
+                    let charString: string = String.fromCharCode(charCode)
+                    this.ctx.fillStyle = charColor
+                    this.ctx.fillText(charString, i * VT52pixelX, j * VT52pixelY + VT52vOffset)
+                }
             }
         }
     }
@@ -339,15 +339,12 @@ export class VT52 {
             for (let i = VT52cols; i < VT52.displayCharBuffer.length; i++) {    // starting at 80 (second line)
                 VT52.displayCharBuffer[i - VT52cols] = VT52.displayCharBuffer[i]
                 VT52.displayColorBuffer[i - VT52cols] = VT52.displayColorBuffer[i]
-                // this.displayCharBuffer[i] = 32   // clear as we scroll
-                // this.displayColorBuffer[i] = 'green'
             }
             this.cursorX = 0   // cursorY remains the bottom row
 
             // clear the bottom line
             let firstCol = ((VT52rows - 1) * VT52cols) - 1
             for (let i = 0; i < VT52cols; i++) {
-                // console.log ('clearing VT52',i+firstCol)
                 VT52.displayCharBuffer[i + firstCol] = 32 // space char
                 VT52.displayColorBuffer[i + firstCol] = 'green'
             }
