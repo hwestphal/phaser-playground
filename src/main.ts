@@ -179,8 +179,8 @@ class Main {
             try {
                 // const fn = await this.editor.transpile(this.game.scope);
                 //this.editorDiv.hidden = true;
-                this.editor.transpile()
-                this.editor.runEditorCode()
+                this.editor.transpile()  // also runs
+                // this.editor.runEditorCode()
 
             } catch (e) {   // transpile error.  show it in an alert
                 alert(e);

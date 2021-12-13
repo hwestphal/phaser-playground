@@ -150,7 +150,7 @@ const PROMPT_CONFIRM = 3
 const VT52pixelX = 13
 const VT52pixelY = 31
 
-const VT52rows = 34    // not 24 like the old terminal
+const VT52rows = 24    // not 24 like the old terminal
 const VT52cols = 80
 
 const VT52vOffset = 20  // correct for characters (not for squares)

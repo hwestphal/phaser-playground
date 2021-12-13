@@ -109,8 +109,11 @@ export class Editor {
     storageKey: string
     safeDelay: number
 
-    systemCode = ''     // hidden stuff that goes into all editors
-    prefixCode = ''     // hidden stuff for THIS instance of the editor
+    systemDecl = ''     // hidden stuff that goes into all editors
+
+    prefixDecl = ''     // hidden decl for TS for THIS instance of the editor
+    prefixCode = ''     // hidden code for THIS instance of the editor
+
     editorCode = ''
     commandCode = ''
 
@@ -183,21 +186,22 @@ export class Editor {
         // this stuff has to go into the EVAL, since it doesn't see otherwise
         // WARNING - it must be JAVASCRIPT
 
-        this.systemCode =
+        this.systemDecl =
             `
-console.log('systemcode: i have defined foo1')
-let foo1 = 5
-const JXG = window.JXG   // (window as any).JXG
-const Mathcode = window.Mathcode   // (window as any).JXG
-`
-        this.prefixCode =
-            `
-console.log('prefixCode: i have defined foo2')
-let foo2 = 'string'
-`
+            const JXG = window.JXG   // (window as any).JXG
+            const Mathcode = window.Mathcode`
 
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(this.systemCode)
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(this.prefixCode)
+        this.prefixDecl =
+            `declare function answer(myAnswer:string):bool;`
+
+        this.prefixCode=
+            `function answer(myAnswer){
+                return (myAnswer == '42')
+            }`
+
+
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(this.systemDecl)
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(this.prefixDecl)
 
         this.editor = monaco.editor.create(this.el, {
             automaticLayout: true,
@@ -289,15 +293,11 @@ let foo2 = 'string'
     runEditorCode() {
 
         let code = ''
-        code += this.systemCode + "\r\n"
+        code += this.systemDecl + "\r\n"
+        // but NOT prefixDecl
         code += this.prefixCode + "\r\n"
         code += this.editorCode + "\r\n"
         code += this.commandCode + "\r\n"
-
-        // console.log('code from editor is ', code)
-
-        // let string = "let vt = new vt52(); vt.print('hello world')npm nkkj; console.log('hello world')"
-        // console.log('code from editor is ', string)
 
         // eval() is crazy dangerous because it runs in the local context
         // Function() is a bit safer, but not much
