@@ -1,0 +1,272 @@
+/*! terminal.js | https://github.com/eosterberg/terminaljs */
+
+import { int } from "babylonjs/types";
+
+//module.exports = (function () {
+
+
+const VERSION = '3.0.1';
+
+// PROMPT_TYPE
+const PROMPT_INPUT = 1
+const PROMPT_PASSWORD = 2
+const PROMPT_CONFIRM = 3
+
+export class TerminalJS {
+
+    firstPrompt = true
+    cursorTimer: any
+
+    html: HTMLDivElement
+    _innerWindow: HTMLDivElement
+    _output: HTMLElement
+    _promptPS: HTMLElement
+    _inputLine: HTMLElement
+    _cursor: HTMLElement
+    _input: HTMLElement
+    _shouldBlinkCursor = true
+
+    constructor(containerId: string) {
+
+        this.html = document.createElement('div'),
+            this._innerWindow = document.createElement('div'),
+            this._output = document.createElement('p'),
+            this._promptPS = document.createElement('span'),
+            this._inputLine = document.createElement('span'); //the span element where the users input is put
+        this._cursor = document.createElement('span');
+        this._input = document.createElement('p'); //the full element administering the user input, including cursor
+
+        this.html.className = 'Terminal';
+
+        this._input.appendChild(this._promptPS);
+        this._input.appendChild(this._inputLine);
+        this._input.appendChild(this._cursor);
+        this._innerWindow.appendChild(this._output);
+        this._innerWindow.appendChild(this._input);
+        this.html.appendChild(this._innerWindow);
+
+        this.setBackgroundColor('black')
+            .setTextColor('white')
+            .setTextSize('1em')
+            .setWidth('100%')
+            .setHeight('100%');
+
+        this.html.style.fontFamily = 'Ubuntu Mono, Monaco, Courier';
+        this.html.style.margin = '0';
+        this.html.style.overflow = 'auto';
+        this.html.style.whiteSpace = 'pre';
+        this._innerWindow.style.padding = '10px';
+        this._input.style.margin = '0';
+        this._output.style.margin = '0';
+        this._cursor.style.background = 'white';
+        this._cursor.innerHTML = 'C'; //put something in the cursor..
+        this._cursor.style.display = 'none'; //then hide it
+        this._input.style.display = 'none';
+
+        if (typeof (containerId) === 'string') {
+            let container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = "";
+                container.appendChild(this.html);
+            } else {
+                throw `terminal-js-emulator did not find parent DIV '{containerID}'`;
+            }
+        } else {
+            throw "terminal-js-emulator requires (string) parent container id in the constructor";
+        }
+
+    }
+
+    fireCursorInterval(inputField: HTMLElement) {
+        if (this.cursorTimer) {
+            clearTimeout(this.cursorTimer)
+        }
+
+        this.cursorTimer = setTimeout(() => {
+            if (inputField.parentElement && this._shouldBlinkCursor) {
+                this._cursor.style.visibility = this._cursor.style.visibility === 'visible' ? 'hidden' : 'visible';
+                this.fireCursorInterval(inputField);
+            } else {
+                this._cursor.style.visibility = 'visible';
+            }
+        }, 500);
+    };
+
+
+    promptInput(message: string, promptType: int, callback: Function) {
+
+        let shouldDisplayInput = (
+            promptType === PROMPT_INPUT ||
+            promptType === PROMPT_CONFIRM)
+
+        let inputField = document.createElement('input');
+
+        inputField.style.position = 'absolute';
+        inputField.style.zIndex = '-100';
+        inputField.style.outline = 'none';
+        inputField.style.border = 'none';
+        inputField.style.opacity = '0';
+        inputField.style.fontSize = '0.2em';
+
+        this._inputLine.textContent = '';
+        this._input.style.display = 'block';
+        this.html.appendChild(inputField);
+        this.fireCursorInterval(inputField);
+
+        if (message.length) {
+            this.print(promptType === PROMPT_CONFIRM ? message + ' (y/n)' : message);
+        }
+
+        inputField.onblur = ()=> {
+            this._cursor.style.display = 'none';
+        }
+
+        inputField.onfocus = () => {
+            inputField.value = this._inputLine.textContent!
+            this._cursor.style.display = 'inline';
+        }
+
+        this.html.onclick = ()=> {
+            inputField.focus();
+        }
+        inputField.onkeydown = (e)=> {
+            if (e.code === 'ArrowUp' || e.code === 'ArrowRight' || e.code === 'ArrowLeft' || e.code === 'ArrowDown' || e.code === 'Tab') {
+                e.preventDefault();
+            }
+        }
+        inputField.onkeyup = (e) => {
+
+            var inputValue = inputField.value;
+
+            if (shouldDisplayInput && e.code !== 'Enter') {
+                this._inputLine.textContent = inputField.value;
+            }
+
+            if (promptType === PROMPT_CONFIRM && e.code !== 'Enter') {
+                if (e.code !== 'KeyY' && e.code !== 'KeyN') { // PROMPT_CONFIRM accept only "Y" and "N" 
+                    this._inputLine.textContent = inputField.value = '';
+                    return;
+                }
+                if (this._inputLine.textContent.length > 1) { // PROMPT_CONFIRM accept only one character
+                    this._inputLine.textContent = inputField.value = this._inputLine.textContent.substr(-1);
+                }
+            }
+
+            if (e.code === "Enter") {
+
+                if (promptType === PROMPT_CONFIRM) {
+                    if (!inputValue.length) { // PROMPT_CONFIRM doesn't accept empty string. It requires answer.
+                        return;
+                    }
+                }
+
+                this._input.style.display = 'none';
+                if (shouldDisplayInput) {
+                    this.print(inputValue);
+                }
+
+                if (typeof (callback) === 'function') {
+                    if (promptType === PROMPT_CONFIRM) {
+                        if (inputValue.toUpperCase()[0] === 'Y') {
+                            callback(true);
+                        } else if (inputValue.toUpperCase()[0] === 'N') {
+                            callback(false);
+                        } else {
+                            throw `PROMPT_CONFIRM failed: Invalid input (${inputValue.toUpperCase()[0]}})`;
+                        }
+                    } else {
+                        callback(inputValue);
+                    }
+                    this.html.removeChild(inputField); // remove input field in the end of each callback	
+                    this.scrollBottom(); // scroll to the bottom of the terminal
+                }
+
+            }
+        }
+        inputField.focus();
+    }
+
+
+    scrollBottom() {
+        this.html.scrollTop = this.html.scrollHeight;
+    }
+
+    print(message: string) {
+        var newLine = document.createElement('div');
+        newLine.textContent = message;
+        this._output.appendChild(newLine);
+        this.scrollBottom();
+        return this;
+    }
+
+    input(message: string, callback: Function) {
+        this.promptInput(message, PROMPT_INPUT, callback);
+        return this;
+    }
+
+    password(message: string, callback: Function) {
+        this.promptInput(message, PROMPT_PASSWORD, callback);
+        return this;
+    }
+
+    confirm(message: string, callback: Function) {
+        this.promptInput(message, PROMPT_CONFIRM, callback);
+        return this;
+    }
+
+    clear() {
+        this._output.innerHTML = '';
+        return this;
+    }
+
+    sleep(milliseconds: int, callback: Function) {
+        setTimeout(callback, milliseconds);
+        return this;
+    }
+
+    setTextSize(size: string) {
+        this._output.style.fontSize = size);
+        this._input.style.fontSize = size;
+        return this;
+    }
+
+    setTextColor(col: string) {
+        this.html.style.color = col;
+        this._cursor.style.background = col;
+        return this;
+    }
+
+    setBackgroundColor(col: string) {
+        this.html.style.background = col;
+        return this;
+    }
+
+    setWidth(width: string) {
+        this.html.style.width = width;
+        return this;
+    }
+
+    setHeight(height: string) {
+        this.html.style.height = height;
+        return this;
+    }
+
+    blinkingCursor(bool: string) {
+        bool = bool.toString().toUpperCase();
+        this._shouldBlinkCursor = (bool === 'TRUE' || bool === '1' || bool === 'YES');
+        return this;
+    }
+
+    setPrompt(promptPS: string) {
+        this._promptPS.textContent = promptPS;
+        return this;
+    }
+
+    getVersion() {
+        console.info(`TerminalJS ${VERSION}`)
+        return VERSION;
+    }
+
+
+}
+
