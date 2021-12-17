@@ -19,27 +19,29 @@ export interface HostMsg {
 
 
 export class Log {
-    
+
     static prevStep = 0
     static prevActivity = 0
     static prevTopic = 0
-    
-    
+
+
     //////////  numerics for 'datacode'
     static Error = -1
     static ClickSpeaker = 1000
-    
+
     static NotReadyToReflect = 1001
     static ReadyToReflect = 1002
     static CompleteStep = 1005
+    static CopyToEditor = 1006
+    static RunInCanvas = 1007
 
     static EditorRun = 1020
-    
-    
+
+
     static write(payload: HostMsg) {
-        
+
         console.log('in writeMoodleLog', payload)
-        
+
         // a bit of a hack.  sometimes we don't know the step, activity, topic
         // (for example, working in the editor and running code)
         // but we want to be able to query the log for all records
@@ -50,12 +52,12 @@ export class Log {
             this.prevStep = payload.step   // save latest step
         else
             payload.step = this.prevStep    // step unknown, use previous one
-        // activity    
+        // activity
         if (payload.activity !== undefined)
             this.prevActivity = payload.activity
         else
             payload.activity = this.prevActivity
-        // topic    
+        // topic
         if (payload.topic !== undefined)
             this.prevTopic = payload.topic
         else

@@ -38,7 +38,7 @@ createApp(App).mount("#app");
 class Main {
 
     editorDiv: HTMLDivElement
-    editor: Editor
+    static editor: Editor
     // game: GameLauncher
     download: HTMLButtonElement
     upload: HTMLButtonElement
@@ -124,6 +124,17 @@ class Main {
                 return (true)  // whetherh we can go ahead
             },
 
+            copyToEditor(paragraph:number,code:string){
+                let codeString =  Buffer.from(code, 'base64').toString('binary');
+                Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: code})
+                Main.editor.editor.setValue(codeString)
+            },
+
+            runInCanvas(paragraph:number,code:string){
+                let codeString =  Buffer.from(code, 'base64').toString('binary');
+                Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: code})
+                Main.editor.runEditorCode(codeString)
+            }
 
         }
     }
@@ -152,7 +163,7 @@ class Main {
         // monaco.editor.createModel(lib_baby, 'typescript', monaco.Uri.parse(babyUri));
 
         this.editorDiv = document.getElementById("editor")! as HTMLDivElement
-        this.editor = new Editor(this.editorDiv, this.template);
+        Main.editor = new Editor(this.editorDiv, this.template);  // static !!
 
 
         // this.game = undefined //new GameLauncher(800, 600);
@@ -166,8 +177,8 @@ class Main {
 
 
 
-        this.download.onclick = () => this.editor.download("game.ts");
-        this.upload.onclick = () => this.editor.upload();
+        this.download.onclick = () => Main.editor.download("game.ts");
+        this.upload.onclick = () => Main.editor.upload();
 
         this.run.onclick = async () => {
             console.log('clicked RUN')
@@ -179,7 +190,7 @@ class Main {
             try {
                 // const fn = await this.editor.transpile(this.game.scope);
                 //this.editorDiv.hidden = true;
-                this.editor.transpile()  // also runs
+                Main.editor.transpile()  // also runs
                 // this.editor.runEditorCode()
 
             } catch (e) {   // transpile error.  show it in an alert

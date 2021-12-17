@@ -251,6 +251,11 @@ export class Editor {
         input.click();
     }
 
+    copyToEditor(code:string){
+        this.editor.setValue(code)
+    }
+
+
     command(fileName: string) {
         console.log('clicked on command')
     }
@@ -286,20 +291,20 @@ export class Editor {
             Log.write({ 'action': 'editorRun', 'datacode': Log.EditorRun, data01:sourceCode, data02:line.toString(), data03:col.toString()})
 
             this.editorCode = output.outputFiles[0].text as string;
-            this.runEditorCode()      // and run the whole mess
+            this.runEditorCode(this.editorCode)      // and run the whole mess
         }
 
         // if model is null, do nothing
     }
 
 
-    runEditorCode() {
+    runEditorCode(editorCode:string) {
 
         let code = ''
         code += this.systemDecl + "\r\n"
         // but NOT prefixDecl
         code += this.prefixCode + "\r\n"
-        code += this.editorCode + "\r\n"
+        code += editorCode + "\r\n"
         code += this.commandCode + "\r\n"
 
         // eval() is crazy dangerous because it runs in the local context
