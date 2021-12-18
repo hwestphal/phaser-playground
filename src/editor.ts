@@ -189,10 +189,12 @@ export class Editor {
         this.systemDecl =
             `
             const JXG = window.JXG   // (window as any).JXG
-            const Mathcode = window.Mathcode`
+            const Mathcode = window.Mathcode
+            const BABYLON = window.BABYLON
+            `
 
         this.prefixDecl =
-            `declare function answer(myAnswer:string):bool;`
+            `declare function answer(myAnswer:string|number|number[]):bool;`
 
         this.prefixCode=
             `function answer(myAnswer){

@@ -58,15 +58,6 @@ module.exports = smp.wrap({
         ]
     },
 
-    ///////////  danger here
-    // optimization: {
-    //     // minimize: true
-    //     runtimeChunk:true,
-    //     removeAvailableModules: false,
-    //     removeEmptyChunks: false,
-    //     splitChunks: false,
-    // },
-
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],
         alias: {

@@ -1,5 +1,0 @@
-import {Baby} from 'expose-loader?exposes=_.concat!baby/baby"'
-let app = new Baby()
-app.floor(20,20,5)
-let cube = app.cube().color('yellow')
-
