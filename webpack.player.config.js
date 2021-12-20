@@ -1,16 +1,18 @@
+// const webpack = require('webpack');
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const smp = new SpeedMeasurePlugin()
 
-const { VueLoaderPlugin } = require("vue-loader");
+// const VueLoaderPlugin = require('vue-loader-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const path = require('path');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const { web } = require('webpack');
 
 module.exports = smp.wrap({
     // devtool: 'inline-source-map',
     devtool: 'eval-source-map',
-
+    target: 'web',
     entry: {
         "app": "./src/main.ts",
         "editor.worker": "monaco-editor/esm/vs/editor/editor.worker.js",
@@ -19,10 +21,10 @@ module.exports = smp.wrap({
     mode: "development",
     module: {
         rules: [
-            {
-                test: /\.vue$/,
-                use: "vue-loader"
-            },
+            // {
+            //     test: /\.vue$/,
+            //     use: "vue-loader"
+            // },
             {
                 test: /\.png$/,
                 use: {
@@ -74,7 +76,7 @@ module.exports = smp.wrap({
             // is a simple `export * from '@vue/runtime-dom`. However having this
             // extra re-export somehow causes webpack to always invalidate the module
             // on the first HMR update and causes the page to reload.
-            vue: "@vue/runtime-dom"
+            // vue: "@vue/runtime-dom"
         }
     },
 
@@ -87,10 +89,13 @@ module.exports = smp.wrap({
     },
     plugins: [
         new MonacoWebpackPlugin(),
-        new VueLoaderPlugin(),
+        // new VueLoaderPlugin(),
         new MiniCssExtractPlugin({
-          filename: "[name].css"
-        })
+            filename: "[name].css"
+        }),
+        // new webpack.optimize.LimitChunkCountPlugin({
+        //     maxChunks: 5,
+        // }),
     ],
     devServer: {
         contentBase: './',
@@ -100,5 +105,5 @@ module.exports = smp.wrap({
         overlay: true,
         injectClient: false,
         disableHostCheck: true
-        }
+    }
 })

@@ -225,7 +225,7 @@ export class TerminalJS {
     }
 
     setTextSize(size: string) {
-        this._output.style.fontSize = size);
+        this._output.style.fontSize = size;
         this._input.style.fontSize = size;
         return this;
     }

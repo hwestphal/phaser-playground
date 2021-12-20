@@ -153,7 +153,17 @@ export class Editor {
             noLib: true,                        // don't bring in everything
         });
 
+        monaco.editor.defineTheme('myTheme', {
+            base: 'vs',
+            inherit: true,
+            rules: [],
+            colors: {
+                'editorInlayHint.foreground': '#00FF00',
+                'editorInlayHint.background': '#FF00FF',
+            }
+        });
 
+        
         var console: Console;
 
 

@@ -6,17 +6,17 @@
 
 import { Editor } from "./editor";
 import { OnClickSay } from "./onClickSay"
-import {TerminalJS } from './terminal'
+// import {TerminalJS } from './terminal'
 import *  as Prism from 'prismjs'
 import { asciiMath, testAsciiMath } from './ASCIIMathML'
 import {Log} from './utilities'
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
-import { createApp } from "vue";
-import App from "./App.vue";
+// import { createApp } from "vue";
+// import App from "./App.vue";
 
-createApp(App).mount("#app");
+// createApp(App).mount("#app");
 
 
 
