@@ -1,11 +1,11 @@
 /****  I had to add this to node_modules/babylonjs/babylon.module.d.ts
  * issue is latest version of typescript vs latest version of babylon
- * 
- * 
+ *
+ *
 interface OffscreenCanvas extends HTMLCanvasElement{}
 interface MouseWheelEvent extends PointerEvent{}
 interface OffscreenCanvasRenderingContext2D extends CanvasRenderingContext2D{}
-type NavigatorUserMediaSuccessCallback = any 
+type NavigatorUserMediaSuccessCallback = any
 type NavigatorUserMediaErrorCallback = any
 type MSGesture = any
 interface WebGLObject {}
@@ -40,6 +40,9 @@ import lib_es2021_string from "./extraLibs/lib.es2021.string.d.ts.txt"
 
 import lib_es2099 from "./extraLibs/lib.es2099.d.ts.txt"
 import lib_jsx_tiny from "./extraLibs/jsx_tiny.d.ts.txt"
+import mathcode from "./extraLibs/mathcode.d.ts.txt"
+
+
 import { RuntimeAnimation } from "babylonjs/Animations/runtimeAnimation";
 import { Log } from "./utilities";
 
@@ -93,7 +96,7 @@ let y = BABYLON
 
 // import { Baby } from 'baby'
 
-// the Editor is also responsible for RUNNING the game.  if you want to 
+// the Editor is also responsible for RUNNING the game.  if you want to
 // run a snippet without user input, then you STILL give it to the editor to run.
 
 
@@ -106,8 +109,11 @@ export class Editor {
     storageKey: string
     safeDelay: number
 
-    systemCode = ''     // hidden stuff that goes into all editors
-    prefixCode = ''     // hidden stuff for THIS instance of the editor
+    systemDecl = ''     // hidden stuff that goes into all editors
+
+    prefixDecl = ''     // hidden decl for TS for THIS instance of the editor
+    prefixCode = ''     // hidden code for THIS instance of the editor
+
     editorCode = ''
     commandCode = ''
 
@@ -185,30 +191,38 @@ export class Editor {
 
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2099)      // stuff that Typescript hasn't provided
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_jsx_tiny)    // my simply remix of the upper level call
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(mathcode)    // my simply remix of the upper level call
 
         // this stuff has to go into the EVAL, since it doesn't see otherwise
         // WARNING - it must be JAVASCRIPT
 
-        this.systemCode =
+        this.systemDecl =
             `
-console.log('systemcode: i have defined foo1')
-let foo1 = 5
-const JXG = window.JXG   // (window as any).JXG
-`
-        this.prefixCode =
+            const JXG = window.JXG   // (window as any).JXG
+            const Mathcode = window.Mathcode
+            const BABYLON = window.BABYLON
             `
-console.log('prefixCode: i have defined foo2')
-let foo2 = 'string'
-`
 
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(this.systemCode)
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(this.prefixCode)
+        this.prefixDecl =
+            `declare function answer(myAnswer:string|number|number[]):bool;`
+
+        this.prefixCode=
+            `function answer(myAnswer){
+                return (myAnswer == '42')
+            }`
+
+
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(this.systemDecl)
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(this.prefixDecl)
 
         this.editor = monaco.editor.create(this.el, {
             automaticLayout: true,
             language: "typescript",
             scrollBeyondLastLine: false,
             value: window.localStorage.getItem(this.storageKey) || this.initFile,
+            minimap: {
+                enabled: false
+            }
         });
         let safeTimeout: number;
         this.editor.onDidChangeModelContent(() => {
@@ -249,6 +263,11 @@ let foo2 = 'string'
         input.click();
     }
 
+    copyToEditor(code:string){
+        this.editor.setValue(code)
+    }
+
+
     command(fileName: string) {
         console.log('clicked on command')
     }
@@ -267,7 +286,7 @@ let foo2 = 'string'
                 .map((m) => `Line ${m.startLineNumber}: ${m.message}`)
                 .join("\n");
             if (errors.length > 0) {
-                alert(errors)    // 
+                alert(errors)    //
                 return
             }
 
@@ -279,31 +298,27 @@ let foo2 = 'string'
 
             const line = this.editor.getPosition()!.lineNumber
             const col = this.editor.getPosition()!.column;
-            
+
             console.log(sourceCode)
             Log.write({ 'action': 'editorRun', 'datacode': Log.EditorRun, data01:sourceCode, data02:line.toString(), data03:col.toString()})
-            
+
             this.editorCode = output.outputFiles[0].text as string;
-            this.runEditorCode()      // and run the whole mess
+            this.runEditorCode(this.editorCode)      // and run the whole mess
         }
 
         // if model is null, do nothing
     }
 
 
-    runEditorCode() {
+    runEditorCode(editorCode:string) {
 
         let code = ''
-        code += this.systemCode + "\r\n"
+        code += this.systemDecl + "\r\n"
+        // but NOT prefixDecl
         code += this.prefixCode + "\r\n"
-        code += this.editorCode + "\r\n"
+        code += editorCode + "\r\n"
         code += this.commandCode + "\r\n"
 
-        // console.log('code from editor is ', code)
-
-        // let string = "let vt = new vt52(); vt.print('hello world')npm nkkj; console.log('hello world')"
-        // console.log('code from editor is ', string)
-        
         // eval() is crazy dangerous because it runs in the local context
         // Function() is a bit safer, but not much
 
@@ -318,7 +333,7 @@ let foo2 = 'string'
 
 
 
-// new Function(src) is a safer form of eval().  
+// new Function(src) is a safer form of eval().
 // code = `app.floor(30,30,5);let cube = app.cube().color('blue').move('up',1)`
 // var app = new Baby(code)
 
@@ -333,11 +348,11 @@ let foo2 = 'string'
 
 
 
-            // new Function(src) is a safer form of eval().  
+            // new Function(src) is a safer form of eval().
             // let code = `app.floor(30,30,5);let cube = app.cube().color('blue').move('up',1)`
 
             // let app = new Baby(code)        // passes code into Baby to be run
-            // new Function(src) is a safer form of eval().  
+            // new Function(src) is a safer form of eval().
 
             // let vt = this.vt52()
             // vt.print('HELLO WORLD')
@@ -348,7 +363,7 @@ let foo2 = 'string'
             // let src = "use strict";(function(${names.join()}) {eval(${JSON.stringify(code)})}).apply(this, arguments[0]);
 
 
-            // new Function(src) is a safer form of eval().  
+            // new Function(src) is a safer form of eval().
 
             // let f = new Function(src)
             // f.call(app)
@@ -406,4 +421,4 @@ let foo2 = 'string'
 // 	value: jsCode,
 // 	language: 'javascript'
 // });
-// 
+//
