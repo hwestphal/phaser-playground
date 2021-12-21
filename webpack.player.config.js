@@ -1,5 +1,7 @@
-// const webpack = require('webpack');
+
+const webpack = require('webpack');
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+
 const smp = new SpeedMeasurePlugin()
 
 const path = require('path');
@@ -99,6 +101,11 @@ module.exports = smp.wrap({
         path: path.resolve(__dirname, "dist"),
     },
     plugins: [
+        new webpack.DefinePlugin({
+            __VUE_OPTIONS_API__: true,     // (enable/disable Options API support, default: true)
+            __VUE_PROD_DEVTOOLS__: false  // (enable/disable devtools support in production, default: false)
+        }),
+
         new MonacoWebpackPlugin(),
         new VueLoaderPlugin(),
         new MiniCssExtractPlugin({
