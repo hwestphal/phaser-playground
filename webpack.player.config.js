@@ -2,12 +2,17 @@
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const smp = new SpeedMeasurePlugin()
 
-// const VueLoaderPlugin = require('vue-loader-plugin');
+const path = require('path');
+
+const { VueLoaderPlugin } = require('vue-loader');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const path = require('path');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const { web } = require('webpack');
+
+
+// const ts = require("./ts");
+
 
 module.exports = smp.wrap({
     // devtool: 'inline-source-map',
@@ -21,10 +26,19 @@ module.exports = smp.wrap({
     mode: "development",
     module: {
         rules: [
-            // {
-            //     test: /\.vue$/,
-            //     use: "vue-loader"
-            // },
+            {
+                test: /\.ts$/,
+                loader: 'ts-loader',
+                //tbtb options: {
+                //     appendTsSuffixTo: [/\.vue$/],
+                // },
+                // exclude: /node_modules/,
+            },
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader',
+            },
+
             {
                 test: /\.png$/,
                 use: {
@@ -34,17 +48,23 @@ module.exports = smp.wrap({
             },
             {
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader']
-            },
+                use: [
+                    //tbtb 'vue-style-loader',
+                    'css-loader'
+                ]
+            },            // {
+            //     test: /\.css$/,
+            //     use: ['style-loader', 'css-loader']
+            // },
             {
                 test: /\.ttf$/,
                 use: ['file-loader']
             },
-            {
-                test: /\.tsx?$/,
-                use: { loader: 'ts-loader', options: { transpileOnly: true } },
-                exclude: /node_modules/,
-            },
+            // {
+            //     test: /\.tsx?$/,
+            //     use: { loader: 'ts-loader', options: { transpileOnly: true } },
+            //     exclude: /node_modules/,
+            // },
             {
                 test: /\.txt$/i,
                 exclude: '/node_modules/',
@@ -80,7 +100,7 @@ module.exports = smp.wrap({
     },
     plugins: [
         new MonacoWebpackPlugin(),
-        // new VueLoaderPlugin(),
+        new VueLoaderPlugin(),
         new MiniCssExtractPlugin({
             filename: "[name].css"
         }),

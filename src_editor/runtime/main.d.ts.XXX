@@ -1,9 +1,0 @@
-export interface ITag {
-    tag: string,   // always lowercase
-    params: string[],
-    rawvalue: string,
-    textvalue: string,
-    speechvalue: string,
-    url: string,
-}
-

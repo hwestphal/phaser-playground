@@ -13,11 +13,10 @@ import {Log} from './utilities'
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
-// import { createApp } from "vue";
-// import App from "./App.vue";
 
-// createApp(App).mount("#app");
 
+import { createApp } from "vue";
+import App from  './App.vue'
 
 
 
@@ -48,7 +47,7 @@ class Main {
     command: HTMLButtonElement
     // fullscreen: HTMLButtonElement
 
-    template = "let app = new Baby()"
+    template = "console.log('Hello World')"
 
     static onClickSay: OnClickSay      // we'll put an instance here
 
@@ -122,6 +121,8 @@ class Main {
 
         console.log('in Main.constructor()')
 
+        createApp(App).mount("#app");
+
         Main.onClickSay = new OnClickSay()
         this.expandCodestr()   // not static, so use 'this'
 
@@ -167,7 +168,7 @@ class Main {
                 // const fn = await this.editor.transpile(this.game.scope);
                 //this.editorDiv.hidden = true;
                 this.editor.transpile()
-                this.editor.runEditorCode()
+                // this.editor.runEditorCode()
 
             } catch (e) {   // transpile error.  show it in an alert
                 alert(e);
