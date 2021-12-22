@@ -1,5 +1,5 @@
 <template>
-<h1>Hello Vue 3 + webpack</h1>
+<h1>Hello Vue 3  in Baby</h1>
 <button @click="inc" class="btn">
     count {{count}}
 </button>
