@@ -19,6 +19,7 @@ import { Log } from './utilities'
 import { createApp } from 'vue'
 import App from './App.vue'
 import { createRouter, createWebHistory, RouterLink,RouterView } from 'vue-router'
+import naive from 'naive-ui'
 
 const a = RouterView
 const b = RouterLink
@@ -149,7 +150,7 @@ class Main {
 
         console.log('in Main.constructor()')
 
-        createApp(App).use(router).mount('#app')
+        createApp(App).use(router).use(naive).mount('#app')
 
         // createApp(App).mount("#app");
 
