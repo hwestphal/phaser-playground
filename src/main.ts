@@ -9,17 +9,45 @@ import { OnClickSay } from "./onClickSay"
 // import {TerminalJS } from './terminal'
 import *  as Prism from 'prismjs'
 import { asciiMath, testAsciiMath } from './ASCIIMathML'
-import {Log} from './utilities'
+import { Log } from './utilities'
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
 
 
-import { createApp } from "vue";
-import App from  './App.vue'
+
+import { createApp } from 'vue'
+import App from './App.vue'
+import { createRouter, createWebHistory, RouterLink,RouterView } from 'vue-router'
+
+const a = RouterView
+const b = RouterLink
+console.log(a,b)
+
+// import router from './router' // <---
+import Home from './views/Home.vue'
+import About from './views/About.vue'
 
 
+// for development with vue-cli, keep /router/index.js in synch
 
+const routes = [
+    {
+        path: "/",
+        name: "Home",
+        component: Home,
+    },
+    {
+        path: "/about",
+        name: "About",
+        component: About,
+    },
+];
+
+export const router = createRouter({
+    history: createWebHistory(),
+    routes,
+});
 
 
 
@@ -61,7 +89,7 @@ class Main {
         (window as any).MathcodeAPI = {
             version: '1.0',
 
-            loader: ()=>{
+            loader: () => {
                 console.log('MathcodeAPI.loader()')
                 console.log('MathcodeAPI.loader successful')
             },
@@ -121,7 +149,16 @@ class Main {
 
         console.log('in Main.constructor()')
 
-        createApp(App).mount("#app");
+        createApp(App).use(router).mount('#app')
+
+        // createApp(App).mount("#app");
+
+
+        // createApp(App)
+        //     .component('vue-router', vueRoute)
+        //     .use(routes)
+        //     .mount('#app');    // this semicolon is important for some reason
+
 
         Main.onClickSay = new OnClickSay()
         this.expandCodestr()   // not static, so use 'this'
@@ -219,7 +256,7 @@ class Main {
         for (let i = 0; i < elements.length; i++) {   // HTMLElements not iterable ?!?
             let codestrElement = elements[i] as HTMLElement
             let codestr = codestrElement.dataset.code
-            console.log('before', codestrElement,codestr)
+            console.log('before', codestrElement, codestr)
 
             if (codestr) {      // might be undefined
 
