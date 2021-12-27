@@ -1,3 +1,5 @@
+
+
 <template>
     <div class="cardBox">
         <div class="container">
@@ -9,7 +11,10 @@
 
 
 <script>
-export default {
+import { defineComponent } from 'vue'
+export const Component = defineComponent({
+    // type inference enabled
+
     name: 'CurrentTime',
     computed: {
         getCurrentDate() {
@@ -29,5 +34,5 @@ export default {
             return intlDateTime.format(new Date());
         }
     }
-};
+})
 </script>

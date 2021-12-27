@@ -1,25 +1,16 @@
-
-const webpack = require('webpack');
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
-
 const smp = new SpeedMeasurePlugin()
 
-const path = require('path');
-
-const { VueLoaderPlugin } = require('vue-loader');
+const { VueLoaderPlugin } = require("vue-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
+const path = require('path');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
-const { web } = require('webpack');
-
-
-// const ts = require("./ts");
-
 
 module.exports = smp.wrap({
     // devtool: 'inline-source-map',
     devtool: 'eval-source-map',
-    target: 'web',
+
     entry: {
         "app": "./src/main.ts",
         "editor.worker": "monaco-editor/esm/vs/editor/editor.worker.js",
@@ -29,18 +20,9 @@ module.exports = smp.wrap({
     module: {
         rules: [
             {
-                test: /\.ts$/,
-                loader: 'ts-loader',
-                //tbtb options: {
-                //     appendTsSuffixTo: [/\.vue$/],
-                // },
-                // exclude: /node_modules/,
-            },
-            {
                 test: /\.vue$/,
-                loader: 'vue-loader',
+                use: "vue-loader"
             },
-
             {
                 test: /\.png$/,
                 use: {
@@ -50,23 +32,17 @@ module.exports = smp.wrap({
             },
             {
                 test: /\.css$/,
-                use: [
-                    //tbtb 'vue-style-loader',
-                    'css-loader'
-                ]
-            },            // {
-            //     test: /\.css$/,
-            //     use: ['style-loader', 'css-loader']
-            // },
+                use: ['style-loader', 'css-loader']
+            },
             {
                 test: /\.ttf$/,
                 use: ['file-loader']
             },
-            // {
-            //     test: /\.tsx?$/,
-            //     use: { loader: 'ts-loader', options: { transpileOnly: true } },
-            //     exclude: /node_modules/,
-            // },
+            {
+                test: /\.tsx?$/,
+                use: { loader: 'ts-loader', options: { transpileOnly: true } },
+                exclude: /node_modules/,
+            },
             {
                 test: /\.txt$/i,
                 exclude: '/node_modules/',
@@ -89,7 +65,7 @@ module.exports = smp.wrap({
             // is a simple `export * from '@vue/runtime-dom`. However having this
             // extra re-export somehow causes webpack to always invalidate the module
             // on the first HMR update and causes the page to reload.
-            // vue: "@vue/runtime-dom"
+            vue: "@vue/runtime-dom"
         }
     },
 
@@ -101,19 +77,11 @@ module.exports = smp.wrap({
         path: path.resolve(__dirname, "dist"),
     },
     plugins: [
-        new webpack.DefinePlugin({
-            __VUE_OPTIONS_API__: true,     // (enable/disable Options API support, default: true)
-            __VUE_PROD_DEVTOOLS__: false  // (enable/disable devtools support in production, default: false)
-        }),
-
         new MonacoWebpackPlugin(),
         new VueLoaderPlugin(),
         new MiniCssExtractPlugin({
-            filename: "[name].css"
-        }),
-        // new webpack.optimize.LimitChunkCountPlugin({
-        //     maxChunks: 5,
-        // }),
+          filename: "[name].css"
+        })
     ],
     devServer: {
         contentBase: './',
@@ -123,5 +91,5 @@ module.exports = smp.wrap({
         overlay: true,
         injectClient: false,
         disableHostCheck: true
-    }
+        }
 })

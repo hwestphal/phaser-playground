@@ -16,39 +16,39 @@ import { Log } from './utilities'
 
 
 
-import { createApp } from 'vue'
-import App from './App.vue'
-import { createRouter, createWebHistory, RouterLink,RouterView } from 'vue-router'
-import naive from 'naive-ui'
+// import { createApp } from 'vue'
+// import App from './App.vue'
+// import { createRouter, createWebHistory, RouterLink,RouterView } from 'vue-router'
+// import naive from 'naive-ui'
 
-const a = RouterView
-const b = RouterLink
-console.log(a,b)
+// const a = RouterView
+// const b = RouterLink
+// console.log(a,b)
 
-// import router from './router' // <---
-import Home from './views/Home.vue'
-import About from './views/About.vue'
+// // import router from './router' // <---
+// import Home from './views/Home.vue'
+// import About from './views/About.vue'
 
 
 // for development with vue-cli, keep /router/index.js in synch
 
-const routes = [
-    {
-        path: "/",
-        name: "Home",
-        component: Home,
-    },
-    {
-        path: "/about",
-        name: "About",
-        component: About,
-    },
-];
+// const routes = [
+//     {
+//         path: "/",
+//         name: "Home",
+//         component: Home,
+//     },
+//     {
+//         path: "/about",
+//         name: "About",
+//         component: About,
+//     },
+// ];
 
-export const router = createRouter({
-    history: createWebHistory(),
-    routes,
-});
+// export const router = createRouter({
+//     history: createWebHistory(),
+//     routes,
+// });
 
 
 
@@ -150,7 +150,7 @@ class Main {
 
         console.log('in Main.constructor()')
 
-        createApp(App).use(router).use(naive).mount('#app')
+        // createApp(App).use(router).use(naive).mount('#app')
 
         // createApp(App).mount("#app");
 

@@ -2,9 +2,8 @@
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
         "strict": true,
-        "target": "es2021",
-        "module": "amd",
-        "jsx": "preserve",
+        "target": "es6",
+        "module": "esnext",
         "moduleResolution": "node",
         "importHelpers": true,
         "allowJs": true,
@@ -12,7 +11,7 @@
         "noUnusedLocals": false,
         "lib": [
             "dom",
-            "ES2021"
+            "ESNext"
         ],
         "esModuleInterop": true,
         "typeRoots": [
@@ -20,9 +19,7 @@
         ],
     },
     "include": [
-        "src/**/*.ts", 
-        "src/vue-shim.d.ts",
-         "src/**/*.vue",
+        "src/**/*"
     ],
     "exclude": [
         "node_modules",
