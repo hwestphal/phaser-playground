@@ -4,12 +4,14 @@ import { MForms } from '../mforms'
 
 
 export type treeNode = {
-	buttonID: number,		// every node has a unique id, we search the tree for it
+	buttonID: number,     // a bakery value
 	label: string,
-	uniqValue: number,
+	callback: Function,
 	children: treeNode[],
 	isExpanded: boolean,
 }
+
+// there is no 'click' on the root (maybe the whole course?)
 
 export class treeviewComponent /*implements viewComponent*/ {
 
@@ -18,33 +20,37 @@ export class treeviewComponent /*implements viewComponent*/ {
 	rootLabel:string
 	root: treeNode
 
-	constructor(divID: string | HTMLElement,rootLabel:string,uniqValue:number) {
+	constructor(divID: string | HTMLElement,rootLabel:string) {
 		this.divElement = DOM.tagToElement(divID)
 		this.rootLabel = rootLabel
-		this.root = this.treeNodeFactory(rootLabel,uniqValue)  	// use the treeNodeFactory to create the root node
+		this.root = this.treeNodeFactory(rootLabel)  	// use the treeNodeFactory to create the root node
 	}
 
-	treeNodeFactory(label: string, uniqValue: number): treeNode {
+	treeNodeFactory(label: string):treeNode {
 		let bID = DOM.bakeryTicket()  // a unique id
 
 		DOM.addObserver(DOM.divName('control',bID),()=>this.openClose(bID))
 
 		return {
-			buttonID:  DOM.bakeryTicket(),
+			buttonID:  bID,
+			callback: ()=>{},
 			label: label,
-			uniqValue: uniqValue,
 			children: [],  // none yet
 			isExpanded: false,
 		}
 	}
 
 
-	addChild(parent: treeNode, label: string, uniqValue: number): treeNode {
-		let newNode = this.treeNodeFactory(label, uniqValue)
+	addChild(parent: treeNode, label: string, codeblock: Function): treeNode {
+		let newNode = this.treeNodeFactory(label)
+        newNode.callback =codeblock
 		parent.children.push(newNode)
 		return newNode
 	}
 
+    getRootNode():treeNode{
+        return this.root
+    }
 
 	getNodeByID(ID:number):treeNode{
 		let current = this.root

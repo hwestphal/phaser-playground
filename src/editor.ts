@@ -19,7 +19,7 @@ declare var WebGLObject: {
 
 
 import * as monaco from "monaco-editor";
-// import * as BABYLON from 'babylonjs';
+import * as BABYLON from 'babylonjs';
 
 import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
 // import lib_baby from "./extraLibs/baby.d.ts.txt";
@@ -43,7 +43,7 @@ import lib_jsx_tiny from "./extraLibs/jsx_tiny.d.ts.txt"
 import mathcode from "./extraLibs/mathcode.d.ts.txt"
 
 
-// import { RuntimeAnimation } from "babylonjs/Animations/runtimeAnimation";
+import { RuntimeAnimation } from "babylonjs/Animations/runtimeAnimation";
 import { Log } from "./utilities";
 
 // let x = JXG         // just to make sure webpack loads them
@@ -179,7 +179,7 @@ export class Editor {
         // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom, "lib.dom_mini.d.ts");
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom, "lib.dom.d.ts");
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_promise, "lib.es2015.promise.d.ts");
-/*
+
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2015_collection)
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2015_core)
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2016_array_include)
@@ -202,7 +202,7 @@ export class Editor {
             const JXG = window.JXG   // (window as any).JXG
             const Mathcode = window.Mathcode
             const BABYLON = window.BABYLON
-            const W = window.W
+
             `
 
         this.prefixDecl =
@@ -216,7 +216,7 @@ export class Editor {
 
         monaco.languages.typescript.typescriptDefaults.addExtraLib(this.systemDecl)
         monaco.languages.typescript.typescriptDefaults.addExtraLib(this.prefixDecl)
-*/
+
         this.editor = monaco.editor.create(this.el, {
             automaticLayout: true,
             language: "typescript",
