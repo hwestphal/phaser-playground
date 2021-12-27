@@ -43,6 +43,7 @@ import lib_jsx_tiny from "./extraLibs/jsx_tiny.d.ts.txt"
 import mathcode from "./extraLibs/mathcode.d.ts.txt"
 
 
+// import { RuntimeAnimation } from "babylonjs/Animations/runtimeAnimation";
 import { Log } from "./utilities";
 
 // let x = JXG         // just to make sure webpack loads them
@@ -117,7 +118,8 @@ export class Editor {
     commandCode = ''
 
     constructor(el: HTMLElement, initFile: string) {
-
+        // console.log('NOT STARTING EDITOR')
+        // return;
         this.el = el
         this.initFile = initFile
         this.storageKey = ''
@@ -158,6 +160,16 @@ export class Editor {
             noLib: true,                        // don't bring in everything
         });
 
+        monaco.editor.defineTheme('myTheme', {
+            base: 'vs',
+            inherit: true,
+            rules: [],
+            colors: {
+                'editorInlayHint.foreground': '#00FF00',
+                'editorInlayHint.background': '#FF00FF',
+            }
+        });
+
 
         var console: Console;
 
@@ -167,7 +179,7 @@ export class Editor {
         // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom, "lib.dom_mini.d.ts");
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom, "lib.dom.d.ts");
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_promise, "lib.es2015.promise.d.ts");
-
+/*
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2015_collection)
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2015_core)
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2016_array_include)
@@ -189,7 +201,8 @@ export class Editor {
             `
             const JXG = window.JXG   // (window as any).JXG
             const Mathcode = window.Mathcode
-            // const BABYLON = window.BABYLON
+            const BABYLON = window.BABYLON
+            const W = window.W
             `
 
         this.prefixDecl =
@@ -203,7 +216,7 @@ export class Editor {
 
         monaco.languages.typescript.typescriptDefaults.addExtraLib(this.systemDecl)
         monaco.languages.typescript.typescriptDefaults.addExtraLib(this.prefixDecl)
-
+*/
         this.editor = monaco.editor.create(this.el, {
             automaticLayout: true,
             language: "typescript",
@@ -263,6 +276,7 @@ export class Editor {
 
 
     async transpile(scope: any = {}) {
+        // return;
         // console.log('in transpile()', scope)
         const names = Object.keys(scope);
         const args = names.map((key) => scope[key]);
@@ -275,6 +289,7 @@ export class Editor {
                 .map((m) => `Line ${m.startLineNumber}: ${m.message}`)
                 .join("\n");
             if (errors.length > 0) {
+                // alert('errors coming')    //
                 alert(errors)    //
                 return
             }

@@ -64,7 +64,7 @@ export class DOM {
 		let tag: HTMLElement
 
 		if (typeof pageID == 'string') {
-			tag = document.getElementById(pageID) as HTMLElement
+			tag = document.getElementById(pageID)
 			if (tag === null) {
 				console.error(`No tag "${pageID}`)
                 tag = document.getRootNode() as HTMLElement
@@ -89,7 +89,7 @@ export class DOM {
             aNode.forEach((element) => {   // can be a string or an array
                 tag.appendChild(element)  // inside the <p></p>
             })
-            return aNode.pop()!  // last element of array
+            return aNode.pop()  // last element of array
         } else {
             tag.appendChild(aNode)  // just a single element
         }

@@ -34,6 +34,8 @@ import * as monaco from "monaco-editor";
 
 class Main {
 
+    editorDiv: HTMLDivElement
+    editor: Editor
     // game: GameLauncher
     download: HTMLButtonElement
     upload: HTMLButtonElement
@@ -43,13 +45,11 @@ class Main {
     command: HTMLButtonElement
     // fullscreen: HTMLButtonElement
 
-    static template = "console.log('Hello World')"
+    template = "console.log('Hello World')"
 
     static onClickSay: OnClickSay      // we'll put an instance here
     static someEditor: Editor
 
-    static editorDiv: HTMLDivElement
-    static editor: Editor
 
 
     /** Attaches the mathcode API to the window object so that you can discover it */
@@ -65,23 +65,17 @@ class Main {
 
             loader: () => {
                 console.log('MathcodeAPI.loader successful, about to start editor')
-
-                // monaco.editor.createModel(lib_baby, 'typescript', monaco.Uri.parse(babyUri));
-
-                Main.editorDiv = document.getElementById("editor")! as HTMLDivElement
-                Main.editor = new Editor(Main.editorDiv, this.template);
-
                 // var editor = monaco.editor.create(document.getElementById('editor'), {
                 //     value: ['function x() {', '\tconsole.log("Hello new world!");', '}'].join('\n'),
                 //     language: 'typescript'
                 // })
-                // var model = monaco.editor.createModel(
-                // 	['function x() {', '\tconsole.log("Hello world!");', '}'].join('\n'),
-                // 	'javascript'
-                // );
-                // var editor1 = monaco.editor.create(document.getElementById('editor'), {
-                // 	model: model
-                // });
+                var model = monaco.editor.createModel(
+					['function x() {', '\tconsole.log("Hello world!");', '}'].join('\n'),
+					'javascript'
+				);
+				var editor1 = monaco.editor.create(document.getElementById('editor'), {
+					model: model
+				});
             },
 
             // MathcodeAPI.onClickSay("u00051",voice,"step","activity","topic")
@@ -225,8 +219,8 @@ class Main {
 
 
 
-        this.download.onclick = () => Main.editor.download("game.ts");
-        this.upload.onclick = () => Main.editor.upload();
+        this.download.onclick = () => this.editor.download("game.ts");
+        this.upload.onclick = () => this.editor.upload();
 
         this.run.onclick = async () => {
             console.log('clicked RUN')
@@ -238,7 +232,7 @@ class Main {
             try {
                 // const fn = await this.editor.transpile(this.game.scope);
                 //this.editorDiv.hidden = true;
-                Main.editor.transpile()
+                this.editor.transpile()
                 // this.editor.runEditorCode()
 
             } catch (e) {   // transpile error.  show it in an alert
