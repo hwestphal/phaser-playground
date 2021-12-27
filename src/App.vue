@@ -1,15 +1,9 @@
-// note the router-link
-
 <template>
-    <div id="nav">
-        <h1>Welcome</h1>
-        <router-link to="/">Home</router-link>|
-        <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+<h1>Hello Vue 3 + webpack</h1>
+<button @click="inc" class="btn">
+    count {{count}}
+</button>
 </template>
-
-
 
 <script>
 import {
@@ -30,7 +24,7 @@ export default {
             inc,
         };
     },
-    mounted() { },
+    mounted() {},
 };
 </script>
 
@@ -51,11 +45,11 @@ h1 {
     white-space: nowrap;
     text-align: center;
     background-image: none;
-    -webkit-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
+    -webkit-box-shadow: 0 2px 0 rgba(0, 0, 0, .015);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, .015);
     cursor: pointer;
-    -webkit-transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    -webkit-transition: all .3s cubic-bezier(.645, .045, .355, 1);
+    transition: all .3s cubic-bezier(.645, .045, .355, 1);
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -72,8 +66,8 @@ h1 {
     color: #fff;
     background: #1890ff;
     border-color: #1890ff;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
-    -webkit-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .12);
+    -webkit-box-shadow: 0 2px 0 rgba(0, 0, 0, .045);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, .045);
 }
 </style>

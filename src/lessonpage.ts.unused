@@ -533,11 +533,11 @@ class SectionCode extends LessonSections {
         // console.log('about to create the editor')
         // this.editor = new EditorInstance(initialCode, tag, halfMonacoWidth, nLines)
 
-        // if we want line numbers, we just add them ourselves
-        initialCode = initialCode
-            .split('\n')
-            .map((line, num) => `${(num + 1).toString().padStart(3, ' ')}    ${line}`)  //
-            .join('\n');
+        // // if we want line numbers, we just add them ourselves
+        // initialCode = initialCode
+        //     .split('\n')
+        //     .map((line, num) => `${(num + 1).toString().padStart(3, ' ')}    ${line}`)  //
+        //     .join('\n');
 
 
         const html = Prism.highlight(initialCode, Prism.languages.javascript, 'javascript');
@@ -807,7 +807,7 @@ class SectionDrill extends LessonSections {   // handles math drills
 
 class SectionYouTube extends LessonSections {
 
-    nodes = []
+    nodes:HTMLElement[] = []
 
     constructor(section: ITag) {
         super(section)

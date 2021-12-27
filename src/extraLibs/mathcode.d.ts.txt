@@ -1,9 +1,10 @@
 declare class VT52 {
     constructor(canvasID: string ='canvas');
 
-    print(text: string, color?: string): Promise<void>;
     print(text?: string, color?: string): Promise<void>;
     printString(text?: string, color?: string): Promise<void>;
     printChar(charCode: number, charColor?: string): Promise<void>;
     setCursor(x: number, y: number);
 }
+
+

@@ -6,17 +6,49 @@
 
 import { Editor } from "./editor";
 import { OnClickSay } from "./onClickSay"
+// import {TerminalJS } from './terminal'
 import *  as Prism from 'prismjs'
 import { asciiMath, testAsciiMath } from './ASCIIMathML'
 import { Log } from './utilities'
-import { VT52 } from './vt52'
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
 
 
 
+// import { createApp } from 'vue'
+// import App from './App.vue'
+// import { createRouter, createWebHistory, RouterLink,RouterView } from 'vue-router'
+// import naive from 'naive-ui'
 
+// const a = RouterView
+// const b = RouterLink
+// console.log(a,b)
+
+// // import router from './router' // <---
+// import Home from './views/Home.vue'
+// import About from './views/About.vue'
+
+
+// for development with vue-cli, keep /router/index.js in synch
+
+// const routes = [
+//     {
+//         path: "/",
+//         name: "Home",
+//         component: Home,
+//     },
+//     {
+//         path: "/about",
+//         name: "About",
+//         component: About,
+//     },
+// ];
+
+// export const router = createRouter({
+//     history: createWebHistory(),
+//     routes,
+// });
 
 
 
@@ -34,7 +66,7 @@ import { VT52 } from './vt52'
 class Main {
 
     editorDiv: HTMLDivElement
-    static editor: Editor
+    editor: Editor
     // game: GameLauncher
     download: HTMLButtonElement
     upload: HTMLButtonElement
@@ -44,27 +76,15 @@ class Main {
     command: HTMLButtonElement
     // fullscreen: HTMLButtonElement
 
-    template = "let app = new Baby()"
+    template = "console.log('Hello World')"
 
     static onClickSay: OnClickSay      // we'll put an instance here
 
 
 
-    static attachMathCode() {
-        (window as any).Mathcode = {
-            version: '1.0',
-
-            VT52: () => {
-                console.log('Mathcode.loader()')
-                console.log('Mathcode.loader successful')
-                return new VT52()
-            },
-        }
-    }
-
 
     /** Attaches the mathcode API to the window object so that you can discover it */
-    static attachMathCodeAPI() {   // NB - STATIC !!!
+    static attachMathCode() {   // NB - STATIC !!!
         // let onClickSay: OnClickSay
 
         (window as any).MathcodeAPI = {
@@ -120,17 +140,6 @@ class Main {
                 return (true)  // whetherh we can go ahead
             },
 
-            copyToEditor(paragraph:number,code:string){
-                let codeString =  Buffer.from(code, 'base64').toString('binary');
-                Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: code})
-                Main.editor.editor.setValue(codeString)
-            },
-
-            runInCanvas(paragraph:number,code:string){
-                let codeString =  Buffer.from(code, 'base64').toString('binary');
-                Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: code})
-                Main.editor.runEditorCode(codeString)
-            }
 
         }
     }
@@ -141,13 +150,23 @@ class Main {
 
         console.log('in Main.constructor()')
 
+        // createApp(App).use(router).use(naive).mount('#app')
+
+        // createApp(App).mount("#app");
+
+
+        // createApp(App)
+        //     .component('vue-router', vueRoute)
+        //     .use(routes)
+        //     .mount('#app');    // this semicolon is important for some reason
+
+
         Main.onClickSay = new OnClickSay()
         this.expandCodestr()   // not static, so use 'this'
 
 
         /** Attaches the mathcode API to the window object so that you can discover it */
         Main.attachMathCode();
-        Main.attachMathCodeAPI();
 
         const State = {
             inputModel: null,
@@ -159,7 +178,7 @@ class Main {
         // monaco.editor.createModel(lib_baby, 'typescript', monaco.Uri.parse(babyUri));
 
         this.editorDiv = document.getElementById("editor")! as HTMLDivElement
-        Main.editor = new Editor(this.editorDiv, this.template);  // static !!
+        this.editor = new Editor(this.editorDiv, this.template);
 
 
         // this.game = undefined //new GameLauncher(800, 600);
@@ -173,8 +192,8 @@ class Main {
 
 
 
-        this.download.onclick = () => Main.editor.download("game.ts");
-        this.upload.onclick = () => Main.editor.upload();
+        this.download.onclick = () => this.editor.download("game.ts");
+        this.upload.onclick = () => this.editor.upload();
 
         this.run.onclick = async () => {
             console.log('clicked RUN')
@@ -186,7 +205,7 @@ class Main {
             try {
                 // const fn = await this.editor.transpile(this.game.scope);
                 //this.editorDiv.hidden = true;
-                Main.editor.transpile()  // also runs
+                this.editor.transpile()
                 // this.editor.runEditorCode()
 
             } catch (e) {   // transpile error.  show it in an alert
@@ -261,7 +280,6 @@ class Main {
 }
 
 let main = new Main()
-
 // let JXGlocal = JXG.JSXGraph   // make sure it links in
 
 
