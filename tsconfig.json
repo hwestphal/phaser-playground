@@ -1,28 +1,24 @@
 {
-    "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
-        "strict": true,
-        "target": "es6",
-        "module": "esnext",
-        "moduleResolution": "node",
-        "importHelpers": true,
-        "allowJs": true,
-        "sourceMap": false,
-        "noUnusedLocals": false,
-        "lib": [
-            "dom",
-            "ESNext"
-        ],
-        "esModuleInterop": true,
-        "typeRoots": [
-            "node_modules/@types"
-        ],
-    },
-    "include": [
-        "src/**/*"
-    ],
-    "exclude": [
-        "node_modules",
-        "**/*.spec.ts"
-    ],
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "module": "amd",
+    "target": "es2021",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "skipLibCheck": true,
+  },
+  "files": [
+    "src/index.ts"
+  ],
+  "typeRoots": [
+    "node_modules/@types"
+  ],
+  "include": [
+    "src/**/*.ts",
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ],
 }

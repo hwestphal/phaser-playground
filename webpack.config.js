@@ -5,6 +5,7 @@ const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV == 'production';
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 
 const config = {
@@ -29,6 +30,11 @@ const config = {
     },
     plugins: [
         new MonacoWebpackPlugin(),
+        new MiniCssExtractPlugin({
+            filename: "[name].css"
+          })
+
+
 
         // Add your plugins here
         // Learn more about plugins from https://webpack.js.org/configuration/plugins/
@@ -37,7 +43,7 @@ const config = {
         rules: [
             {
                 test: /\.(ts|tsx)$/i,
-                loader: 'ts-loader',
+                loader: 'ts-loader', options: { transpileOnly: true },
                 exclude: ['/node_modules/'],
             },
             {
@@ -45,10 +51,10 @@ const config = {
                 exclude: '/node_modules/',
                 use: 'raw-loader'
             },
-            {
-                test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-                type: 'asset',
-            },
+            // {
+            //     test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+            //     type: 'asset',
+            // },
             {
                 test: /\.ttf$/,
                 use: ['file-loader']

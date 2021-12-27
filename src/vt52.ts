@@ -1,7 +1,7 @@
 // import { Canvas } from "./canvas"
 // import { Observable } from "./paon"
 
-import { ThinEngine } from "babylonjs/Engines/thinEngine"
+// import { ThinEngine } from "babylonjs/Engines/thinEngine"
 
 // // this implements the different playgrounds for the student
 

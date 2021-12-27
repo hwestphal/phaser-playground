@@ -7,7 +7,7 @@
 import { Editor } from "./editor";
 import { OnClickSay } from "./onClickSay"
 import *  as Prism from 'prismjs'
-import { asciiMath, testAsciiMath } from './ASCIIMathML'
+// import { asciiMath, testAsciiMath } from './ASCIIMathML'
 import { Log } from './utilities'
 import { VT52 } from './vt52'
 
@@ -149,10 +149,10 @@ class Main {
         Main.attachMathCode();
         Main.attachMathCodeAPI();
 
-        const State = {
-            inputModel: null,
-            outputModel: null,
-        };
+        // const State = {
+        //     inputModel: null,
+        //     outputModel: null,
+        // };
 
 
 
