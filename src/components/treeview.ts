@@ -1,14 +1,23 @@
-import { DOM } from '../DOM'
+import { stringifyStyle } from '@vue/shared'
+import { isConditionalExpression } from 'typescript'
+import { DOM, unicodeHeavyPlus } from '../DOM'
 import { MForms } from '../mforms'
+
+// this tree is fairly specialized.
+// - It ONLY shows the buttons that are on the current display path
+// - there is a callback for every button (root might display x, level 1 might show y, or every button might be different)
+
 
 
 
 export type treeNode = {
-	buttonID: number,     // a bakery value
-	label: string,
-	callback: Function,
-	children: treeNode[],
-	isExpanded: boolean,
+    buttonID: string,     // a bakery value 'tree1234'
+    label: string,
+    callback: Function,
+    children: treeNode[],
+    isExpanded: boolean,
+    color: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' | 'link',
+    // addChild: Function,  // so we have a nice syntax
 }
 
 // there is no 'click' on the root (maybe the whole course?)
@@ -16,57 +25,141 @@ export type treeNode = {
 export class treeviewComponent /*implements viewComponent*/ {
 
 
-	divElement: HTMLElement
-	rootLabel:string
-	root: treeNode
+    divElement: HTMLElement
+    rootLabel: string
+    root: treeNode
+    openNode: treeNode | null // only one node can be open at a time
+    rootBtnElement: HTMLElement  // delete this to clean the tree and redraw
 
-	constructor(divID: string | HTMLElement,rootLabel:string) {
-		this.divElement = DOM.tagToElement(divID)
-		this.rootLabel = rootLabel
-		this.root = this.treeNodeFactory(rootLabel)  	// use the treeNodeFactory to create the root node
-	}
+    constructor(
+        divID: string | HTMLElement, rootLabel: string,
+        color: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' | 'link' = 'primary',
+        callback: Function = () => { },
+    ) {
 
-	treeNodeFactory(label: string):treeNode {
-		let bID = DOM.bakeryTicket()  // a unique id
+        this.divElement = DOM.tagToElement(divID)
+        this.root = this.treeNodeFactory(rootLabel, color, callback)  	// use the treeNodeFactory to create the root node
+        this.root.label = rootLabel
+        this.root.color = color
+        this.root.callback = callback
+        this.openNode = null  // initially the entire tree is closed
 
-		DOM.addObserver(DOM.divName('control',bID),()=>this.openClose(bID))
-
-		return {
-			buttonID:  bID,
-			callback: ()=>{},
-			label: label,
-			children: [],  // none yet
-			isExpanded: false,
-		}
-	}
+        // immediately draw the root button
+        this.rootBtnElement = DOM.button(divID, this.root.label, this.root.color, () => this.openClose(this.root.buttonID))
+        console.log('rootbtnelement',this.rootBtnElement)
+    }
 
 
-	addChild(parent: treeNode, label: string, codeblock: Function): treeNode {
-		let newNode = this.treeNodeFactory(label)
-        newNode.callback =codeblock
-		parent.children.push(newNode)
-		return newNode
-	}
+    treeNodeFactory(
+        label: string,
+        color: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' | 'link',
+        callback: Function,
+    ): treeNode {
 
-    getRootNode():treeNode{
+        let bID = DOM.divName('tree', DOM.bakeryTicket())  // a unique id
+
+
+        return {
+            buttonID: bID,
+            callback: callback,
+            label: label,
+            children: [],  // none yet
+            isExpanded: false,
+            color: color,
+        }
+    }
+
+    // adds a child to the tree (not yet to the DOM)
+    addTreeChild(
+        treeParent: treeNode,
+        label: string,
+        color: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' | 'link',
+        codeblock: Function = (str: string) => { },
+    ): treeNode {
+
+        let newNode = this.treeNodeFactory(label, color, codeblock)  // new TREE node, not visible yet
+
+        treeParent.children.push(newNode)  // add me to my parent's family
+        return newNode
+    }
+
+    getRootNode(): treeNode {
         return this.root
     }
 
-	getNodeByID(ID:number):treeNode{
-		let current = this.root
+    getNodeByID(ID: string): treeNode {
+        let current = this.root
 
-		return current
-	}
+        return current
+    }
 
-	openClose(buttonID:number){
-		let pointer = this.rootLabel
+    openClose(buttonID: string) {
+        this.openNode = this.getNodeByID(buttonID)
+        this.openNode.isExpanded = !(this.openNode.isExpanded)
+        // alert('is expanded is '+(this.openNode.isExpanded)?'true':'false')
+        this.renderTree()
 
-	}
+    }
 
-	renderTree(parent: treeNode): void {
+    // is the childnode we are looking for a child of THIS node?
+    isChildOf(node: treeNode, childNode: treeNode): boolean {
+        node.children.forEach(recursiveNode => {
+            if (recursiveNode.buttonID == childNode.buttonID) {
+                return (true)
+            } else {
+                return (this.isChildOf(recursiveNode, childNode))
+            }
+        });
+        return false
+    }
 
-	}
 
+    renderTree(): void {   // always the whole thing
+        let row = MForms.rowOpen('Tree', 12)   // take all the space we are given
+        let indent = 0
+
+        DOM.removeAllChildNodes(this.rootBtnElement)  // erase any children (innerHTML and rest of tree)
+        this.rootBtnElement.innerHTML = this.root.label  // replace the innerHTML text
+
+        if (this.root.isExpanded) {   // if the root is expanded
+            this.renderTreeHelper(this.root)
+        }
+        console.log(this.root)
+    }
+
+    renderTreeHelper(node: treeNode): void {
+        node.children.forEach(child => {
+            let btn = DOM.button('lesson', child.label, child.color, child.callback)
+            this.renderTreeHelper(child)
+            // // if it is open, then draw its children
+            // if (this.openNode && (this.openNode == this.root || this.isChildOf(this.root, this.openNode))) {
+            //     this.renderTreeHelper(this.root)
+            // }
+        })
+
+
+    }
+
+
+}
+
+export function someMockFunction(payload: string) {
+    console.log('payload', payload)
+}
+
+// leaving this here so that we can run a test tree easily
+export function testTree(): void {
+
+    let tree = new treeviewComponent('lesson', 'Root of Tree', 'primary')
+
+    let child1 = tree.addTreeChild(tree.root, 'first child', 'info')
+    tree.addTreeChild(child1, 'first grandchild', 'danger')
+    tree.addTreeChild(child1, 'second grandchild', 'danger')
+
+    let child2 = tree.addTreeChild(tree.root, 'second child', 'primary')
+    tree.addTreeChild(child2, 'second child of second child', 'secondary')
+
+    tree.renderTree()
 }
 
 // /////////////

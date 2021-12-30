@@ -10,6 +10,8 @@ import *  as Prism from 'prismjs'
 // import { asciiMath, testAsciiMath } from './ASCIIMathML'
 import { Log } from './utilities'
 import { VT52 } from './vt52'
+import { testTree, treeviewComponent } from "./components/treeview";
+import { DOMclass } from "./DOM";
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
@@ -69,6 +71,8 @@ class Main {
 
         (window as any).MathcodeAPI = {
             version: '1.0',
+
+            DOM: new DOMclass(),   // exposes the DOM utilities
 
             loader: () => {
                 console.log('MathcodeAPI.loader()')
@@ -140,6 +144,11 @@ class Main {
     constructor() {
 
         console.log('in Main.constructor()')
+
+        testTree()
+        // let treeview = new treeviewComponent('Tree','root label')
+        // treeview.renderTree()
+
 
         Main.onClickSay = new OnClickSay()
         this.expandCodestr()   // not static, so use 'this'
@@ -219,6 +228,9 @@ class Main {
         };
 
         // this.fullscreen.onclick = () => this.game.fullScreen = true;
+
+
+
 
     }
 

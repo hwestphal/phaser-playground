@@ -1,4 +1,4 @@
-import { DOM } from "./DOM";
+import { DOM, DOMAttribute } from "./DOM";
 
 
 export class MForms {
@@ -29,6 +29,15 @@ export class MForms {
         return col
     }
 
+
+    // these are bootstraph glyphs in the form
+    //<p><span class="glyphicon glyphicon-envelope">Envelope icon</span></p>
+    static glyphIcon(parent:string|HTMLElement,glyph:string,attributes:DOMAttribute[]=[]):HTMLElement{
+        // add a style attribute
+        attributes = DOM.defaultAttribute(attributes,{key:'style',value:'font-size:large;'})
+        let p = DOM.paragraph(parent,glyph,attributes)
+        return p
+    }
 
 
 
