@@ -1,33 +1,173 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Phaser Playground</title>
-    <style type="text/css">
-        html,
-        body {
-            height: 100%;
-            overflow: hidden;
-        }
+    <meta charset="utf-8" />
 
-        #editor {
-            height: calc(100% - 90px);
+    <title>Local Testing</title>
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" type="text/css" href="lib/jsxgraph.css" />
+    <script type="text/javascript" src="lib/jsxgraphcore.js"></script>
+
+    <script src="./lib/pep.js"></script>
+    <script src="./lib/ammo.js"></script>
+    <script src="./lib/babylon.js"></script>
+
+    <!-- bootstrap-4.1.3 -->
+    <script type="text/javascript" src="./lib/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="./lib/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./lib/bootstrap.css">
+
+    <style type="text/css">
+        * {
+            font-size: 11px;
+            line-height: 1.15;
         }
+    </style>
+
+    <link rel="stylesheet" href="main.css">
+
+    <style>
     </style>
 </head>
 
-<body>
-    <p>
-        <button id="download">Download</button>
-        <button id="upload">Upload</button>
-        <button id="run">Run</button>
-        <button id="stop" disabled>Stop</button>
-        <button id="pause" disabled>Pause</button>
-        <button id="fullscreen" disabled>Full Screen</button>
-    </p>
-    <div id="editor"></div>
+<!-- <body onload='window.history.pushState(null, null, `limits.php`);'> -->
+
+<body style="background-color:lightpink;">
+
+
+    <div id="header">
+        <div id="logo"><img src="logo.png" height="100px" /></div>
+        <!-- <div id="title">title</div> -->
+
+    </div>
+
+    <!-- <div id="headerbtns">
+        <div id="closeBtn"><span class="arrow2">x</span><span class="txt">Close</span></div>
+        <div id="next"><span class="txt">Next </span><span class="arrow1"></span></div>
+        <!-- <div id="pageno"></div> -->
+        <!-- <div id="back"><span class="arrow">
+            < /span><span class="txt"> Back</span></div> -->
+            <div id="coursemapbtn"></div>
+            <div id="progress">
+                <div id="fill"></div>
+            <div id="progressTxt"></div>
+        </div>
+
+    </div>
+
+
+    <div class="splitter" style="margin:auto;width:98%">
+
+
+        <!---  texteditor - remove for production -->
+        <div id="texteditor"></div>
+        <div id="vseparator1"></div>
+
+
+        <div id="lesson">this is the lesson
+            <div id='App'></div>
+            <div id='Tree'></div>
+
+        </div>
+        <div id="vseparator"></div>
+
+        <div id='right'>
+            <div id="buttons">
+                <p>
+                    <input type='text' id='command'></input>
+                    <button id="download">Download</button>
+                    <button id="upload">Upload</button>
+                    <button id="run">Run</button>
+                    <!-- button id="fullscreen" disabled>Full Screen</button -->
+                </p>
+
+            </div>
+            <div id="editor"></div>
+            <div id="hseparator"></div>
+            <div id="canvasdiv"><canvas id="canvas" touch-action="none"></canvas></div>
+        </div>
+    </div>
+
+    <script>
+
+        // A function is used for dragging and moving
+        function dragElement(element, direction) {
+            var md; // remember mouse down info
+            const lesson = document.getElementById("lesson");
+            const editor = document.getElementById("editor");
+            const canvas = document.getElementById("canvas");
+
+            element.onmousedown = onMouseDown;
+
+            function onMouseDown(e) {
+                console.log("mouse down: " + e.clientX);
+                md = {
+                    e,
+                    offsetLeft: element.offsetLeft,
+                    offsetTop: element.offsetTop,
+                    lessonWidth: lesson.offsetWidth,
+                    editorWidth: editor.offsetWidth,
+                    canvasWidth: canvas.offsetWidth,
+                    editorHeight: editor.offsetHeight,
+                    canvasHeight: canvas.offsetHeight,
+                };
+
+                document.onmousemove = onMouseMove;
+                document.onmouseup = () => {
+                    console.log("mouse up");
+                    document.onmousemove = document.onmouseup = null;
+                }
+            }
+
+            function onMouseMove(e) {
+                console.log("mouse move: " + e.clientX, direction);
+                var delta = {
+                    x: e.clientX - md.e.clientX,
+                    y: e.clientY - md.e.clientY
+                };
+
+                if (direction === "H") // Horizontal
+                {
+                    // Prevent negative-sized elements
+                    delta.x = Math.min(Math.max(delta.x, -md.lessonWidth),
+                        md.editorWidth);
+
+                    element.style.left = md.offsetLeft + delta.x + "px";
+                    lesson.style.width = (md.lessonWidth + delta.x) + "px";
+                    editor.style.width = (md.editorWidth - delta.x) + "px";
+                    canvas.style.width = (md.canvasWidth - delta.x) + "px";
+                }
+                if (direction === "V") // Vertical (between editor and canvas)
+                {
+                    // Prevent negative-sized elements
+                    delta.y = Math.min(Math.max(delta.y, -md.editorHeight),
+                        md.canvasHeight);
+
+                    element.style.left = md.offsetLeft + delta.y + "px";
+                    editor.style.height = (md.editorHeight + delta.y) + "px";
+                    canvas.style.height = (md.canvasHeight - delta.y) + "px";
+                }
+
+            }
+        }
+
+
+        dragElement(document.getElementById("vseparator"), "H");
+        dragElement(document.getElementById("hseparator"), "V");
+
+    </script>
+
+
+
+
+
+
+
+
+    <script src="dist/bundle.app.js"></script>
 </body>
 
 </html>

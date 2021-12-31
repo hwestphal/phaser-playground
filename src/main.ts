@@ -1,88 +1,283 @@
-import * as monaco from "monaco-editor";
-import { Editor } from "./editor";
-import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
-import lib_p2 from "./extraLibs/p2.d.ts.txt";
-import lib_phaser from "./extraLibs/phaser.comments.d.ts.txt";
-import lib_pixi from "./extraLibs/pixi.comments.d.ts.txt";
-import lib_runtime from "./extraLibs/runtime.d.ts.txt";
-import { GameLauncher } from "./game";
-import template from "./template.ts.txt";
+// to prepare the baby.d.ts.txt file, you must
+//   - remove all the 'import' statements
+//   - remove the word 'export' from 'export declare'
+//   - you should also remove   /** @ignore */ and the line that follows
 
+
+import { Editor } from "./editor";
+import { OnClickSay } from "./onClickSay"
+import *  as Prism from 'prismjs'
+// import { asciiMath, testAsciiMath } from './ASCIIMathML'
+import { Log } from './utilities'
+import { VT52 } from './vt52'
+import { testTree, treeviewComponent } from "./components/treeview";
+import { DOMclass } from "./DOM";
+
+// import { XMLHttpRequest } from 'xmlhttprequest-ts'
+
+
+
+
+
+
+
+
+// not sure if this is useful
 (self as any).MonacoEnvironment = {
     getWorkerUrl(moduleId: string, label: string) {
         if (label === "typescript" || label === "javascript") {
-            return "./ts.worker.js";
+            return "./dist/ts.worker.js";
         }
-        return "./editor.worker.js";
+        return "./dist/editor.worker.js";
     },
 };
 
-monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-    allowNonTsExtensions: true,
-    inlineSourceMap: true,
-    inlineSources: true,
-    noLib: true,
-    sourceMap: true,
-    strict: true,
-    target: monaco.languages.typescript.ScriptTarget.ES5,
-});
-monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es5, "lib.es5.d.ts");
-monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_p2, "p2.d.ts");
-monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_pixi, "pixi.comments.d.ts");
-monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_phaser, "phaser.comments.d.ts");
-monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_runtime, "runtime.d.ts");
 
-const editorDiv = document.getElementById("editor")!;
-const editor = new Editor(editorDiv, template, "phaser/source");
-const game = new GameLauncher(800, 600);
+class Main {
 
-const download = document.getElementById("download") as HTMLButtonElement;
-const upload = document.getElementById("upload") as HTMLButtonElement;
-const run = document.getElementById("run") as HTMLButtonElement;
-const stop = document.getElementById("stop") as HTMLButtonElement;
-const pause = document.getElementById("pause") as HTMLButtonElement;
-const fullscreen = document.getElementById("fullscreen") as HTMLButtonElement;
+    editorDiv: HTMLDivElement
+    static editor: Editor
+    // game: GameLauncher
+    download: HTMLButtonElement
+    upload: HTMLButtonElement
+    run: HTMLButtonElement
+    stop: HTMLButtonElement
+    pause: HTMLButtonElement
+    command: HTMLButtonElement
+    // fullscreen: HTMLButtonElement
 
-download.onclick = () => editor.download("game.ts");
-upload.onclick = () => editor.upload();
-run.onclick = async () => {
-    download.disabled = true;
-    upload.disabled = true;
-    run.disabled = true;
-    stop.disabled = false;
-    pause.disabled = false;
-    fullscreen.disabled = false;
-    try {
-        const fn = await editor.transpile(game.scope);
-        editorDiv.hidden = true;
-        game.run(fn);
-    } catch (e) {
-        alert(e);
-        resetButtons();
+    template = "let app = new Baby()"
+
+    static onClickSay: OnClickSay      // we'll put an instance here
+
+
+
+    static attachMathCode() {
+        (window as any).Mathcode = {
+            version: '1.0',
+
+            VT52: () => {
+                console.log('Mathcode.loader()')
+                console.log('Mathcode.loader successful')
+                return new VT52()
+            },
+        }
     }
-};
-stop.onclick = () => {
-    try {
-        game.stop();
-    } finally {
-        editorDiv.hidden = false;
-        resetButtons();
-    }
-};
-pause.onclick = () => {
-    const paused = game.paused;
-    game.paused = !paused;
-    pause.innerText = paused ? "Pause" : "Continue";
-    fullscreen.disabled = !paused;
-};
-fullscreen.onclick = () => game.fullScreen = true;
 
-function resetButtons() {
-    download.disabled = false;
-    upload.disabled = false;
-    run.disabled = false;
-    stop.disabled = true;
-    pause.innerText = "Pause";
-    pause.disabled = true;
-    fullscreen.disabled = true;
+
+    /** Attaches the mathcode API to the window object so that you can discover it */
+    static attachMathCodeAPI() {   // NB - STATIC !!!
+        // let onClickSay: OnClickSay
+
+        (window as any).MathcodeAPI = {
+            version: '1.0',
+
+            DOM: new DOMclass(),   // exposes the DOM utilities
+
+            loader: () => {
+                console.log('MathcodeAPI.loader()')
+                console.log('MathcodeAPI.loader successful')
+            },
+
+            // MathcodeAPI.onClickSay("u00051",voice,"step","activity","topic")
+            onClickSay: (utterID: string, voiceN: number, step: number, activity: number, topic: number) => {
+                // console.log(`onClickSay: (utterID: ${utterID}, voiceN: ${voiceN}, step: ${step}, activity: ${activity}, topic: ${topic})`)
+
+                let sayThis = document.getElementById(utterID)  // : HTMLElement or null
+                if (!sayThis) {     // might be null
+                    Log.write({ 'action': 'log', 'datacode': Log.Error, 'data01': `could not find HTML ID '${utterID}'`, 'step': step, 'activity': activity, 'topic': topic })
+                } else {
+
+                    Log.write({ 'action': 'log', 'datacode': Log.ClickSpeaker, 'data01': utterID, 'data02': sayThis.innerHTML.substring(0, 30), 'step': step, 'activity': activity, 'topic': topic })
+
+                    if (!this.onClickSay)
+                        this.onClickSay = new OnClickSay()
+
+                    // this.onClickSay = new OnClickSay()
+                    this.onClickSay.onClickSay(sayThis.innerHTML, voiceN)
+                }
+            },
+
+            // student clicks into reflection, have they finished all challenges?
+            readyToReflect: (step: number, activity: number, topic: number): boolean => {
+                // console.log(`readyToReflect: (${step}:number,${activity}:number,${topic}:number)`)
+
+                // this version is neutered
+                let readyToReflect = true  // TODO:  look it up in the page
+
+                if (!readyToReflect) {
+                    // if NOT ready, then use 1001, data01 describes what is missing
+                    Log.write({ 'action': 'readyToReflect', 'datacode': 1001, 'data01': 'code challenge', 'step': step, 'activity': activity, 'topic': topic })
+                    alert('checking whether you are reading to finish ' + step.toString())
+                } else {
+                    // if ready, then use 1002.  and set a flag so don't have to check again
+                    Log.write({ 'action': 'readyToReflect', 'datacode': Log.ReadyToReflect, 'step': step, 'activity': activity, 'topic': topic })
+                }
+                return readyToReflect
+            },
+
+
+            // MathcodeAPI.completeStep("00051","step","activity","topic")
+            completeStep: (id: string, step: number, activity: number, topic: number) => {
+                // alert('complete step')
+                Log.write({ 'action': 'completeStep', 'datacode': Log.CompleteStep, 'step': step, 'activity': activity, 'topic': topic })
+                return (true)  // whetherh we can go ahead
+            },
+
+            copyToEditor(paragraph:number,code:string){
+                let codeString =  Buffer.from(code, 'base64').toString('binary');
+                Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: code})
+                Main.editor.editor.setValue(codeString)
+            },
+
+            runInCanvas(paragraph:number,code:string){
+                let codeString =  Buffer.from(code, 'base64').toString('binary');
+                Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: code})
+                Main.editor.runEditorCode(codeString)
+            }
+
+        }
+    }
+
+
+
+    constructor() {
+
+        console.log('in Main.constructor()')
+
+        testTree()
+        // let treeview = new treeviewComponent('Tree','root label')
+        // treeview.renderTree()
+
+
+        Main.onClickSay = new OnClickSay()
+        this.expandCodestr()   // not static, so use 'this'
+
+
+        /** Attaches the mathcode API to the window object so that you can discover it */
+        Main.attachMathCode();
+        Main.attachMathCodeAPI();
+
+        // const State = {
+        //     inputModel: null,
+        //     outputModel: null,
+        // };
+
+
+
+        // monaco.editor.createModel(lib_baby, 'typescript', monaco.Uri.parse(babyUri));
+
+        this.editorDiv = document.getElementById("editor")! as HTMLDivElement
+        Main.editor = new Editor(this.editorDiv, this.template);  // static !!
+
+
+        // this.game = undefined //new GameLauncher(800, 600);
+        this.download = document.getElementById("download") as HTMLButtonElement;
+        this.upload = document.getElementById("upload") as HTMLButtonElement;
+        this.run = document.getElementById("run") as HTMLButtonElement;
+        this.stop = document.getElementById("stop") as HTMLButtonElement;
+        this.pause = document.getElementById("pause") as HTMLButtonElement;
+        this.command = document.getElementById("command") as HTMLButtonElement;
+        // this.fullscreen = document.getElementById("fullscreen") as HTMLButtonElement;
+
+
+
+        this.download.onclick = () => Main.editor.download("game.ts");
+        this.upload.onclick = () => Main.editor.upload();
+
+        this.run.onclick = async () => {
+            console.log('clicked RUN')
+            // this.run.disabled = false;  // was true
+            // this.stop.disabled = false;
+            // this.pause.disabled = false;
+            // this.command.disabled = false;
+            // this.fullscreen.disabled = false;
+            try {
+                // const fn = await this.editor.transpile(this.game.scope);
+                //this.editorDiv.hidden = true;
+                Main.editor.transpile()  // also runs
+                // this.editor.runEditorCode()
+
+            } catch (e) {   // transpile error.  show it in an alert
+                alert(e);
+                this.resetButtons();
+            }
+        };
+        // this.stop.onclick = () => {
+        //     try {
+        //         //TODO: implement stop
+        //         // this.game.stop();
+        //     } finally {
+        //         this.editorDiv.hidden = false;
+        //         this.resetButtons();
+        //     }
+        // };
+        // this.pause.onclick = () => {
+        //     // const paused = this.game.paused;
+        //     // this.game.paused = !paused;
+        //     // this.pause.innerText = paused ? "Pause" : "Continue";
+        //     // this.fullscreen.disabled = !paused;
+        // };
+
+        this.command.onclick = () => {
+            console.log('clicked command')
+            // const paused = this.game.paused;
+            // this.game.paused = !paused;
+            // this.pause.innerText = paused ? "Pause" : "Continue";
+            // this.fullscreen.disabled = !paused;
+        };
+
+        // this.fullscreen.onclick = () => this.game.fullScreen = true;
+
+
+
+
+    }
+
+    resetButtons() {
+        this.download.disabled = false;
+        this.upload.disabled = false;
+        this.run.disabled = false;
+        // this.stop.disabled = true;
+        // this.pause.innerText = "Pause";
+        // this.pause.disabled = true;
+        // this.fullscreen.disabled = true;
+    }
+
+    expandCodestr() {
+        console.log('about to expand CODESTR blocks')
+        let elements = document.getElementsByClassName('codestr')
+        for (let i = 0; i < elements.length; i++) {   // HTMLElements not iterable ?!?
+            let codestrElement = elements[i] as HTMLElement
+            let codestr = codestrElement.dataset.code
+            console.log('before', codestrElement, codestr)
+
+            if (codestr) {      // might be undefined
+
+
+                // PHP specialcharacters() converts five elements, we must switch them back
+                codestr = codestr.replaceAll(`&amp;`, `&`)
+                codestr = codestr.replaceAll(`&quot;`, `&`)
+                codestr = codestr.replaceAll(`&#039;`, `'`)
+                codestr = codestr.replaceAll(`&lt;`, `<`)
+                codestr = codestr.replaceAll(`&gt;`, `>`)
+
+                console.log('after', codestr)
+
+                // and write back into the page
+                elements[i].innerHTML = Prism.highlight(codestr, Prism.languages.javascript, 'javascript');
+            }
+        }
+    }
+
 }
+
+let main = new Main()
+
+// let JXGlocal = JXG.JSXGraph   // make sure it links in
+
+
+
+
+
+

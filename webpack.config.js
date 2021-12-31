@@ -1,58 +1,89 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const phaserPath = path.join(__dirname, "node_modules", "phaser-ce", "build", "custom");
+// Generated using webpack-cli https://github.com/webpack/webpack-cli
 
-module.exports = function(env, args = {}) {
-    const prod = args.mode === "production";
-    return {
-        devtool: prod ? "source-map" : "eval-source-map",
-        entry: {
-            "app": "./src/main.ts",
-            "editor.worker": "monaco-editor/esm/vs/editor/editor.worker.js",
-            "ts.worker": "monaco-editor/esm/vs/language/typescript/ts.worker.js",
-        },
-        mode: "development",
-        module: {
-            rules: [{
-                exclude: /node_modules/,
-                test: /\.(j|t)s$/,
-                use: {
-                    loader: "ts-loader",
-                    options: {
-                        transpileOnly: true,
-                    },
-                },
+const path = require('path');
+const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
+
+const isProduction = process.env.NODE_ENV == 'production';
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+
+const config = {
+    target: 'web',
+    entry: {
+        "app": "./src/index.ts",
+        "editor.worker": "monaco-editor/esm/vs/editor/editor.worker.js",
+        "ts.worker": "monaco-editor/esm/vs/language/typescript/ts.worker.js",
+    },
+    output: {
+        filename: 'bundle.[name].js',     // for small bundles
+        publicPath: "dist/",
+        globalObject: "self",
+        path: path.resolve(__dirname, "dist"),
+    },
+    devServer: {
+        open: true,
+        host: 'localhost',
+        static: {
+            directory: path.join(__dirname, ''),
+                  },
+    },
+    plugins: [
+        new MonacoWebpackPlugin(),
+        new MiniCssExtractPlugin({
+            filename: "[name].css"
+          })
+
+
+
+        // Add your plugins here
+        // Learn more about plugins from https://webpack.js.org/configuration/plugins/
+    ],
+    module: {
+        rules: [
+            {
+                test: /\.(ts|tsx)$/i,
+                loader: 'ts-loader', options: { transpileOnly: true },
+                exclude: ['/node_modules/'],
+            },
+            {
+                test: /\.txt$/i,
+                exclude: '/node_modules/',
+                use: 'raw-loader'
+            },
+            // {
+            //     test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+            //     type: 'asset',
+            // },
+            {
+                test: /\.ttf$/,
+                use: ['file-loader']
             },
             {
                 test: /\.css$/,
-                use: ["style-loader", "css-loader"],
-            },
-            {
-                test: /\.txt$/,
-                use: "raw-loader",
-            },
-            { test: /pixi\.js$/, loader: "expose-loader?PIXI" },
-            { test: /phaser-split\.js$/, loader: "expose-loader?Phaser" },
-            { test: /p2\.js$/, loader: "expose-loader?p2" }],
-        },
-        output: {
-            filename: "[name].js",
-            globalObject: "self",
-            path: path.resolve(__dirname, "dist"),
-        },
-        plugins: [
-            new HtmlWebpackPlugin({
-                chunks: ["app"],
-                template: "index.html",
-            }),
+                use: [
+                    'css-loader'
+                ]
+            },            // {
+
+            // Add your rules for custom modules here
+            // Learn more about loaders from https://webpack.js.org/loaders/
         ],
-        resolve: {
-            alias: {
-                p2: path.join(phaserPath, "p2.js"),
-                "phaser-ce": path.join(phaserPath, "phaser-split.js"),
-                pixi: path.join(phaserPath, "pixi.js"),
-            },
-            extensions: [".js", ".ts"],
-        },
-    };
+    },
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js'],
+    },
+};
+
+module.exports = () => {
+    if (isProduction) {
+        config.mode = 'production';
+
+
+        config.plugins.push(new WorkboxWebpackPlugin.GenerateSW());
+
+    } else {
+        config.mode = 'development';
+    }
+    return config;
 };

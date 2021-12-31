@@ -1,4 +1,7 @@
 node_modules/
 /dist/
+/dist_editor/
 *.log
 /vscode.cmd
+/coverage/
+/src_editor/mathcodeEditor/dist/

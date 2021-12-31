@@ -1,0 +1,126 @@
+
+let board = JXG.JSXGraph.initBoard('canvasdiv', { boundingbox: [-10, 10, 10, -10], axis: true })
+let p = board.create('point', [-3, 1]);
+let p2 = board.create('point', [3, 1], { name: 'X', size: 5 });
+
+// two points, A is draggable,  B.X is bound to A
+let a = board.create('point',[0,0], {name:'A', size:3})
+let b = board.create('point',[()=>a.X()/2, 1], {name:'B', face:'[]', size:3})
+let c = board.create('point',[3,3], {name:'C'})
+
+
+
+
+
+
+
+let canvas = document.getElementById('canvas') as HTMLCanvasElement
+let ctx = canvas.getContext("2d")!;
+
+ctx.beginPath();
+ctx.arc(95, 50, 40, 0, 2 * Math.PI);
+ctx.stroke();
+
+
+
+
+
+
+//////////////////////////////
+const canvas = document.getElementById("canvas")!; // Get the canvas element
+
+
+const engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
+
+// Add your code here matching the playground format
+const createScene = function () {
+
+    const scene = new BABYLON.Scene(engine);
+
+    BABYLON.MeshBuilder.CreateBox("box", {})
+
+    const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0));
+    camera.attachControl(canvas, true);
+    new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+    return scene;
+};
+
+const scene = createScene(); //Call the createScene function
+
+// Register a render loop to repeatedly render the scene
+engine.runRenderLoop(function () {
+    scene.render();
+});
+
+// // Watch for browser/canvas resize events
+// window.addEventListener("resize", function () {
+//     engine.resize();
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////
+const canvas = document.getElementById("canvas")!; // Get the canvas element
+const engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
+
+var createScene = function() {
+
+    var scene = new BABYLON.Scene(engine);
+    scene.clearColor = new BABYLON.Color3(0.35, 0.35, 0.42);
+
+    var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
+    camera.attachControl(canvas, true);
+    camera.setPosition(new BABYLON.Vector3(0.0, 3.0, -8.0));
+
+    var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
+    light.intensity = 0.2;
+    var pl = new BABYLON.PointLight('pl', camera.position, scene);
+    pl.intensity = 0.9;
+
+    var mesh = BABYLON.MeshBuilder.CreateIcoSphere("m", {radius: 2.0}, scene);
+    mesh.updateFacetData();
+
+    var box = BABYLON.MeshBuilder.CreateBox("b", {}, scene);
+
+    var tmpVector = BABYLON.Vector3.Zero();
+    var worldPos = BABYLON.Vector3.Zero();
+    var worldNor = BABYLON.Vector3.Zero();
+    var boxPos = BABYLON.Vector3.Zero();
+    var facetIndex = 10;
+    var distance = 2.0;
+
+    box.position = boxPos;
+
+    scene.registerBeforeRender(function() {
+        mesh.getFacetPositionToRef(facetIndex, worldPos);
+        mesh.getFacetNormalToRef(facetIndex, worldNor);
+        worldNor.scaleToRef(distance, tmpVector);
+        tmpVector.addToRef(worldPos, boxPos);
+        mesh.rotation.y += 0.01;
+        mesh.rotation.z -= 0.005;
+    });
+
+
+    return scene;
+};
+const scene = createScene(); //Call the createScene function
+
+// Register a render loop to repeatedly render the scene
+engine.runRenderLoop(function () {
+    scene.render();
+});
+
