@@ -17,6 +17,18 @@ describe("test observable functions", () => {
         expect(result).toBe(true)
     });
 
+    it("removes the observable, and tries again", function() {
+        result = false              // baseline behavior
+        expect(result).toBe(false)
+        DOM.notifyObservers('test')
+        expect(result).toBe(true)
+
+        result = false              // try again with remove
+        expect(result).toBe(false)
+        DOM.removeObserver('test')  // removed the observer
+        DOM.notifyObservers('test') // nothing gets notified
+        expect(result).toBe(false)
+    });
 })
 
 

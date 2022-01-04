@@ -28,7 +28,7 @@ describe("Create a tree and try some simple manipulations",
                 let root = tree.getRootNode()
                 // mockSomething is a codeblock that could be 'render activity 123' or whatever
                 let mockSomething = (str:string) => {return str }
-                let newNode = tree.addChild(root, 'first child', 'mockPayload', 'info', (str:string)=>{mockSomething('42')})
+                let newNode = tree.addTreeChild(root, 'first child', 'info', (str:string)=>{mockSomething('42')})
 
                 expect(root.children.length).toEqual(1)
                 expect(root.children[0].label).toEqual('first child')

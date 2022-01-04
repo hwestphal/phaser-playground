@@ -1,6 +1,6 @@
 import { stringifyStyle } from '@vue/shared'
 import { isConditionalExpression } from 'typescript'
-import { DOM, unicodeHeavyPlus } from '../DOM'
+import { bakeryDispenser, DOM, unicodeHeavyPlus } from '../DOM'
 import { MForms } from '../mforms'
 
 // this tree is fairly specialized.
@@ -25,7 +25,7 @@ export type treeNode = {
 export class treeviewComponent /*implements viewComponent*/ {
 
 
-    divElement: HTMLElement
+    divElement: HTMLElement  // parent of the tree
     rootLabel: string
     root: treeNode
     openNode: treeNode | null // only one node can be open at a time
@@ -42,11 +42,13 @@ export class treeviewComponent /*implements viewComponent*/ {
         this.root.label = rootLabel
         this.root.color = color
         this.root.callback = callback
+
         this.openNode = null  // initially the entire tree is closed
 
         // immediately draw the root button
-        this.rootBtnElement = DOM.button(divID, this.root.label, this.root.color, () => this.openClose(this.root.buttonID))
-        console.log('rootbtnelement',this.rootBtnElement)
+
+        this.addButton(divID,this.root)
+        // console.log('rootbtnelement',this.rootBtnElement)
     }
 
 
@@ -56,11 +58,10 @@ export class treeviewComponent /*implements viewComponent*/ {
         callback: Function,
     ): treeNode {
 
-        let bID = DOM.divName('tree', DOM.bakeryTicket())  // a unique id
 
 
         return {
-            buttonID: bID,
+            buttonID: 'unused',   // gets filled in when there is a visible button
             callback: callback,
             label: label,
             children: [],  // none yet
@@ -93,10 +94,11 @@ export class treeviewComponent /*implements viewComponent*/ {
         return current
     }
 
-    openClose(buttonID: string) {
+    nodeIsClicked(buttonID: string) {
+        console.log('node is clicked:  buttonID', buttonID)
         this.openNode = this.getNodeByID(buttonID)
         this.openNode.isExpanded = !(this.openNode.isExpanded)
-        // alert('is expanded is '+(this.openNode.isExpanded)?'true':'false')
+        // alert('is expanded is ' + ((this.openNode.isExpanded) ? 'true' : 'false'))
         this.renderTree()
 
     }
@@ -115,21 +117,23 @@ export class treeviewComponent /*implements viewComponent*/ {
 
 
     renderTree(): void {   // always the whole thing
+        console.log('renderTree',this.root)
         let row = MForms.rowOpen('Tree', 12)   // take all the space we are given
         let indent = 0
 
-        DOM.removeAllChildNodes(this.rootBtnElement)  // erase any children (innerHTML and rest of tree)
-        this.rootBtnElement.innerHTML = this.root.label  // replace the innerHTML text
+        DOM.removeAllChildNodes(this.root.buttonID)  // erase any children (innerHTML and rest of tree)
+        // document.getElementById(this.root.buttonID).innerHTML = this.root.label  // replace the innerHTML text
 
         if (this.root.isExpanded) {   // if the root is expanded
             this.renderTreeHelper(this.root)
         }
-        console.log(this.root)
     }
 
     renderTreeHelper(node: treeNode): void {
         node.children.forEach(child => {
-            let btn = DOM.button('lesson', child.label, child.color, child.callback)
+
+            this.addButton(node.buttonID,child)  // add a new button with all the fixings
+
             this.renderTreeHelper(child)
             // // if it is open, then draw its children
             // if (this.openNode && (this.openNode == this.root || this.isChildOf(this.root, this.openNode))) {
@@ -140,6 +144,22 @@ export class treeviewComponent /*implements viewComponent*/ {
 
     }
 
+    subtreeContainsOpenNode(node: treeNode):boolean{
+        // we don't check OURSELF, assume the caller does that
+        return node.children.some(node => this.subtreeContainsOpenNode(node))  //recursive search
+    }
+
+
+    addButton(parent:string|HTMLElement,child:treeNode){
+        child.buttonID = DOM.button(parent, child.label+' '+(bakeryDispenser+1).toString(), child.color)
+
+        // add the events we want for this button
+        DOM.addObserver(child.buttonID, () => this.nodeIsClicked(child.buttonID))
+        DOM.addObserver(child.buttonID, () => console.log('clicked on ', child.buttonID))
+        DOM.addObserver(child.buttonID, () => child.callback)
+        console.log('should be lots of observers for ', child.buttonID)
+
+    }
 
 }
 
