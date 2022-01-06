@@ -19,9 +19,6 @@ import { DOMclass } from "./DOM";
 
 
 
-
-
-
 // not sure if this is useful
 (self as any).MonacoEnvironment = {
     getWorkerUrl(moduleId: string, label: string) {
@@ -124,15 +121,15 @@ class Main {
                 return (true)  // whetherh we can go ahead
             },
 
-            copyToEditor(paragraph:number,code:string){
-                let codeString =  Buffer.from(code, 'base64').toString('binary');
-                Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: code})
+            copyToEditor(paragraph: number, code: string) {
+                let codeString = Buffer.from(code, 'base64').toString('binary');
+                Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: code })
                 Main.editor.editor.setValue(codeString)
             },
 
-            runInCanvas(paragraph:number,code:string){
-                let codeString =  Buffer.from(code, 'base64').toString('binary');
-                Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: code})
+            runInCanvas(paragraph: number, code: string) {
+                let codeString = Buffer.from(code, 'base64').toString('binary');
+                Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: code })
                 Main.editor.runEditorCode(codeString)
             }
 

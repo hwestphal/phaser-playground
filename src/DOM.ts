@@ -1,5 +1,6 @@
 // this is a static class, there should only be one instance of it
 
+import { isEmptyObject } from "jquery"
 import { isConditionalExpression } from "typescript"
 
 
@@ -28,7 +29,7 @@ export const unicodeHeavyPlus = '➕'
 
 export class DOMclass {
 
-
+    debug = true
 
     //////////////////////
     /// micro 'observable' for events
@@ -36,18 +37,21 @@ export class DOMclass {
     addObserver(trigger: string, callback: Function): Observer {
         let newObserver: Observer = { trigger: trigger, action: callback }
         observers.push(newObserver)
+        // if (this.debug) console.log(`%caddObserver('${trigger})'`, 'background-color:yellow;')
         return newObserver
     }
 
     notifyObservers(trigger: string): void {
         // may trigger several actions
+        if (this.debug) console.log(`%cnotifyObservers('${trigger})'`, 'background-color:yellow;')
         observers.forEach(obs => { obs.trigger === trigger ? obs.action() : null })     // if message matches, call the action
     }
 
     removeObserver(trigger: string): void {
+        if (this.debug) console.log(`%cremoveObserver('${trigger})'`, 'background-color:yellow;')
         observers = observers.filter(obs => obs.trigger !== trigger);
-        console.log('removeObserver', trigger, 'remaining', observers)
     }
+
     // some triggers are just the id of a button, but
     // there is are triggers when the data changes
 
@@ -120,17 +124,19 @@ export class DOMclass {
 
 
     removeAllChildNodes(existingID: string | HTMLElement) {
-        console.log('removeAllChildNodes', existingID)
-        let tag = DOM.tagToElement(existingID)  // convert to HTMLElement
+        // console.log('removeAllChildNodes', existingID)
+        if (existingID) {
+            let tag = DOM.tagToElement(existingID)  // convert to HTMLElement
 
-        if (tag.hasChildNodes()) {
-            let children = tag.childNodes;
-            for (let i = children.length - 1; i >= 0; i--) {
-                if (tag.children[i] instanceof HTMLElement) {
-                    // console.log('removing ', tag, ' firstchild ', tag.firstChild)
-                    this.removeObserver(tag.children[i].id)
-                    this.removeAllChildNodes(tag.children[i].id)  // recursive call
-                    tag.children[i].remove() //removeChild(tag.firstChild);
+            if (tag.hasChildNodes()) {
+                let children = tag.childNodes;
+                for (let i = children.length - 1; i >= 0; i--) {
+                    if (tag.children[i] instanceof HTMLElement) {
+                        // console.log('removing ', tag, ' firstchild ', tag.firstChild)
+                        this.removeObserver(tag.children[i].id)
+                        this.removeAllChildNodes(tag.children[i].id)  // recursive call
+                        tag.children[i].remove() //removeChild(tag.firstChild);
+                    }
                 }
             }
         }
@@ -221,6 +227,8 @@ export class DOMclass {
         aria: string = '',        // defaults to text, add if using a glyph
     ): string {
 
+        let tag = DOM.tagToElement(parent)  // convert to HTMLElement
+
         let uniqID = DOM.divName('btn', DOM.bakeryTicket())
         let btnSet = `btn-${color} `
         let btnNotSet = `btn-outline-${color} `
@@ -233,7 +241,7 @@ export class DOMclass {
         attributes.push({ key: 'onclick', value: `MathcodeAPI.DOM.notifyObservers("${uniqID}")` })
         attributes.push({ key: 'aria-label', value: aria ? aria : text })
         let infoButton = DOM.node('button', text, uniqID, btnClass, attributes)
-        DOM.appendChild(parent, infoButton)
+        DOM.appendChild(tag, infoButton)
 
         // now add the callback
         DOM.addObserver(uniqID, callback)  // when the button is clicked...
