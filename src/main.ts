@@ -30,7 +30,7 @@ import { DOMclass } from "./DOM";
 };
 
 
-class Main {
+export class Main {
 
     editorDiv: HTMLDivElement
     static editor: Editor
@@ -49,17 +49,17 @@ class Main {
 
 
 
-    static attachMathCode() {
-        (window as any).Mathcode = {
-            version: '1.0',
+    // static attachMathCode() {
+    //     (window as any).Mathcode = {
+    //         version: '1.0',
 
-            VT52: () => {
-                console.log('Mathcode.loader()')
-                console.log('Mathcode.loader successful')
-                return new VT52()
-            },
-        }
-    }
+    //         VT52: () => {
+    //             console.log('Mathcode.loader()')
+    //             console.log('Mathcode.loader successful')
+    //             return new VT52()
+    //         },
+    //     }
+    // }
 
 
     /** Attaches the mathcode API to the window object so that you can discover it */
@@ -71,9 +71,9 @@ class Main {
 
             DOM: new DOMclass(),   // exposes the DOM utilities
 
-            loader: () => {
-                console.log('MathcodeAPI.loader()')
-                console.log('MathcodeAPI.loader successful')
+            loader: (courseInfo:string) => {
+                console.log('%cMathcodeAPI.loader successful','background-color:red;color:white;')
+                console.log('courseInfo(raw): ',courseInfo)
             },
 
             // MathcodeAPI.onClickSay("u00051",voice,"step","activity","topic")
@@ -152,7 +152,6 @@ class Main {
 
 
         /** Attaches the mathcode API to the window object so that you can discover it */
-        Main.attachMathCode();
         Main.attachMathCodeAPI();
 
         // const State = {
