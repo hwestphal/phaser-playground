@@ -20,6 +20,7 @@ declare var WebGLObject: {
 
 import * as monaco from "monaco-editor";
 import * as BABYLON from 'babylonjs';
+import * as PlanetCute from './planetcute'
 
 import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
 // import lib_baby from "./extraLibs/baby.d.ts.txt";
@@ -202,11 +203,14 @@ export class Editor {
             const JXG = window.JXG   // (window as any).JXG
             const Mathcode = window.Mathcode
             const BABYLON = window.BABYLON
-
+            // const window.PlanetCute = new PlanetCute()
+            // const PlanetCute = window.PlanetCute
             `
 
         this.prefixDecl =
             `declare function answer(myAnswer:string|number|number[]):bool;`
+
+
 
         this.prefixCode=
             `function answer(myAnswer){

@@ -124,3 +124,25 @@ engine.runRenderLoop(function () {
     scene.render();
 });
 
+
+///////////////////////////////////////////////////////
+
+let v = Mathcode.VT52()
+for (let i=0;i<10;i++)
+  v.printString('0123456789',i%2?'red':'green')
+
+///////////////////////////////////////////////////////
+
+let p = Mathcode.PlanetCute() as PlanetCute
+let canvas = document.getElementById('canvas') as HTMLCanvasElement
+var scale = 2;
+canvas.width = 640 * scale;
+canvas.height = 480 * scale;
+
+let ctx = canvas.getContext("2d")!;
+
+ctx.fillStyle = "#FF0000"
+ctx.fillRect(0, 0, 1280, 960);
+
+let img = p.CharacterHornGirl
+img.onload = ()=> ctx.drawImage(img,0,-50)

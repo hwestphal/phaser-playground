@@ -138,7 +138,7 @@ export class treeviewComponent /*implements viewComponent*/ {
     }
 
     renderTree(): void {   // always the whole thing
-        console.log('%crenderTree', 'background-color:silver;', this.openNode, this.root)
+        // console.log('%crenderTree', 'background-color:silver;', this.openNode, this.root)
 
         DOM.removeAllChildNodes('Tree')  // erase any children (innerHTML and rest of tree)
         let indent = 0
@@ -146,7 +146,7 @@ export class treeviewComponent /*implements viewComponent*/ {
     }
 
     renderTreeHelper(node: treeNode): void {
-        console.log(`%crenderTreeHelper(${node.label})`, 'background-color:silver;')
+        // console.log(`%crenderTreeHelper(${node.label})`, 'background-color:silver;')
         // if this is the opennode then list ALL children
         if (this.openNode && this.openNode.buttonID == node.buttonID) {   // if the root is expanded
             this.addButton('Tree', node)  // add a new button with all the fixings
@@ -176,7 +176,7 @@ export class treeviewComponent /*implements viewComponent*/ {
         node.children.forEach(child => {
             ret = ret || this.containsOpenNode(child)
         })
-        console.log(`containsOpenNode for ${node.buttonID} is ${ret ? 'true' : 'false'}`)
+        // console.log(`containsOpenNode for ${node.buttonID} is ${ret ? 'true' : 'false'}`)
         return ret
     }
 
@@ -189,7 +189,7 @@ export class treeviewComponent /*implements viewComponent*/ {
         DOM.addObserver(child.buttonID, () => this.nodeIsClicked(child.buttonID))
         DOM.addObserver(child.buttonID, () => console.log('clicked on ', child.buttonID))
         DOM.addObserver(child.buttonID, () => child.callback)
-        console.log('should be lots of observers for ', child.buttonID)
+        // console.log('should be lots of observers for ', child.buttonID)
 
     }
 

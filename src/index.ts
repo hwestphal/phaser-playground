@@ -21,6 +21,8 @@ import {Main} from './main'
 
 
 
+
+
 // not sure if this is useful
 (self as any).MonacoEnvironment = {
     getWorkerUrl(moduleId: string, label: string) {

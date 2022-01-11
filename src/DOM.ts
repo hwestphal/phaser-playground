@@ -29,7 +29,7 @@ export const unicodeHeavyPlus = '➕'
 
 export class DOMclass {
 
-    debug = true
+    debug = false
 
     //////////////////////
     /// micro 'observable' for events
@@ -246,7 +246,7 @@ export class DOMclass {
         // now add the callback
         DOM.addObserver(uniqID, callback)  // when the button is clicked...
 
-        console.log('have added button')
+        // console.log('have added button')
         return uniqID
     }
 

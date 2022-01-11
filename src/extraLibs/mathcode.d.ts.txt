@@ -7,3 +7,66 @@ declare class VT52 {
     printChar(charCode: number, charColor?: string): Promise<void>;
     setCursor(x: number, y: number);
 }
+
+
+declare class PlanetCute {
+    constructor();
+    BrownBlock: HTMLImageElement;
+    CharacterBoy: HTMLImageElement;
+    CharacterCatGirl: HTMLImageElement;
+    CharacterHornGirl: HTMLImageElement;
+    CharacterPinkGirl: HTMLImageElement;
+    CharacterPrincessGirl: HTMLImageElement;
+    ChestClosed: HTMLImageElement;
+    ChestLid: HTMLImageElement;
+    ChestOpen: HTMLImageElement;
+    DirtBlock: HTMLImageElement;
+    DoorTallClosed: HTMLImageElement;
+    DoorTallOpen: HTMLImageElement;
+    EnemyBug: HTMLImageElement;
+    GemBlue: HTMLImageElement;
+    GemGreen: HTMLImageElement;
+    GemOrange: HTMLImageElement;
+    GrassBlock: HTMLImageElement;
+    Heart: HTMLImageElement;
+    Key: HTMLImageElement;
+    PlainBlock: HTMLImageElement;
+    PlanetCuteShadowMockup: HTMLImageElement;
+    PlanetCuteShadowTest: HTMLImageElement;
+    RampEast: HTMLImageElement;
+    RampNorth: HTMLImageElement;
+    RampSouth: HTMLImageElement;
+    RampWest: HTMLImageElement;
+    Rock: HTMLImageElement;
+    RoofEast: HTMLImageElement;
+    RoofNorthEast: HTMLImageElement;
+    RoofNorth: HTMLImageElement;
+    RoofNorthWest: HTMLImageElement;
+    RoofSouthEast: HTMLImageElement;
+    RoofSouth: HTMLImageElement;
+    RoofSouthWest: HTMLImageElement;
+    RoofWest: HTMLImageElement;
+    Selector: HTMLImageElement;
+    ShadowEast: HTMLImageElement;
+    ShadowNorthEast: HTMLImageElement;
+    ShadowNorth: HTMLImageElement;
+    ShadowNorthWest: HTMLImageElement;
+    ShadowSideWest: HTMLImageElement;
+    ShadowSouthEast: HTMLImageElement;
+    ShadowSouth: HTMLImageElement;
+    ShadowSouthWest: HTMLImageElement;
+    ShadowWest: HTMLImageElement;
+    SpeechBubble: HTMLImageElement;
+    Star: HTMLImageElement;
+    StoneBlock: HTMLImageElement;
+    StoneBlockTall: HTMLImageElement;
+    Thumbs: HTMLImageElement;
+    TreeShort: HTMLImageElement;
+    TreeTall: HTMLImageElement;
+    TreeUgly: HTMLImageElement;
+    WallBlock: HTMLImageElement;
+    WallBlockTall: HTMLImageElement;
+    WaterBlock: HTMLImageElement;
+    WindowTall: HTMLImageElement;
+    WoodBlock: HTMLImageElement;
+}
