@@ -10,7 +10,11 @@ declare class VT52 {
 
 
 declare class PlanetCute {
-    constructor();
+    constructor(canvasID:string);
+    ctx():CanvasRenderingContext2D;
+    placeTile(tile:HTMLImageElement, x:number,y:number,height:number):void;
+
+
     BrownBlock: HTMLImageElement;
     CharacterBoy: HTMLImageElement;
     CharacterCatGirl: HTMLImageElement;

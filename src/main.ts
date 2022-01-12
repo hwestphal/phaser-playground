@@ -79,10 +79,10 @@ export class Main {
 
         (window as any).Mathcode = {
 
-            VT52: ():VT52 => {
+            VT52: (): VT52 => {
                 return new VT52()
             },
-            PlanetCute: ():PlanetCute=>{
+            PlanetCute: (): PlanetCute => {
                 return new PlanetCute()
             }
         },

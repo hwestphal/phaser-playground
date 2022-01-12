@@ -146,3 +146,29 @@ ctx.fillRect(0, 0, 1280, 960);
 
 let img = p.CharacterHornGirl
 img.onload = ()=> ctx.drawImage(img,0,-50)
+
+
+///////////////////////////////////////////////////////
+
+let p = Mathcode.PlanetCute() as PlanetCute
+let ctx = p.ctx();
+
+ctx.fillStyle = "#FF0000"
+ctx.fillRect(0, 0, 1280, 960);
+
+
+p.placeTile(p.BrownBlock,3,2,0)
+p.placeTile(p.BrownBlock,4,2,0)
+
+p.placeTile(p.BrownBlock,3,3,0)
+p.placeTile(p.BrownBlock,4,3,0)
+p.placeTile(p.BrownBlock,5,3,0)
+
+p.placeTile(p.PlainBlock,3,3,1)
+p.placeTile(p.GrassBlock,3,2,2)
+p.placeTile(p.GrassBlock,3,3,2)
+
+p.placeTile(p.ShadowSouthWest,4,3,2)
+p.placeTile(p.ShadowSouthWest,4,4,2)
+
+
