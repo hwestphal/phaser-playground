@@ -15,7 +15,7 @@
     "node_modules/@types"
   ],
   "include": [
-    "src/**/*.ts", "planetcute/planetcute.d.ts",
+    "src/**/*.ts", "planetcute/planetcute.d.ts", "src/jxg.ts",
   ],
   "exclude": [
     "node_modules",

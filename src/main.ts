@@ -17,8 +17,9 @@ import { PlanetCute } from "./planetcute";
 import { testTree, treeviewComponent } from "./components/treeview";
 import { DOMclass } from "./DOM";
 import { talk_to_moodle } from './moodle'
-import { LogRecord, logRecord } from './logrecords'
 
+import { LogRecord, logRecord } from './logrecords'
+import {tsFS} from './tsFS'
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
@@ -165,9 +166,28 @@ export class Main {
 
         console.log('in Main.constructor()')
 
+        let fs = new tsFS()
+
+        fs.writeFile(0, 'books.xlsx', 'The Big Lebowski')
+
+        console.log('localstorage 0', JSON.parse(localStorage.getItem('FileSystem_0')))
+        console.log('localstorage 1', JSON.parse(localStorage.getItem('FileSystem_1')))
+        console.log('localstorage 2', JSON.parse(localStorage.getItem('FileSystem_2')))
+        console.log('localstorage 3', JSON.parse(localStorage.getItem('FileSystem_3')))
+
+        fs.writeFile(0, 'books.xlsx', 'The Big Second Lebowski')
+
+        console.log('localstorage 0', JSON.parse(localStorage.getItem('FileSystem_0')))
+        console.log('localstorage 1', JSON.parse(localStorage.getItem('FileSystem_1')))
+        console.log('localstorage 2', JSON.parse(localStorage.getItem('FileSystem_2')))
+        console.log('localstorage 3', JSON.parse(localStorage.getItem('FileSystem_3')))
+
+
+
         LogRecord.readAndClear()  // initialize
         LogRecord.add(1, 2, 3, 'zerodata')
         LogRecord.add(11, 12, 13, 'onedata')
+
 
         test_talk_to_moodle() // this is an async function
 
