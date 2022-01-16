@@ -56,7 +56,7 @@ describe("housekeeping stuff", () => {
             expect(fs.getNewFileNumber()).toEqual(3)  //third value
 
             // there should be a root directory now, let's get it
-            let dObj = fs.getDirectoryObject(0) as directoryObject
+            let dObj = fs.getDirectoryObject(1) as directoryObject
             expect(dObj.files.length).toEqual(0)
             expect(dObj.subdirs.length).toEqual(0)
 

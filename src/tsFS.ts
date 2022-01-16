@@ -1,16 +1,16 @@
 // the filesystem consists of a collection of JSON fileObjects 
 
+import { DirectiveArgumentNode } from "@vue/compiler-core"
 import { LZString } from "lzstring.ts"
-import { basename, dirname, format, parse, normalize }  from "path-browserify"
+import { basename, dirname, format, parse, normalize } from "path-browserify"
 
 
 // the key/name of fileObjects in localstore is 'FileSystem_${fileNumber}'.
 //   representing the file ./     there is also a ../
 // the ROOT key of the filesystem is 'FileSystem_0'
 
-// There is a special case for the root 'FileSystem_0': it is a
-// directoryObject, but its fileNumber is the 
-// largest filenumber used in the system (a 'bakery ticket')
+// There is a special case: the root is always 'FileSystem_0'
+// its fileNumber is the largest filenumber used in the system (a 'bakery ticket')
 
 // https://stackoverflow.com/questions/12100299/whats-a-canonical-path
 
@@ -18,6 +18,7 @@ import { basename, dirname, format, parse, normalize }  from "path-browserify"
 enum FileType {
     FILE = 1,
     DIR = 2,
+    ROOT = 3,
 }
 
 export type fileObject = {
@@ -46,6 +47,12 @@ export type directoryObject = {
     subdirs: number[],
 }
 
+export type rootObject = {
+    fileType: FileType,         // should always be FileType.DIR
+    fileNumber: number,         // (dot) the fileNumber of this record
+}
+
+
 
 // directory operations:
 //  dir.path()      // read-only
@@ -69,6 +76,36 @@ export class tsFS {
     fs: Object = {}
     FSName: string = 'FileSystem'
 
+    // can't use a constructor for testing
+    crud() {
+        localStorage.clear()  // start from nothing
+
+        this.writeFile(1, 'books.xlsx', 'The Big Lebowski')
+
+        console.log('localstorage 0', JSON.parse(localStorage.getItem('FileSystem_0')))
+        console.log('localstorage 1', JSON.parse(localStorage.getItem('FileSystem_1')))
+        console.log('localstorage 2', JSON.parse(localStorage.getItem('FileSystem_2')))
+        console.log('localstorage 3', JSON.parse(localStorage.getItem('FileSystem_3')))
+
+        this.writeFile(1, 'books.xlsx', 'The Big Second Lebowski')
+
+        console.log('localstorage 0', JSON.parse(localStorage.getItem('FileSystem_0')))
+        console.log('localstorage 1', JSON.parse(localStorage.getItem('FileSystem_1')))
+        console.log('localstorage 2', JSON.parse(localStorage.getItem('FileSystem_2')))
+        console.log('localstorage 3', JSON.parse(localStorage.getItem('FileSystem_3')))
+
+        this.writeFile(1, 'book2.xlsx', 'The Big Second Lebowski')
+
+        console.log('localstorage 0', JSON.parse(localStorage.getItem('FileSystem_0')))
+        console.log('localstorage 1', JSON.parse(localStorage.getItem('FileSystem_1')))
+        console.log('localstorage 2', JSON.parse(localStorage.getItem('FileSystem_2')))
+        console.log('localstorage 3', JSON.parse(localStorage.getItem('FileSystem_3')))
+
+
+
+    }
+
+
     // docs for lzcompress:  https://pieroxy.net/blog/pages/lz-string/guide.html
     compress(plain: string): string {
         return LZString.compressToUTF16(plain)
@@ -77,35 +114,43 @@ export class tsFS {
         return LZString.decompressFromUTF16(zipped)
     }
 
-    createRootDirectory(): directoryObject {
-        let rootObj: directoryObject = {   // don't use the factory!!
+    // we create both the the special directory object and the root
+    createRootDirectory(): rootObject {
+        let rootObj: rootObject = {   // don't use the factory!!
+            fileType: FileType.ROOT,
+            fileNumber: 1,  // we know we have another (just below)
+        }
+        localStorage.setItem(`${this.FSName}_0`, JSON.stringify(rootObj))
+
+        let dObj: directoryObject = {
             fileType: FileType.DIR,
-            fileNumber: 0,
+            fileNumber: 1,
             dirName: '/',
             dotdot: 0,
             files: [],
             subdirs: [],
         }
-
-        localStorage.setItem(`${this.FSName}_0`, JSON.stringify(rootObj))
+        localStorage.setItem(`${this.FSName}_1`, JSON.stringify(dObj))
         return (rootObj)
     }
 
     getNewFileNumber(): number {
         // the filenumber in the root is a bakery ticket.  this also CREATES
         // the root if it does not already exist
-        let rootObj: directoryObject
+        let rootObj: rootObject
         let newF: number
 
         let rootStr = localStorage.getItem(`${this.FSName}_0`)
-        if (rootStr) {  // localhost could not find?
+        if (rootStr) {  // did we find it?
             rootObj = JSON.parse(rootStr) as directoryObject
         } else {  // root doesn't exist, this should only happen once
             rootObj = this.createRootDirectory()
         }
         // get the bakery number plus one
+        console.log(`before increment ${rootObj.fileNumber}`)
         rootObj.fileNumber += 1  // increment the root
         localStorage.setItem(`${this.FSName}_0`, JSON.stringify(rootObj))
+        console.log(`getNewFileNumber rturns ${rootObj.fileNumber}`)
         return rootObj.fileNumber
     }
 
@@ -127,7 +172,11 @@ export class tsFS {
     writeFile(dNum: number, fileString: string, payload: string): number {
         let dObj = this.getDirectoryObject(dNum)
 
-        let p = parse(fileString)  // only looking at base
+        let p = parse(fileString)  // break up the fileString
+        console.log('directoryparse', fileString,p.root,p.dir) 
+        let xplodP = p.dir.split('/')
+        console.log('xplode',xplodP) 
+
 
         // if this base (name+ext) is already in this directory
         // then reuse it, otherwise create a new one.  To do 
@@ -135,15 +184,11 @@ export class tsFS {
 
         let newObj: fileObject
 
-        let matchNum = dObj.files.find(fNum => {
-            let x = this.getFileObject(fNum)
-            console.log(`compare ${p.base} and ${x.base}`,x)
-            this.getFileObject(fNum).base == p.base
-        })
+        let matchNum = dObj.files.find(fNum =>
+            this.getFileObject(fNum).base == p.base)
 
         // if we found an localStore entry, reuse it     
         if (matchNum !== undefined) {  // found one
-            console.log(`found the file, it is #${matchNum}`)
             newObj = this.getFileObject(matchNum);
             if (newObj.fileType !== FileType.FILE)  // sanity check
                 throw ('not a File')
@@ -153,6 +198,7 @@ export class tsFS {
             newObj.payload = this.compress(payload)
 
         } else {
+            console.log('adding a new file')
             newObj = {
                 fileType: FileType.FILE,
                 fileNumber: this.getNewFileNumber(),
@@ -164,14 +210,15 @@ export class tsFS {
                 length: payload.length,
                 payload: this.compress(payload),
             }
+
             // new file, so changes the directory object
             dObj.files.push(newObj.fileNumber) // add it to the directory
-            console.log('updated directory obj',dObj)
+            console.log('updated directory obj', dObj)
             this.setDirectoryObject(dObj)   // write out the new directory
         }
 
         this.setFileObject(newObj)
-        
+
         return newObj.fileNumber
     }
 
@@ -199,14 +246,12 @@ export class tsFS {
     }
 
     getDirectoryObject(n: number): directoryObject {
+        console.log(`getDirectoryObject(${n})`)
+
         let dString = localStorage.getItem(this.storageName(n))
-        if (!dString) { // doesn't exist
-            if (n == 0) {    // special case for the root, we create it if not there
-                this.createRootDirectory() // only happens once
-                dString = localStorage.getItem(this.storageName(n))
-            } else {
-                throw ('could not find directory object')
-            }
+        if (!dString) { // doesn't exist (system not initialized?)
+            this.createRootDirectory() // only happens once
+            dString = localStorage.getItem(this.storageName(n))
         }
         let dObj: directoryObject = JSON.parse(dString)
         if (dObj.fileType !== FileType.DIR)

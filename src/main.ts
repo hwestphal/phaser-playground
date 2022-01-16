@@ -167,20 +167,7 @@ export class Main {
         console.log('in Main.constructor()')
 
         let fs = new tsFS()
-
-        fs.writeFile(0, 'books.xlsx', 'The Big Lebowski')
-
-        console.log('localstorage 0', JSON.parse(localStorage.getItem('FileSystem_0')))
-        console.log('localstorage 1', JSON.parse(localStorage.getItem('FileSystem_1')))
-        console.log('localstorage 2', JSON.parse(localStorage.getItem('FileSystem_2')))
-        console.log('localstorage 3', JSON.parse(localStorage.getItem('FileSystem_3')))
-
-        fs.writeFile(0, 'books.xlsx', 'The Big Second Lebowski')
-
-        console.log('localstorage 0', JSON.parse(localStorage.getItem('FileSystem_0')))
-        console.log('localstorage 1', JSON.parse(localStorage.getItem('FileSystem_1')))
-        console.log('localstorage 2', JSON.parse(localStorage.getItem('FileSystem_2')))
-        console.log('localstorage 3', JSON.parse(localStorage.getItem('FileSystem_3')))
+        fs.crud()
 
 
 
