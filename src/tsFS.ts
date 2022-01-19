@@ -1,9 +1,10 @@
-// the filesystem consists of a collection of JSON fileObjects 
+// the filesystem consists of a collection of JSON fileObjects
 
-import { DirectiveArgumentNode } from "@vue/compiler-core"
 import { LZString } from "lzstring.ts"
-import { basename, dirname, format, parse, normalize } from "path-browserify"
-
+//import Path from "path-browserify"   // ???? this doesn't work
+import { join, basename, dirname, format, parse, normalize } from "path-browserify"
+import { MForms } from './mforms'
+import { DOM } from "./DOM"
 
 // the key/name of fileObjects in localstore is 'FileSystem_${fileNumber}'.
 //   representing the file ./     there is also a ../
@@ -15,6 +16,8 @@ import { basename, dirname, format, parse, normalize } from "path-browserify"
 // https://stackoverflow.com/questions/12100299/whats-a-canonical-path
 
 
+
+
 enum FileType {
     FILE = 1,
     DIR = 2,
@@ -24,7 +27,7 @@ enum FileType {
 export type fileObject = {
     fileType: FileType,         // should always be FileType.FILE
     fileNumber: number,         // should match the keyname of this record
-    dir: string,                 //  dir-base-name-ext from node.Path    
+    dir: string,                 //  dir-base-name-ext from node.Path
     base: string,
     name: string,
     ext: string,
@@ -34,8 +37,8 @@ export type fileObject = {
 }
 
 
-// i would rather not use FileNumber: number and files: number[] 
-// since TypeScript can't help me.  But I don't want to JSON.decode() 
+// i would rather not use FileNumber: number and files: number[]
+// since TypeScript can't help me.  But I don't want to JSON.decode()
 // everything in a big directory every time i touch a file.
 
 export type directoryObject = {
@@ -62,7 +65,7 @@ export type rootObject = {
 //  dir.mkdir(n,name)
 //  dir.search()   //
 
-// file operations:  
+// file operations:
 //  fs.read(file)
 //  fs.writeFile(dNum: number, fileString: string, payload: string): fileObject {
 //  fs.append(file,data)
@@ -76,33 +79,64 @@ export class tsFS {
     fs: Object = {}
     FSName: string = 'FileSystem'
 
+    //a utility for dumping localhost
+    show10() {
+        // let a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).forEach(i => {
+            console.log(`localstorage ${i}`, JSON.parse(localStorage.getItem(`FileSystem_${i}`)))
+        });
+        //
+    }
+
+
     // can't use a constructor for testing
     crud() {
+        // return
         localStorage.clear()  // start from nothing
+        let a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-        this.writeFile(1, 'books.xlsx', 'The Big Lebowski')
+        this.writeFile('books.xlsx', 'The Big Lebowski')
+        this.writeFile('/second.xlsx', 'The Big Lebowski')
+        this.writeFile('/second/third.xlsx', 'The Big Lebowski')
 
-        console.log('localstorage 0', JSON.parse(localStorage.getItem('FileSystem_0')))
-        console.log('localstorage 1', JSON.parse(localStorage.getItem('FileSystem_1')))
-        console.log('localstorage 2', JSON.parse(localStorage.getItem('FileSystem_2')))
-        console.log('localstorage 3', JSON.parse(localStorage.getItem('FileSystem_3')))
+        // console.log('localstorage 0', JSON.parse(localStorage.getItem('FileSystem_0')))
+        // console.log('localstorage 1', JSON.parse(localStorage.getItem('FileSystem_1')))
+        // console.log('localstorage 2', JSON.parse(localStorage.getItem('FileSystem_2')))
+        // console.log('localstorage 3', JSON.parse(localStorage.getItem('FileSystem_3')))
 
-        this.writeFile(1, 'books.xlsx', 'The Big Second Lebowski')
+        this.writeFile('books.xlsx', 'The Big Second Lebowski')
 
-        console.log('localstorage 0', JSON.parse(localStorage.getItem('FileSystem_0')))
-        console.log('localstorage 1', JSON.parse(localStorage.getItem('FileSystem_1')))
-        console.log('localstorage 2', JSON.parse(localStorage.getItem('FileSystem_2')))
-        console.log('localstorage 3', JSON.parse(localStorage.getItem('FileSystem_3')))
+        // console.log('localstorage 0', JSON.parse(localStorage.getItem('FileSystem_0')))
+        // console.log('localstorage 1', JSON.parse(localStorage.getItem('FileSystem_1')))
+        // console.log('localstorage 2', JSON.parse(localStorage.getItem('FileSystem_2')))
+        // console.log('localstorage 3', JSON.parse(localStorage.getItem('FileSystem_3')))
 
-        this.writeFile(1, 'book2.xlsx', 'The Big Second Lebowski')
+        this.writeFile('/book2.xlsx', 'The Big Second Lebowski')
 
-        console.log('localstorage 0', JSON.parse(localStorage.getItem('FileSystem_0')))
-        console.log('localstorage 1', JSON.parse(localStorage.getItem('FileSystem_1')))
-        console.log('localstorage 2', JSON.parse(localStorage.getItem('FileSystem_2')))
-        console.log('localstorage 3', JSON.parse(localStorage.getItem('FileSystem_3')))
+        // console.log('localstorage 0', JSON.parse(localStorage.getItem('FileSystem_0')))
+        // console.log('localstorage 1', JSON.parse(localStorage.getItem('FileSystem_1')))
+        // console.log('localstorage 2', JSON.parse(localStorage.getItem('FileSystem_2')))
+        // console.log('localstorage 3', JSON.parse(localStorage.getItem('FileSystem_3')))
 
+        // this write will add a dir AND a file
+        this.writeFile('/stuff/movies.xlsx', 'The Big Chill')
 
+        // console.log('reading...', this.readFile('/stuff/movies.xlsx'))
+        a.forEach(i => {
+            console.log(`localstorage ${i}`, JSON.parse(localStorage.getItem(`FileSystem_${i}`)))
+        });
 
+        this.fileExplorer(1)
+
+    }
+
+    // wrap the low-level reads and writes, in case we want something other than localhost
+    readRecord(n: number): directoryObject | fileObject | rootObject {
+        let sObj: string = localStorage.getItem(`${this.FSName}_${n}`)
+        return (JSON.parse(sObj)) // return in Object form
+    }
+    writeRecord(n: number, obj: object) {
+        localStorage.setItem(`${this.FSName}_${n}`, JSON.stringify(obj))
     }
 
 
@@ -120,37 +154,33 @@ export class tsFS {
             fileType: FileType.ROOT,
             fileNumber: 1,  // we know we have another (just below)
         }
-        localStorage.setItem(`${this.FSName}_0`, JSON.stringify(rootObj))
+        this.writeRecord(0, rootObj)
 
         let dObj: directoryObject = {
             fileType: FileType.DIR,
             fileNumber: 1,
-            dirName: '/',
+            dirName: '',
             dotdot: 0,
             files: [],
             subdirs: [],
         }
-        localStorage.setItem(`${this.FSName}_1`, JSON.stringify(dObj))
+        this.writeRecord(1, dObj)
         return (rootObj)
     }
 
     getNewFileNumber(): number {
         // the filenumber in the root is a bakery ticket.  this also CREATES
         // the root if it does not already exist
-        let rootObj: rootObject
         let newF: number
 
-        let rootStr = localStorage.getItem(`${this.FSName}_0`)
-        if (rootStr) {  // did we find it?
-            rootObj = JSON.parse(rootStr) as directoryObject
-        } else {  // root doesn't exist, this should only happen once
+        let rootObj = this.readRecord(0) as rootObject
+        if (!rootObj) {  // did we find it?
             rootObj = this.createRootDirectory()
         }
         // get the bakery number plus one
-        console.log(`before increment ${rootObj.fileNumber}`)
+        // console.log(`before increment ${rootObj.fileNumber}`)
         rootObj.fileNumber += 1  // increment the root
-        localStorage.setItem(`${this.FSName}_0`, JSON.stringify(rootObj))
-        console.log(`getNewFileNumber rturns ${rootObj.fileNumber}`)
+        this.writeRecord(0, rootObj)
         return rootObj.fileNumber
     }
 
@@ -168,59 +198,131 @@ export class tsFS {
         return newObj
     }
 
+    deleteFile(n: number) {
 
-    writeFile(dNum: number, fileString: string, payload: string): number {
-        let dObj = this.getDirectoryObject(dNum)
+    }
 
-        let p = parse(fileString)  // break up the fileString
-        console.log('directoryparse', fileString,p.root,p.dir) 
-        let xplodP = p.dir.split('/')
-        console.log('xplode',xplodP) 
+    traverseDirs(fileString: string, buildPath: boolean): directoryObject | false {  // traverse, build any necessary
+        console.log(`%ctraverseDirs(${fileString}, ${buildPath})`, 'color:blue;')
 
+        let p = parse(normalize(join('/', fileString)))  // break up the fileString
+        let xplodeP = p.dir.split('/')
+        // xplodeP.shift()   // first element is always empty
+        xplodeP.shift()   // second element is always '/'
 
-        // if this base (name+ext) is already in this directory
-        // then reuse it, otherwise create a new one.  To do 
-        // that, we have to read every file in this directory
+        let dObj = this.getDirectoryObject(1) // always the starting point
 
-        let newObj: fileObject
+        console.log(`%ctraversing `, 'color:blue;', dObj, ' vs ', xplodeP)
 
-        let matchNum = dObj.files.find(fNum =>
-            this.getFileObject(fNum).base == p.base)
-
-        // if we found an localStore entry, reuse it     
-        if (matchNum !== undefined) {  // found one
-            newObj = this.getFileObject(matchNum);
-            if (newObj.fileType !== FileType.FILE)  // sanity check
-                throw ('not a File')
-
-            newObj.dateUpdate = Date.now()
-            newObj.length = payload.length
-            newObj.payload = this.compress(payload)
-
-        } else {
-            console.log('adding a new file')
-            newObj = {
-                fileType: FileType.FILE,
-                fileNumber: this.getNewFileNumber(),
-                dir: p.dir,
-                base: p.base,
-                name: p.name,
-                ext: p.ext,
-                dateUpdate: Date.now(),
-                length: payload.length,
-                payload: this.compress(payload),
-            }
-
-            // new file, so changes the directory object
-            dObj.files.push(newObj.fileNumber) // add it to the directory
-            console.log('updated directory obj', dObj)
-            this.setDirectoryObject(dObj)   // write out the new directory
+        // first, maybe it's the root (so don't need to look at subdirs)
+        if (xplodeP[0] == '') {
+            return dObj  // it IS the root.   too easy
         }
 
-        this.setFileObject(newObj)
+        while (xplodeP.length > 0) {  // we keep shortening it
 
-        return newObj.fileNumber
+
+            // let dObj = this.getDirectoryObject(xplodeP[0])  // always the root
+            // console.log(`%clooking for fNum where dObj.subDirs.dirname == '${xplodeP[0]}'`, 'color:blue;')
+            let matchNum = dObj.subdirs.find(fNum =>
+                this.getDirectoryObject(fNum).dirName == xplodeP[0])
+
+            // console.log(`%cmatchNum of matching directory `, 'color:blue;', matchNum)
+
+
+            if (matchNum == undefined && !buildPath)
+                return false  // directory doesn't exist
+
+            if (matchNum == undefined) {  // buildPath must be true
+                // create the new directory
+                let newDirObj = this.directoryObjectFactory(dObj.fileNumber, xplodeP[0])
+                // and add it to the existing one
+                dObj.subdirs.push(newDirObj.fileNumber)
+                this.setDirectoryObject(dObj)  // write it out
+                dObj = newDirObj  // and move down the tree
+                xplodeP.shift()   // we have processed the first element
+            } else {
+                // here if we found a match, move down the tree
+                dObj = this.getDirectoryObject(matchNum)
+            }
+        }
+
+        return dObj  // we must be at the end of the path
     }
+
+
+    writeFile(fileString: string, payload: string): number {
+        // console.log(`%cwriteFile(${fileString}, ${payload})`, 'background-color:lightblue;')
+        // this.show10()
+
+        let p = parse(normalize(join('/', fileString)))  // break up the fileString
+
+        let dObj = this.traverseDirs(fileString, true)  // traverse, build any necessary
+        if (dObj) {  // typeguard, it is always truthy
+            // console.log(`%cdObj selected`, 'background-color:lightblue;', dObj)
+
+            // if this base (name+ext) is already in this directory
+            // then reuse it, otherwise create a new one.  To do
+            // that, we have to read every file in this directory
+
+            let newObj: fileObject
+
+            let matchNum = dObj.files.find(fNum =>
+                this.getFileObject(fNum).base == p.base)
+
+            // if we found an localStore entry, reuse it
+            if (matchNum !== undefined) {  // found one
+                newObj = this.getFileObject(matchNum);
+                if (newObj.fileType !== FileType.FILE)  // sanity check
+                    throw ('not a File')
+
+                newObj.dateUpdate = Date.now()
+                newObj.length = payload.length
+                newObj.payload = this.compress(payload)
+
+            } else {
+                console.log('adding a new file')
+                newObj = {
+                    fileType: FileType.FILE,
+                    fileNumber: this.getNewFileNumber(),
+                    dir: p.dir,
+                    base: p.base,
+                    name: p.name,
+                    ext: p.ext,
+                    dateUpdate: Date.now(),
+                    length: payload.length,
+                    payload: this.compress(payload),
+                }
+
+                // new file, so changes the directory object
+                dObj.files.push(newObj.fileNumber) // add it to the directory
+                console.log('updated directory obj', dObj)
+                this.setDirectoryObject(dObj)   // write out the new directory
+            }
+
+            this.setFileObject(newObj)
+            return newObj.fileNumber
+        }
+    }
+
+
+    readFile(fileString: string): string | false {
+
+        let p = parse(normalize(join('/', fileString)))  // break up the fileString
+
+        let dObj = this.traverseDirs(fileString, false)
+        if (!dObj) return false
+        else {   // we found the directory, look for the file
+            let matchNum = dObj.files.find(fNum =>
+                this.getFileObject(fNum).base == p.base)
+
+            if (matchNum == undefined) return false // dir, but no file
+
+            let fObj = this.getFileObject(matchNum)
+            return this.decompress(fObj.payload)
+        }
+    }
+
 
 
     // mkdir makes any subdirectories required on the path
@@ -240,15 +342,18 @@ export class tsFS {
     }
 
     getFileObject(n: number): fileObject {
-        let fObj: fileObject = JSON.parse(localStorage.getItem(this.storageName(n)))
+        let fObj = this.readRecord(n) as fileObject
         console.assert(fObj.fileType == FileType.FILE, `expected a file at string #${n} `)
         return fObj
     }
 
     getDirectoryObject(n: number): directoryObject {
-        console.log(`getDirectoryObject(${n})`)
+        // console.log(`getDirectoryObject(${n})`)
 
+        // console.log('%cdomain', 'color:red;', location.protocol, location.host)
         let dString = localStorage.getItem(this.storageName(n))
+        // console.log(`%cgetDirectoryObject(${n}) gets ${dString}`, 'background-color:yellow;')
+
         if (!dString) { // doesn't exist (system not initialized?)
             this.createRootDirectory() // only happens once
             dString = localStorage.getItem(this.storageName(n))
@@ -261,16 +366,167 @@ export class tsFS {
 
 
     setFileObject(fObj: fileObject) {
+        console.assert(fObj.fileType == FileType.FILE, `expected a file object`)
         fObj.dateUpdate = Date.now()
-        localStorage.setItem(this.storageName(fObj.fileNumber), JSON.stringify(fObj))
+        this.writeRecord(fObj.fileNumber, fObj)
     }
 
     setDirectoryObject(dObj: directoryObject) {
-        localStorage.setItem(this.storageName(dObj.fileNumber), JSON.stringify(dObj))
+        console.assert(dObj.fileType == FileType.DIR, `expected a directory object`)
+        this.writeRecord(dObj.fileNumber, dObj)
     }
 
 
 
+    ////////////////////////// generate HTML report
+    ///  can be in 'explore' or 'save' mode (in save, file-add, folder-add,  selected gets written)
+    //   in 'explore', can search, delete, open, run,
+    //   in 'save', can add new directory, save-as, save
+    fileExplorer(dirNum: number, isModeSave: boolean = false, errMsg: string = 'an error'): string {
+
+        let dirObj = this.getDirectoryObject(dirNum)
+        console.log('%cdirObject', 'background-color:pink;', dirObj)
+
+        let HTML = ''
+
+        let p = parse(dirObj.dirName)  // break up the fileString
+        let xplodeP = p.dir.split('/')
+        xplodeP.shift()   // second element is always '/'
+
+        if (errMsg) {
+            HTML += `\n<div class="row">`
+            HTML += `\n<div class="col-12">`
+            HTML += `\n<div style="text-align:center;color:red;"><h3>errMsg</h3></div>`
+            HTML += `\n</div">`
+            HTML += `\n</div">`
+        }
+
+
+        // breadcrumbs
+        HTML += `\n<div class="row">`
+        HTML += `\n><div class="col-7">`
+
+
+        isModeSave = true
+        if (isModeSave) {
+            // a save-as form
+            HTML += `<form class="form-inline">`
+            HTML += `<input class="form-control mr-sm-0 input-sm" type="search" placeholder="Save As" aria-label="Save As">`
+            HTML += `<button class="btn btn-outline-success my-0 my-sm-0 btn-sm" type="submit">Save As</button>`
+            HTML += `</form>`
+        } else {
+            // a search form
+            HTML += `<form class="form-inline">`
+            HTML += `<input class="form-control mr-sm-0 input-sm" type="search" placeholder="Search" aria-label="Search">`
+            HTML += `<button class="btn btn-outline-success my-0 my-sm-0 btn-sm" type="submit">Search</button>`
+            HTML += `</form>`
+        }
+
+
+        HTML += `\n</div><div class="col-2">`
+
+        let glyph = MForms.glyphIcon('search', 24)
+        HTML += `<a href="#"  onclick="MathcodeAPI.addFileExplorer(${dirNum})" >${glyph}</a>`
+
+        glyph = MForms.glyphIcon('folder-plus', 24)
+        HTML += `<a href="#"  onclick="MathcodeAPI.addFileExplorer(${dirNum})" >${glyph}</a>`
+
+        HTML += `\n</div><div class="col-2">`
+        glyph = MForms.glyphIcon('x', 24)
+        HTML += `<a href="#"  onclick="MathcodeAPI.eraseFileExplorer()" >${glyph}</a>`
+
+        HTML += `\n</div>`  // col
+        HTML += `\n</div>`  // row
+
+        HTML += `\n<nav aria-label="breadcrumb">`
+        HTML += `\n<ol class="breadcrumb">`
+        HTML += `\n<li class="breadcrumb-item"><a href="#" onclick="MathcodeAPI.refreshFileExplorer(1)">${MForms.glyphIcon('house', 12)}</a></li>`
+        xplodeP.forEach((element, index) => {
+            HTML += `\n<li class="breadcrumb-item"><a href="#">${element}</a></li>`
+        })
+        HTML += `\n</ol>`
+        HTML += `\n</nav>`
+
+        // table
+
+        HTML += `\n<div class="container-fluid">`
+        HTML += `\n <table class="table table-hover" > `
+        HTML += `\n        <thead>`
+        HTML += `\n          <tr>`
+        HTML += `\n            <th scope="col" id = "icon" > </th>`
+        HTML += `\n            <th scope="col" id = "name" > Name </th>`
+        HTML += `\n            <th scope="col" id="size">Size</th>`
+        HTML += `\n            <th scope="col" id="time">Last Modified</th>`
+        HTML += `\n            <th scope="col" id="time">Actions</th>`
+        HTML += `\n            <th scope="col" id="time">#</th>`
+        HTML += `\n          </tr>`
+        HTML += `\n        </thead>`
+        HTML += `\n        <tbody>`
+
+        dirObj.subdirs.forEach(value => {
+
+            let subDirObj = this.getDirectoryObject(value)
+            let folder = MForms.glyphIcon('folder', 12)
+            let trash = MForms.glyphIcon('trash', 16)
+            let dirName = subDirObj.dirName ? subDirObj.dirName : MForms.glyphIcon('house', 12)
+            let dirNameClick = `<div onclick="MathcodeAPI.refreshFileExplorer(${subDirObj.fileNumber})">${dirName}</div>`
+
+            let length = `(<span style="color:#007bff;"><b>${subDirObj.subdirs.length}</b></span>/${subDirObj.files.length})`
+
+            HTML += `\n          <tr>`
+            HTML += `\n            <td>${folder}</td>`
+            HTML += `\n            <td><b><a href="#">${dirNameClick}</a></b></td>`
+            HTML += `\n            <td>${length}</td>`  // # of dirs/files
+            HTML += `\n            <td></td>`  // unused last modified
+            HTML += `\n            <td>${trash} </td>`
+            HTML += `\n            <td>${subDirObj.fileNumber}</td>`  // unused
+            HTML += `\n          </tr>`
+        })
+
+        dirObj.files.forEach(value => {
+
+            let fileObj = this.getFileObject(value)
+            let trash = MForms.glyphIcon('trash', 18)
+            let boxUp = MForms.glyphIcon('run.png', 20)
+            let copy = MForms.glyphIcon('copy.png', 20)
+            let lastMod = new Date(fileObj.dateUpdate).toDateString()
+
+            HTML += `\n          <tr>`
+            HTML += `\n            <td> </td>`
+            HTML += `\n            <td>${fileObj.name}</td>`
+            HTML += `\n            <td>${fileObj.length}</td>`  // unused
+            HTML += `\n            <td>${lastMod}</td>`  // unused
+            HTML += `\n            <td>${trash} ${boxUp} ${copy}</td>`
+            HTML += `\n            <td>${fileObj.fileNumber}</td>`  // unused
+            HTML += `\n          </tr>`
+        })
+
+
+        HTML += `\n        </tbody>`
+        HTML += `\n      </table>`
+        HTML += `\n  </div>`
+
+        let canvasDiv = document.getElementById('canvasdiv')
+        if (canvasDiv) {
+            canvasDiv.innerHTML = HTML
+        }
+        return HTML
+    }
+
+    // search function
+    findFileExplorer(search: string) {
+
+    }
+
+    // remove fileExplorder from the screen (restore canvas)
+    eraseFileExplorer() {
+        let canvasDiv = document.getElementById('canvasdiv')
+        if (canvasDiv) {
+            canvasDiv.innerHTML = ''
+            // add back the canvas element that was inside
+            DOM.appendChild(canvasDiv, DOM.node('canvas', '', 'canvas'))
+        }
+    }
 
     /*
         readFile = function(farray: fileObject) {
@@ -283,14 +539,14 @@ export class tsFS {
             }
             return JSON.parse(result)
         }
-    
-    
+
+
         removeFile = function(farray: fileObject) {
             return localStorage.removeItem(this._fileName(farray.fileNumber))
         }
-    
+
         // tom... i think this is how coffeescript declares properties...
-    
+
         // function _Class(name) {
         //     this.rm = __bind(this.rm, this)
         //     this.type = __bind(this.type, this)
@@ -301,27 +557,27 @@ export class tsFS {
         //     this._cwd = FileSystem.prototype.pathSeparator
         //     this.compressionDefault = false
         // }
-    
+
         getName() {
             return this.name
         }
-    
+
         getCwd() {
             return this.cwd
         }
-    
+
         // _ref = (simultaneousReplace(pathString, esc + sep, sep, esc + esc, esc, sep, '\n')).split('\n')
         //  _results.push(simultaneousReplace(p, sep, esc + sep, esc, esc + esc))
-    
-    
+
+
         simultaneousReplace() {
             var found, i, result, string, swaps, _i, _ref
             string = arguments[0], swaps = 2 <= arguments.length ? string.slice.call(arguments, 1) : []
             result = ''
             while (string.length > 0) {
                 found = false
-    
-                // 
+
+                //
                 for (i = _i = 0, _ref = swaps.length - 1 _i < _ref i = _i += 2) {
                     if (string.slice(0, swaps[i].length) === swaps[i]) {
                         result += swaps[i + 1]
@@ -337,13 +593,13 @@ export class tsFS {
             }
             return result
         }
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
         splitPath(pathString: string) {
             var bit, esc, pos, sep, _i, _len, _ref, _results
             sep = this.pathSeparator
@@ -369,7 +625,7 @@ export class tsFS {
             }
             return _results
         }
-    
+
         joinPath = function(pathArray: string[]) {
             var esc, p, sep
             sep = this.pathSeparator
@@ -384,7 +640,7 @@ export class tsFS {
                 return results
             })()).join(sep)
         }
-    
+
         toAbsolutePath = function(cwdPath: string, relativePath: string) {
             var result, sep
             if (relativePath == null) {
@@ -400,7 +656,7 @@ export class tsFS {
             }
             return result
         }
-    
+
         toCanonicalPath = function(absolutePath: string): string {
             var result, sep, step, _i, _len, _ref
             result = []
@@ -425,12 +681,12 @@ export class tsFS {
             }
             return result
         }
-    
+
         isValidCanonicalPath(absolutePath: string): boolean {
             var path, step, walk, _i, _len
             path = this.splitPath(absolutePath)
             walk = this.getFilesystemObject()
-            for (_i = 0, _len = path.length _i < _len _i++) {
+            for (_i = 0, _len = length _i < _len _i++) {
                 step = path[_i]
                 walk = walk[step]
                 if (!walk || walk instanceof Array) {
@@ -439,12 +695,12 @@ export class tsFS {
             }
             return true
         }
-    
+
         separate(path: string): string[] {
             return this.splitPath(this.toCanonicalPath(this.toAbsolutePath(this.cwd, path)))
         }
-    
-    
+
+
         separateWithFilename(path: string) {
             let fullPath = this.separate(path)
             return {
@@ -452,7 +708,7 @@ export class tsFS {
                 name: fullPath[fullPath.length - 1]
             }
         }
-    
+
         walkPath(start, pathArray) {
             var step, _i, _len
             for (_i = 0, _len = pathArray.length _i < _len _i++) {
@@ -464,7 +720,7 @@ export class tsFS {
             }
             return start
         }
-    
+
         walkPathAndFile(start, pathArray) {
             if (pathArray.length === 0) {
                 return start
@@ -475,7 +731,7 @@ export class tsFS {
             }
             return start[pathArray[pathArray.length - 1]] || null
         }
-    
+
         type(pathToEntry: string): 'file' | 'folder' | null {
             var entry, fullpath
             fullpath = this.separate(pathToEntry)
@@ -489,7 +745,7 @@ export class tsFS {
                 return 'folder'
             }
         }
-    
+
         cd(path: string) {
             if (path == null) {
                 path = this.pathSeparator
@@ -499,7 +755,7 @@ export class tsFS {
                 return this.cwd = newcwd
             }
         }
-    
+
         mkdir(path: string) {
             var addedSomething, fs, step, walk, _i, _len, _ref
             if (path == null) {
@@ -518,7 +774,7 @@ export class tsFS {
             }
             return addedSomething && this.setFilesystemObject(fs)
         }
-    
+
         ls(folder, type) {
             var entry, files, folders, fullpath
             if (folder == null) {
@@ -567,7 +823,7 @@ export class tsFS {
                 return folders
             }
         }
-    
+
         nextAvailableFileNumber() {
             var i, keys, result, used, usedNumbers, _i, _j, _ref, _ref1
             keys = []
@@ -605,7 +861,7 @@ export class tsFS {
                 }
             }
         }
-    
+
         write(filename, content, compress) {
             var file, folder, former, fs, name, path, wasCompressed, _ref
             if (compress == null) {
@@ -642,7 +898,7 @@ export class tsFS {
             }
             return file[1]
         }
-    
+
         read(filename) {
             let file = this.walkPathAndFile(this.getFilesystemObject(), this.separate(filename))
             if (!file) {
@@ -650,12 +906,12 @@ export class tsFS {
             }
             return this.readFile(file)
         }
-    
+
         size(filename) {
             let file = this.walkPathAndFile(this._getFilesystemObject(), this.separate(filename))
             return (file != null ? file[1] : void 0) || -1
         }
-    
+
         append(filename, content, compress) {
             var file, folder, former, fs, name, path, wasCompressed, _ref
             if (compress == null) {
@@ -699,7 +955,7 @@ export class tsFS {
             }
             return file[1]
         }
-    
+
         rm(path) {
             var file, filesBeneath, folder, fs, name, _i, _len, _ref, _ref1
             _ref = this.separateWithFilename(path), path = _ref.path, name = _ref.name
@@ -735,7 +991,7 @@ export class tsFS {
             this._setFilesystemObject(fs)
             return true
         }
-    
+
         cp(source, dest) {
             var data, destFolder, destName, e, file, fs, name, newfile, path, sourcePath, _ref
             fs = this._getFilesystemObject()
@@ -776,7 +1032,7 @@ export class tsFS {
             }
             return true
         }
-    
+
         mv(source, dest) {
             var destFolder, destName, fs, name, path, sourceFolder, sourceName, _ref, _ref1
             fs = this._getFilesystemObject()

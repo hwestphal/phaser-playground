@@ -24,6 +24,19 @@ ctx.stroke();
 
 
 
+let canvas = document.getElementById('canvas') as HTMLCanvasElement
+let ctx = canvas.getContext('2d')!
+var img = new Image
+img.src = 'pix/bootstrap-icons/bootstrap.svg'
+
+img.onload = function () {
+    ctx.drawImage(img, 0, 0, 24, 24)
+}
+
+
+
+
+
 
 
 //////////////////////////////

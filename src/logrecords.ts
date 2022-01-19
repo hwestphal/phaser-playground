@@ -45,7 +45,7 @@ export class LogRecord {
     // use this when writing to the host
     static readAndClear():string{
         let temp = LogRecord.read()
-        this.storage.clear()
+        // this.storage.clear()   /// never clear !!!
         return temp             // return whatever was in there
     }
 

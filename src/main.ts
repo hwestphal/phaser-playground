@@ -19,7 +19,7 @@ import { DOMclass } from "./DOM";
 import { talk_to_moodle } from './moodle'
 
 import { LogRecord, logRecord } from './logrecords'
-import {tsFS} from './tsFS'
+import { tsFS } from './tsFS'
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
@@ -49,6 +49,7 @@ export class Main {
     // game: GameLauncher
     download: HTMLButtonElement
     upload: HTMLButtonElement
+    files: HTMLButtonElement
     run: HTMLButtonElement
     stop: HTMLButtonElement
     pause: HTMLButtonElement
@@ -119,6 +120,23 @@ export class Main {
                         this.onClickSay.onClickSay(sayThis.innerHTML, voiceN)
                     }
                 },
+
+                //////// these functions are for the file explorer
+                refreshFileExplorer: (n: number) => {
+                    let fs = new tsFS()
+                    fs.eraseFileExplorer()
+                    fs.fileExplorer(n)
+                },
+                eraseFileExplorer: () => {
+                    let fs = new tsFS()
+                    fs.eraseFileExplorer()
+                },
+                findFileExplorer: (s: string) => {
+                    let fs = new tsFS()
+                    fs.findFileExplorer(s)
+                },
+
+
 
                 // student clicks into reflection, have they finished all challenges?
                 readyToReflect: (step: number, activity: number, topic: number): boolean => {
@@ -206,6 +224,7 @@ export class Main {
             // this.game = undefined //new GameLauncher(800, 600);
             this.download = document.getElementById("download") as HTMLButtonElement;
             this.upload = document.getElementById("upload") as HTMLButtonElement;
+            this.files = document.getElementById("files") as HTMLButtonElement;
             this.run = document.getElementById("run") as HTMLButtonElement;
             this.stop = document.getElementById("stop") as HTMLButtonElement;
             this.pause = document.getElementById("pause") as HTMLButtonElement;
@@ -216,6 +235,7 @@ export class Main {
 
             this.download.onclick = () => Main.editor.download("game.ts");
             this.upload.onclick = () => Main.editor.upload();
+            this.files.onclick = () => (window as any).MathcodeAPI.refreshFileExplorer(1);
 
             this.run.onclick = async () => {
                 console.log('clicked RUN')

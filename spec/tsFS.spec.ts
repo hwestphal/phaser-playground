@@ -1,6 +1,6 @@
 import { tsFS, directoryObject, fileObject } from '../src/tsFS'
+import { join, basename, dirname, format, parse, normalize } from "path-browserify"
 // import Path from "path-browserify"
-import { basename, dirname, format, parse, normalize }  from "path-browserify"
 
 
 describe("examples of path-browserify", () => {
@@ -9,6 +9,13 @@ describe("examples of path-browserify", () => {
         expect(basename('C:\\temp\\myfile.html')).toEqual('C:\\temp\\myfile.html')
         expect(dirname('/foo/bar/baz/asdf/quux')).toEqual('/foo/bar/baz/asdf')
         expect(normalize('/foo/bar//baz/asdf/quux/..')).toEqual('/foo/bar/baz/asdf')
+
+        expect(normalize('books.xlsx')).toEqual('books.xlsx')
+        expect(normalize(join('/','books.xlsx'))).toEqual('/books.xlsx')
+        expect(normalize(join('/','/books.xlsx'))).toEqual('/books.xlsx')
+
+        expect(join('/', 'books.xlsx')).toEqual('/books.xlsx')
+        expect(join('/', '/books.xlsx')).toEqual('/books.xlsx')
 
         let p = parse('/home/user/dir/file.txt');
         // Returns:
@@ -43,38 +50,57 @@ describe("housekeeping stuff", () => {
         let small = fs.compress(big)
         expect(small.length).toBeLessThan(big.length)
         expect(fs.decompress(small)).toEqual(big)
-    }),
+    })
 
-        it("checks the utility functions", function() {
+    it("checks the utility functions", function() {
 
-            expect(fs.storageName(0)).toEqual('FileSystem_0')
-            expect(fs.storageName(100)).toEqual('FileSystem_100')
+        expect(fs.storageName(0)).toEqual('FileSystem_0')
+        expect(fs.storageName(100)).toEqual('FileSystem_100')
 
-            localStorage.removeItem('FileSystem_0') // wipe the system
-            expect(fs.getNewFileNumber()).toEqual(1)  //first value
-            expect(fs.getNewFileNumber()).toEqual(2)  //second value
-            expect(fs.getNewFileNumber()).toEqual(3)  //third value
+        localStorage.clear() // wipe the system
+        // root will be zero
+        // '/'directory will be one
+        expect(fs.getNewFileNumber()).toEqual(2)  //first value
+        expect(fs.getNewFileNumber()).toEqual(3)  //second value
+        expect(fs.getNewFileNumber()).toEqual(4)  //third value
 
-            // there should be a root directory now, let's get it
-            let dObj = fs.getDirectoryObject(1) as directoryObject
-            expect(dObj.files.length).toEqual(0)
-            expect(dObj.subdirs.length).toEqual(0)
+        // there should be a root directory now, let's get it
+        let dObj = fs.getDirectoryObject(1) as directoryObject
+        expect(dObj.files.length).toEqual(0)
+        expect(dObj.subdirs.length).toEqual(0)
 
-        })
+    })
 
     it("tries to write a file and read it back from the root", function() {
 
-        localStorage.clear()
+        localStorage.clear()  // wipe the system
 
-        expect(fs.writeFile(0, 'movies.xlsx', 'The Big Lebowski')).toEqual(1)
-        expect(fs.writeFile(0, 'books.xlsx', 'The Big Lebowski')).toEqual(2)
+        // strings 0 and 1 are the filesystem ROOT and dir '/'
+        expect(fs.writeFile('movies.xlsx', 'The Big Lebowski')).toEqual(2)
+        expect(fs.readFile('movies.xlsx')).toEqual('The Big Lebowski')
+        expect(fs.readFile('books.xlsx')).toEqual(false)  // no such file
+
+        expect(fs.writeFile('books.xlsx', 'The Big Lebowski')).toEqual(3)
+        expect(fs.readFile('books.xlsx')).toEqual('The Big Lebowski')
+
         // write with the same filename again
-        expect(fs.writeFile(0, 'books.xlsx', "Faucault's Pendulum")).toEqual(2)
+        expect(fs.writeFile('books.xlsx', "Faucault's Pendulum")).toEqual(3)
 
-        console.log('localstorage 0', JSON.parse(localStorage.getItem('FileSystem_0')))
-        console.log('localstorage 1', JSON.parse(localStorage.getItem('FileSystem_1')))
-        console.log('localstorage 2', JSON.parse(localStorage.getItem('FileSystem_2')))
-        console.log('localstorage 3', JSON.parse(localStorage.getItem('FileSystem_3')))
+        expect(fs.readFile('books.xlsx')).toEqual("Faucault's Pendulum")
+
+        // this write will add a dir AND a file
+        expect(fs.writeFile('/stuff/movies.xlsx', 'The Big Chill')).toEqual(5)
+        expect(fs.readFile('/stuff/movies.xlsx')).toEqual('The Big Chill')
+
+        // this write will add a dir AND a file
+        let txt = `If On a Winter's Night, A Traveller`
+        expect(fs.writeFile('/stuff/books.xlsx', txt)).toEqual(2)
+        expect(fs.readFile('/stuff/books.xlsx')).toEqual(txt)
+
+        let a = [0,1,2,3,4,5,6,7,8,9]
+        a.forEach(i => {
+            console.log(`localstorage ${i}`, JSON.parse(localStorage.getItem(`FileSystem_${i}`)))
+        });
 
 
     })
@@ -179,7 +205,7 @@ Try to `cd` to the root folder in two ways.
             F.cd '/'
             expect( F._cwd ).toBe '/'
 
-Try an absolute path, a non-canonical path, and a relative path.
+Try an absolute path, a non-canonical path, and a relative
 
             F.cd '/folder1'
             expect( F._cwd ).toBe '/folder1'
