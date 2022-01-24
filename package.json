@@ -34,6 +34,7 @@
         "path-browserify": "^1.0.1",
         "prismjs": "^1.25.0",
         "raw-loader": "^4.0.2",
+        "split.js": "^1.6.5",
         "style-loader": "^1.2.1",
         "ts-loader": "^8.0.14",
         "typescript": "^4.4.3",

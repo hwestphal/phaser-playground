@@ -8,6 +8,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "sourceMap": true,
+    "esModuleInterop": true,
   },
   "files": [
     "src/index.ts"

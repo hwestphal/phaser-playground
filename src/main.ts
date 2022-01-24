@@ -20,6 +20,9 @@ import { talk_to_moodle } from './moodle'
 
 import { LogRecord, logRecord } from './logrecords'
 import { tsFS } from './tsFS'
+import {LangString} from './lang'
+import {dragElement } from './split'
+import {Raytracer} from './raytracer'
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
@@ -127,7 +130,7 @@ export class Main {
                     fs.eraseFileExplorer()
                     fs.fileExplorer(n)
                 },
-                eraseFileExplorer: () => {
+                eraseFileExplorer: () => {    // erases the canvas
                     let fs = new tsFS()
                     fs.eraseFileExplorer()
                 },
@@ -135,8 +138,22 @@ export class Main {
                     let fs = new tsFS()
                     fs.findFileExplorer(s)
                 },
+                trashfileFileExplorer: (s: string) => {
+                    let fs = new tsFS()
+                    fs.trashfileFileExplorer(parseInt(s))
+                },
+                trashdirFileExplorer: (s: string) => {
+                    let fs = new tsFS()
+                    fs.trashfileFileExplorer(parseInt(s))
+                },
 
+                // // expose the Split library...
+                // Split:(a:any,b:any)=>{
+                //     console.log(window,a,b);
+                //     const Split = window.Split
 
+                //     Split(a,b);
+                // },
 
                 // student clicks into reflection, have they finished all challenges?
                 readyToReflect: (step: number, activity: number, topic: number): boolean => {
@@ -183,15 +200,29 @@ export class Main {
     constructor() {
 
         console.log('in Main.constructor()')
+        console.log("Your screen resolution is: " + screen.width + "x" + screen.height);
 
-        let fs = new tsFS()
-        fs.crud()
+        // // attach the tragger
+        // console.log("vseparator",document.getElementById("vseparator"))
+        // dragElement(document.getElementById("vseparator"), "H");
+        // dragElement(document.getElementById("hseparator"), "V");
 
 
+        /** Attaches the mathcode API to the window object so that you can discover it */
+        Main.attachMathCodeAPI();
 
-        LogRecord.readAndClear()  // initialize
-        LogRecord.add(1, 2, 3, 'zerodata')
-        LogRecord.add(11, 12, 13, 'onedata')
+        // let str = new LangString()
+        // str.testGetString()
+
+
+        // let fs = new tsFS()
+        // fs.crud()
+
+        Raytracer()
+
+        // LogRecord.readAndClear()  // initialize
+        // LogRecord.add(1, 2, 3, 'zerodata')
+        // LogRecord.add(11, 12, 13, 'onedata')
 
 
         test_talk_to_moodle() // this is an async function
@@ -205,8 +236,6 @@ export class Main {
         this.expandCodestr()   // not static, so use 'this'
 
 
-        /** Attaches the mathcode API to the window object so that you can discover it */
-        Main.attachMathCodeAPI();
 
         // const State = {
         //     inputModel: null,
@@ -258,13 +287,13 @@ export class Main {
 
 
 
-            this.command.onclick = () => {
-                console.log('clicked command')
-                // const paused = this.game.paused;
-                // this.game.paused = !paused;
-                // this.pause.innerText = paused ? "Pause" : "Continue";
-                // this.fullscreen.disabled = !paused;
-            };
+            // this.command.onclick = () => {
+            //     console.log('clicked command')
+            //     // const paused = this.game.paused;
+            //     // this.game.paused = !paused;
+            //     // this.pause.innerText = paused ? "Pause" : "Continue";
+            //     // this.fullscreen.disabled = !paused;
+            // };
         }
 
         // this.fullscreen.onclick = () => this.game.fullScreen = true;

@@ -5,6 +5,7 @@ import { LZString } from "lzstring.ts"
 import { join, basename, dirname, format, parse, normalize } from "path-browserify"
 import { MForms } from './mforms'
 import { DOM } from "./DOM"
+import { assert } from "@vue/compiler-core"
 
 // the key/name of fileObjects in localstore is 'FileSystem_${fileNumber}'.
 //   representing the file ./     there is also a ../
@@ -27,6 +28,7 @@ enum FileType {
 export type fileObject = {
     fileType: FileType,         // should always be FileType.FILE
     fileNumber: number,         // should match the keyname of this record
+    inDirNumber: number,         // so we can remove it quickly
     dir: string,                 //  dir-base-name-ext from node.Path
     base: string,
     name: string,
@@ -130,6 +132,8 @@ export class tsFS {
 
     }
 
+    /////////////////////////////////////////////////////
+
     // wrap the low-level reads and writes, in case we want something other than localhost
     readRecord(n: number): directoryObject | fileObject | rootObject {
         let sObj: string = localStorage.getItem(`${this.FSName}_${n}`)
@@ -138,6 +142,11 @@ export class tsFS {
     writeRecord(n: number, obj: object) {
         localStorage.setItem(`${this.FSName}_${n}`, JSON.stringify(obj))
     }
+
+    removeRecord(n: number) {
+        localStorage.removeItem(`${this.FSName}_${n}`)
+    }
+
 
 
     // docs for lzcompress:  https://pieroxy.net/blog/pages/lz-string/guide.html
@@ -285,6 +294,7 @@ export class tsFS {
                 newObj = {
                     fileType: FileType.FILE,
                     fileNumber: this.getNewFileNumber(),
+                    inDirNumber: dObj.fileNumber,
                     dir: p.dir,
                     base: p.base,
                     name: p.name,
@@ -331,202 +341,241 @@ export class tsFS {
         return 1
     }
 
+    rmFile(fNum: number) {
+        console.log(`rmFile(${fNum}: number`)
+            let fObj = this.readRecord(fNum) as fileObject
+        console.assert(fObj.fileType == FileType.FILE)
 
-    // this group of functions manages reading and writing
-    // to localstore.  If you want to use another storage,
-    // only need to change these.
+        // we need to visit the parent and remove it from that directory
+        let parentDirNum = fObj.inDirNumber
+        let dObj = this.readRecord(parentDirNum) as directoryObject
+        console.assert(dObj.fileType == FileType.DIR)
 
-
-    storageName(sN: number): string {
-        return `${this.FSName}_${sN}`
+        // this feels like a double-negative:  filter the ones that aren't ...
+        dObj.files = dObj.files.filter(fileNumber => fileNumber !== fObj.fileNumber)
+        this.removeRecord(fNum)  // no one points to it anymore, but release the space anyhow
     }
 
-    getFileObject(n: number): fileObject {
-        let fObj = this.readRecord(n) as fileObject
-        console.assert(fObj.fileType == FileType.FILE, `expected a file at string #${n} `)
-        return fObj
-    }
-
-    getDirectoryObject(n: number): directoryObject {
-        // console.log(`getDirectoryObject(${n})`)
-
-        // console.log('%cdomain', 'color:red;', location.protocol, location.host)
-        let dString = localStorage.getItem(this.storageName(n))
-        // console.log(`%cgetDirectoryObject(${n}) gets ${dString}`, 'background-color:yellow;')
-
-        if (!dString) { // doesn't exist (system not initialized?)
-            this.createRootDirectory() // only happens once
-            dString = localStorage.getItem(this.storageName(n))
-        }
-        let dObj: directoryObject = JSON.parse(dString)
-        if (dObj.fileType !== FileType.DIR)
-            throw ('not a Directory')
-        return dObj
+    rmDir(dNum: number) {
+        console.log(`rmDir(${dNum}: number`)
+        let dObj = this.readRecord(dNum) as directoryObject
+        console.assert(dObj.fileType == FileType.DIR)
+        // we need to visit the parent and remove it from that directory
+        console.assert('no code here yet')
+        // this.removeRecord(dNum)
     }
 
 
-    setFileObject(fObj: fileObject) {
-        console.assert(fObj.fileType == FileType.FILE, `expected a file object`)
-        fObj.dateUpdate = Date.now()
-        this.writeRecord(fObj.fileNumber, fObj)
+// this group of functions manages reading and writing
+// to localstore.  If you want to use another storage,
+// only need to change these.
+
+
+storageName(sN: number): string {
+    return `${this.FSName}_${sN}`
+}
+
+getFileObject(n: number): fileObject {
+    let fObj = this.readRecord(n) as fileObject
+    console.assert(fObj.fileType == FileType.FILE, `expected a file at string #${n} `)
+    return fObj
+}
+
+getDirectoryObject(n: number): directoryObject {
+    // console.log(`getDirectoryObject(${n})`)
+
+    // console.log('%cdomain', 'color:red;', location.protocol, location.host)
+    let dString = localStorage.getItem(this.storageName(n))
+    // console.log(`%cgetDirectoryObject(${n}) gets ${dString}`, 'background-color:yellow;')
+
+    if (!dString) { // doesn't exist (system not initialized?)
+        this.createRootDirectory() // only happens once
+        dString = localStorage.getItem(this.storageName(n))
     }
-
-    setDirectoryObject(dObj: directoryObject) {
-        console.assert(dObj.fileType == FileType.DIR, `expected a directory object`)
-        this.writeRecord(dObj.fileNumber, dObj)
-    }
-
-
-
-    ////////////////////////// generate HTML report
-    ///  can be in 'explore' or 'save' mode (in save, file-add, folder-add,  selected gets written)
-    //   in 'explore', can search, delete, open, run,
-    //   in 'save', can add new directory, save-as, save
-    fileExplorer(dirNum: number, isModeSave: boolean = false, errMsg: string = 'an error'): string {
-
-        let dirObj = this.getDirectoryObject(dirNum)
-        console.log('%cdirObject', 'background-color:pink;', dirObj)
-
-        let HTML = ''
-
-        let p = parse(dirObj.dirName)  // break up the fileString
-        let xplodeP = p.dir.split('/')
-        xplodeP.shift()   // second element is always '/'
-
-        if (errMsg) {
-            HTML += `\n<div class="row">`
-            HTML += `\n<div class="col-12">`
-            HTML += `\n<div style="text-align:center;color:red;"><h3>errMsg</h3></div>`
-            HTML += `\n</div">`
-            HTML += `\n</div">`
-        }
+    let dObj: directoryObject = JSON.parse(dString)
+    if (dObj.fileType !== FileType.DIR)
+        throw ('not a Directory')
+    return dObj
+}
 
 
-        // breadcrumbs
+setFileObject(fObj: fileObject) {
+    console.assert(fObj.fileType == FileType.FILE, `expected a file object`)
+    fObj.dateUpdate = Date.now()
+    this.writeRecord(fObj.fileNumber, fObj)
+}
+
+setDirectoryObject(dObj: directoryObject) {
+    console.assert(dObj.fileType == FileType.DIR, `expected a directory object`)
+    this.writeRecord(dObj.fileNumber, dObj)
+}
+
+
+
+////////////////////////// generate HTML report
+///  can be in 'explore' or 'save' mode (in save, file-add, folder-add,  selected gets written)
+//   in 'explore', can search, delete, open, run,
+//   in 'save', can add new directory, save-as, save
+fileExplorer(dirNum: number, isModeSave: boolean = false, errMsg: string = 'an error'): string {
+    console.log(`fileExplorer(${dirNum}: number, ${isModeSave}: boolean = false, errMsg: string = 'an error'): string`)
+
+    let dirObj = this.getDirectoryObject(dirNum)
+    console.log('%cdirObject', 'background-color:pink;', dirObj)
+
+    let HTML = ''
+
+    let p = parse(dirObj.dirName)  // break up the fileString
+    let xplodeP = p.dir.split('/')
+    xplodeP.shift()   // second element is always '/'
+
+    if (errMsg) {
         HTML += `\n<div class="row">`
-        HTML += `\n><div class="col-7">`
+        HTML += `\n<div class="col-12">`
+        HTML += `\n<div style="text-align:center;color:red;"><h3>errMsg</h3></div>`
+        HTML += `\n</div">`
+        HTML += `\n</div">`
+    }
 
 
-        isModeSave = true
+    // breadcrumbs
+    HTML += `\n<div class="row">`
+    HTML += `\n><div class="col-7">`
+
+
+    isModeSave = true
+    if (isModeSave) {
+        // a save-as form
+        HTML += `<form class="form-inline">`
+        HTML += `<input class="form-control mr-sm-0 input-sm" type="search" placeholder="Save As" aria-label="Save As">`
+        HTML += `<button class="btn btn-outline-success my-0 my-sm-0 btn-sm" type="submit">Save As</button>`
+        HTML += `</form>`
+    } else {
+        // a search form
+        HTML += `<form class="form-inline">`
+        HTML += `<input class="form-control mr-sm-0 input-sm" type="search" placeholder="Search" aria-label="Search">`
+        HTML += `<button class="btn btn-outline-success my-0 my-sm-0 btn-sm" type="submit">Search</button>`
+        HTML += `</form>`
+    }
+
+
+    HTML += `\n</div><div class="col-2">`
+
+    let glyph = MForms.glyphIcon('search', 24)
+    HTML += `<a href="#"  onclick="MathcodeAPI.addFileExplorer(${dirNum})" >${glyph}</a>`
+
+    glyph = MForms.glyphIcon('folder-plus', 24)
+    HTML += `<a href="#"  onclick="MathcodeAPI.addFileExplorer(${dirNum})" >${glyph}</a>`
+
+    HTML += `\n</div><div class="col-2">`
+    glyph = MForms.glyphIcon('x', 24)
+    HTML += `<a href="#"  onclick="MathcodeAPI.eraseFileExplorer()" >${glyph}</a>`
+
+    HTML += `\n</div>`  // col
+    HTML += `\n</div>`  // row
+
+    HTML += `\n<nav aria-label="breadcrumb">`
+    HTML += `\n<ol class="breadcrumb">`
+    HTML += `\n<li class="breadcrumb-item"><a href="#" onclick="MathcodeAPI.refreshFileExplorer(1)">${MForms.glyphIcon('house', 12)}</a></li>`
+    xplodeP.forEach((element, index) => {
+        HTML += `\n<li class="breadcrumb-item"><a href="#">${element}</a></li>`
+    })
+    HTML += `\n</ol>`
+    HTML += `\n</nav>`
+
+    // table
+
+    HTML += `\n<div class="container-fluid">`
+    HTML += `\n <table class="table table-hover" > `
+    HTML += `\n        <thead>`
+    HTML += `\n          <tr>`
+    HTML += `\n            <th scope="col" id = "icon" > </th>`
+    HTML += `\n            <th scope="col" id = "name" > Name </th>`
+    HTML += `\n            <th scope="col" id="size">Size</th>`
+    HTML += `\n            <th scope="col" id="time">Last Modified</th>`
+    HTML += `\n            <th scope="col" id="time">Actions</th>`
+    HTML += `\n            <th scope="col" id="time">#</th>`
+    HTML += `\n          </tr>`
+    HTML += `\n        </thead>`
+    HTML += `\n        <tbody>`
+
+    dirObj.subdirs.forEach(value => {
+
+        let subDirObj = this.getDirectoryObject(value)
+        let folder = MForms.glyphIcon('folder', 12)
+
+
+        let trash = ''  // assume not displayed
         if (isModeSave) {
-            // a save-as form
-            HTML += `<form class="form-inline">`
-            HTML += `<input class="form-control mr-sm-0 input-sm" type="search" placeholder="Save As" aria-label="Save As">`
-            HTML += `<button class="btn btn-outline-success my-0 my-sm-0 btn-sm" type="submit">Save As</button>`
-            HTML += `</form>`
-        } else {
-            // a search form
-            HTML += `<form class="form-inline">`
-            HTML += `<input class="form-control mr-sm-0 input-sm" type="search" placeholder="Search" aria-label="Search">`
-            HTML += `<button class="btn btn-outline-success my-0 my-sm-0 btn-sm" type="submit">Search</button>`
-            HTML += `</form>`
+            let glyph = MForms.glyphIcon('trash', 16)
+            trash = `<a href="#"  onclick="confirm('Delete directory '${subDirObj.dirName}' and all its contents? Are you sure?');MathcodeAPI.trashFileExplorer(${subDirObj.fileNumber})" >${glyph}</a>`
         }
 
+        let dirName = subDirObj.dirName ? subDirObj.dirName : MForms.glyphIcon('house', 12)
+        let dirNameClick = `<div onclick="MathcodeAPI.refreshFileExplorer(${subDirObj.fileNumber})">${dirName}</div>`
 
-        HTML += `\n</div><div class="col-2">`
+        let length = `(<span style="color:#007bff;"><b>${subDirObj.subdirs.length}</b></span>/${subDirObj.files.length})`
 
-        let glyph = MForms.glyphIcon('search', 24)
-        HTML += `<a href="#"  onclick="MathcodeAPI.addFileExplorer(${dirNum})" >${glyph}</a>`
-
-        glyph = MForms.glyphIcon('folder-plus', 24)
-        HTML += `<a href="#"  onclick="MathcodeAPI.addFileExplorer(${dirNum})" >${glyph}</a>`
-
-        HTML += `\n</div><div class="col-2">`
-        glyph = MForms.glyphIcon('x', 24)
-        HTML += `<a href="#"  onclick="MathcodeAPI.eraseFileExplorer()" >${glyph}</a>`
-
-        HTML += `\n</div>`  // col
-        HTML += `\n</div>`  // row
-
-        HTML += `\n<nav aria-label="breadcrumb">`
-        HTML += `\n<ol class="breadcrumb">`
-        HTML += `\n<li class="breadcrumb-item"><a href="#" onclick="MathcodeAPI.refreshFileExplorer(1)">${MForms.glyphIcon('house', 12)}</a></li>`
-        xplodeP.forEach((element, index) => {
-            HTML += `\n<li class="breadcrumb-item"><a href="#">${element}</a></li>`
-        })
-        HTML += `\n</ol>`
-        HTML += `\n</nav>`
-
-        // table
-
-        HTML += `\n<div class="container-fluid">`
-        HTML += `\n <table class="table table-hover" > `
-        HTML += `\n        <thead>`
         HTML += `\n          <tr>`
-        HTML += `\n            <th scope="col" id = "icon" > </th>`
-        HTML += `\n            <th scope="col" id = "name" > Name </th>`
-        HTML += `\n            <th scope="col" id="size">Size</th>`
-        HTML += `\n            <th scope="col" id="time">Last Modified</th>`
-        HTML += `\n            <th scope="col" id="time">Actions</th>`
-        HTML += `\n            <th scope="col" id="time">#</th>`
+        HTML += `\n            <td>${folder}</td>`
+        HTML += `\n            <td><b><a href="#">${dirNameClick}</a></b></td>`
+        HTML += `\n            <td>${length}</td>`  // # of dirs/files
+        HTML += `\n            <td></td>`  // unused last modified
+        HTML += `\n            <td>${trash} </td>`
+        HTML += `\n            <td>${subDirObj.fileNumber}</td>`  // unused
         HTML += `\n          </tr>`
-        HTML += `\n        </thead>`
-        HTML += `\n        <tbody>`
+    })
 
-        dirObj.subdirs.forEach(value => {
+    dirObj.files.forEach(value => {
 
-            let subDirObj = this.getDirectoryObject(value)
-            let folder = MForms.glyphIcon('folder', 12)
-            let trash = MForms.glyphIcon('trash', 16)
-            let dirName = subDirObj.dirName ? subDirObj.dirName : MForms.glyphIcon('house', 12)
-            let dirNameClick = `<div onclick="MathcodeAPI.refreshFileExplorer(${subDirObj.fileNumber})">${dirName}</div>`
+        let fileObj = this.getFileObject(value)
+        let trash = MForms.glyphIcon('trash', 18)
+        let boxUp = MForms.glyphIcon('run.png', 20)
+        let copy = MForms.glyphIcon('copy.png', 20)
+        let lastMod = new Date(fileObj.dateUpdate).toDateString()
 
-            let length = `(<span style="color:#007bff;"><b>${subDirObj.subdirs.length}</b></span>/${subDirObj.files.length})`
-
-            HTML += `\n          <tr>`
-            HTML += `\n            <td>${folder}</td>`
-            HTML += `\n            <td><b><a href="#">${dirNameClick}</a></b></td>`
-            HTML += `\n            <td>${length}</td>`  // # of dirs/files
-            HTML += `\n            <td></td>`  // unused last modified
-            HTML += `\n            <td>${trash} </td>`
-            HTML += `\n            <td>${subDirObj.fileNumber}</td>`  // unused
-            HTML += `\n          </tr>`
-        })
-
-        dirObj.files.forEach(value => {
-
-            let fileObj = this.getFileObject(value)
-            let trash = MForms.glyphIcon('trash', 18)
-            let boxUp = MForms.glyphIcon('run.png', 20)
-            let copy = MForms.glyphIcon('copy.png', 20)
-            let lastMod = new Date(fileObj.dateUpdate).toDateString()
-
-            HTML += `\n          <tr>`
-            HTML += `\n            <td> </td>`
-            HTML += `\n            <td>${fileObj.name}</td>`
-            HTML += `\n            <td>${fileObj.length}</td>`  // unused
-            HTML += `\n            <td>${lastMod}</td>`  // unused
-            HTML += `\n            <td>${trash} ${boxUp} ${copy}</td>`
-            HTML += `\n            <td>${fileObj.fileNumber}</td>`  // unused
-            HTML += `\n          </tr>`
-        })
+        HTML += `\n          <tr>`
+        HTML += `\n            <td> </td>`
+        HTML += `\n            <td>${fileObj.name}</td>`
+        HTML += `\n            <td>${fileObj.length}</td>`  // unused
+        HTML += `\n            <td>${lastMod}</td>`  // unused
+        HTML += `\n            <td>${trash} ${boxUp} ${copy}</td>`
+        HTML += `\n            <td>${fileObj.fileNumber}</td>`  // unused
+        HTML += `\n          </tr>`
+    })
 
 
-        HTML += `\n        </tbody>`
-        HTML += `\n      </table>`
-        HTML += `\n  </div>`
+    HTML += `\n        </tbody>`
+    HTML += `\n      </table>`
+    HTML += `\n  </div>`
 
-        let canvasDiv = document.getElementById('canvasdiv')
-        if (canvasDiv) {
-            canvasDiv.innerHTML = HTML
-        }
-        return HTML
+    let canvasDiv = document.getElementById('canvasdiv')
+    if (canvasDiv) {
+        canvasDiv.innerHTML = HTML
     }
+    return HTML
+}
 
-    // search function
-    findFileExplorer(search: string) {
+// search function
+findFileExplorer(search: string) {
+}
 
+// separate functions to delete files and directories
+trashfileFileExplorer(n: number){
+    this.rmFile(n)
+}
+trashdirFileExplorer(n: number){
+    this.rmDir(n)
+}
+
+// remove fileExplorder from the screen (restore canvas)
+eraseFileExplorer() {
+    let canvasDiv = document.getElementById('canvasdiv')
+    if (canvasDiv) {
+        canvasDiv.innerHTML = ''
+        // add back the canvas element that was inside
+        DOM.appendChild(canvasDiv, DOM.node('canvas', '', 'canvas'))
     }
-
-    // remove fileExplorder from the screen (restore canvas)
-    eraseFileExplorer() {
-        let canvasDiv = document.getElementById('canvasdiv')
-        if (canvasDiv) {
-            canvasDiv.innerHTML = ''
-            // add back the canvas element that was inside
-            DOM.appendChild(canvasDiv, DOM.node('canvas', '', 'canvas'))
-        }
-    }
+}
 
     /*
         readFile = function(farray: fileObject) {
@@ -956,41 +1005,6 @@ export class tsFS {
             return file[1]
         }
 
-        rm(path) {
-            var file, filesBeneath, folder, fs, name, _i, _len, _ref, _ref1
-            _ref = this.separateWithFilename(path), path = _ref.path, name = _ref.name
-            if (!name) {
-                return false
-            }
-            fs = this._getFilesystemObject()
-            folder = this.walkPath(fs, path)
-            if (!folder) {
-                return false
-            }
-            if (!folder.hasOwnProperty(name)) {
-                return false
-            }
-            filesBeneath = function(entry) {
-                var child, result
-                if (entry instanceof Array) {
-                    return [entry]
-                }
-                result = []
-                for (child in entry) {
-                    if (!__hasProp.call(entry, child)) continue
-                    result = result.concat(filesBeneath(entry[child]))
-                }
-                return result
-            }
-            _ref1 = filesBeneath(folder[name])
-            for (_i = 0, _len = _ref1.length _i < _len _i++) {
-                file = _ref1[_i]
-                this._removeFile(file)
-            }
-            delete folder[name]
-            this._setFilesystemObject(fs)
-            return true
-        }
 
         cp(source, dest) {
             var data, destFolder, destName, e, file, fs, name, newfile, path, sourcePath, _ref

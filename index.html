@@ -89,13 +89,13 @@
             <div id="editor"></div>
             <div id="hseparator"></div>
             <div id="canvasdiv">
-                <canvas id="canvas" touch-action="none">
+                <canvas id="canvas" height="1280" width="768" touch-action="none">
                 </canvas></div>
         </div>
     </div>
 
     <script>
-
+/*
         // A function is used for dragging and moving
         function dragElement(element, direction) {
             var md; // remember mouse down info
@@ -107,7 +107,7 @@
             element.onmousedown = onMouseDown;
 
             function onMouseDown(e) {
-                console.log("mouse down: " + e.clientX);
+                // console.log("mouse down: " + e.clientX);
                 md = {
                     e,
                     offsetLeft: element.offsetLeft,
@@ -121,13 +121,13 @@
 
                 document.onmousemove = onMouseMove;
                 document.onmouseup = () => {
-                    console.log("mouse up");
+                    // console.log("mouse up");
                     document.onmousemove = document.onmouseup = null;
                 }
             }
 
             function onMouseMove(e) {
-                console.log("mouse move: " + e.clientX, direction);
+                // console.log("mouse move: " + e.clientX, direction);
                 var delta = {
                     x: e.clientX - md.e.clientX,
                     y: e.clientY - md.e.clientY
@@ -161,7 +161,7 @@
 
         dragElement(document.getElementById("vseparator"), "H");
         dragElement(document.getElementById("hseparator"), "V");
-
+*/
     </script>
 
 
