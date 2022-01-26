@@ -1,15 +1,27 @@
 // adapted from https://github.com/anon767/rayjs
+// check this out:  https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection
+
+// info about webgl2:  https://webgl2fundamentals.org/webgl/lessons/webgl-fundamentals.html
 
 
 import { V2, V3, V4, plus, minus, dot, cross, scalarmult, normalize, normLength } from './math'
 
 
+// var width = 1024;
+// var height = 768;
+
+let width = 320;
+let height = 200;
+
+
 var c = document.getElementById("canvas") as HTMLCanvasElement
+c.width = width
+c.height = height
+
 var ctx = c.getContext("2d")
 ctx.imageSmoothingEnabled = true;
 
-var width = 1024;
-var height = 768;
+
 
 // let framebuffer: V3[] = Array(width * height).fill([0, 0, 0])  // initialize to black
 let framebuffer: any = []
@@ -100,7 +112,8 @@ class Sphere extends Obj {
 function reflect(I: V3, N: V3): V3 {
     return minus(I, scalarmult(scalarmult(N, 2), dot(I, N)));
 }
-function scenceIntersect(orig: V3, dir: V3, spheres: Sphere[]): [boolean, V3, V3, Material] {
+
+function sceneIntersect(orig: V3, dir: V3, spheres: Sphere[]): [boolean, V3, V3, Material] {
     let N: V3, hit: V3, material: Material, spheres_dist = 1000;
     for (let i = 0; i < spheres.length; ++i) {
         let [intersects, dist_i] = spheres[i].rayIntersect(orig, dir);
@@ -113,38 +126,43 @@ function scenceIntersect(orig: V3, dir: V3, spheres: Sphere[]): [boolean, V3, V3
     }
     return [spheres_dist < 1000, hit, N, material];
 }
-function castRay(orig: V3, dir: V3, spheres: Sphere[], lights: Light[], depth = 0): V3 {
 
-    let [intersects, point, N, material] = scenceIntersect(orig, dir, spheres);
-    if (depth > maxrecur || !intersects) {
-        return [0, 0, 0]; // background color
-    }
+
+function castRay(orig: V3, dir: V3, spheres: Sphere[], lights: Light[], depth = 0): V3 {
+    let [intersects, point, N, material] = sceneIntersect(orig, dir, spheres);
+    if (!intersects && depth==0)  // pointing at infinite space
+        return background;
+
+    if (depth > maxrecur || !intersects)
+        return [0, 0, 0]   //  this won't interfere with other colors
+
 
     let reflect_dir = normalize(reflect(dir, N))
     let reflect_orig = (dot(reflect_dir, N) < 0) ? minus(point, scalarmult(N, 0.001)) : plus(point, scalarmult(N, 0.001));
-    let reflect_color = castRay(reflect_orig, reflect_dir, spheres, lights, depth + 1);
+    let reflect_color = castRay(reflect_orig, reflect_dir, spheres, lights, depth + 1);   //recursive
 
+    let diffuse_light_intensity = 0
+    let specular_light_intensity = 0;
 
-    let diffuse_light_intensity = 0, specular_light_intensity = 0;
     for (let i = 0; i < lights.length; ++i) {
         let light_dir = normalize(minus(lights[i].position, point))
         let light_distance = normLength(minus(lights[i].position, point))
         let shadow_orig = dot(light_dir, N) < 0 ? minus(point, scalarmult(N, 0.001)) : plus(point, scalarmult(N, 0.001));
-        let [shadow_intersects, shadow_point, shadow_N, shadow_material] = scenceIntersect(shadow_orig, light_dir, spheres);
+        let [shadow_intersects, shadow_point, shadow_N, shadow_material] = sceneIntersect(shadow_orig, light_dir, spheres);
         if (shadow_intersects && normLength(minus(shadow_point, shadow_orig)) < light_distance)
             continue;
         diffuse_light_intensity += Math.max(0, dot(light_dir, N)) * lights[i].intensity;
         specular_light_intensity += Math.pow(Math.max(0, -dot(reflect(minus([0, 0, 0], light_dir), N), dir)), material.specularExponent) * lights[i].intensity;
     }
 
-
-    return plus(
-        scalarmult(material.diffuseColor, diffuse_light_intensity * material.albedo[0]),
+    // add up the different contributions
+    let finalColor = plus(scalarmult(material.diffuseColor, diffuse_light_intensity * material.albedo[0]),
         plus(
             scalarmult([1, 1, 1], specular_light_intensity * material.albedo[1]),
             scalarmult(reflect_color, material.albedo[2])
         )
     );
+    return finalColor
 }
 
 function draw() {
@@ -158,17 +176,10 @@ function draw() {
     for (var y = 0; y < height; ++y) {
         for (var x = 0; x < width; ++x) {
             data[y * width + x] =
-            (255 << 24) |    // alpha
-            ((Math.min(1, framebuffer[x][y][2]) * 255) << 16) |    // blue
-            ((Math.min(1, framebuffer[x][y][1]) * 255) << 8) |    // green
-            (Math.min(1, framebuffer[x][y][0]) * 255);            // red
-
-        //     let ptr = y * width + x
-
-        //     data[ptr] = (255 << 24) |    // alpha
-        //         ((Math.min(1, framebuffer[ptr][2]) * 255) << 16) |    // blue
-        //         ((Math.min(1, framebuffer[ptr][1]) * 255) << 8) |    // green
-        //         (Math.min(1, framebuffer[ptr][0]) * 255);            // red
+                (255 << 24) |    // alpha
+                ((Math.min(1, framebuffer[x][y][2]) * 255) << 16) |    // blue
+                ((Math.min(1, framebuffer[x][y][1]) * 255) << 8) |    // green
+                (Math.min(1, framebuffer[x][y][0]) * 255);            // red
         }
     }
     imageData.data.set(buf8);
@@ -205,6 +216,7 @@ function demo() {
     window.requestAnimationFrame(step);
 }
 function keyDownHandler(event: any) {
+    // console.log(event)
     if (event.keyCode == 39) {
         rightPressed = true;
     }
@@ -266,6 +278,7 @@ const fov = Math.PI / 3.;
 const maxrecur = 4;
 var camera: V3 = [0, 0, 0]
 
+let background: V3 = [.4, .2, .2]
 
 let ivory = new Material([0.6, 0.3, 0.1], [0.4, 0.4, 0.3], 50.);
 let red_rubber = new Material([0.9, 0.1, 0], [0.3, 0.1, 0.1], 10.);
@@ -281,13 +294,15 @@ spheres.push(new Sphere([-1.0, -1.5, -12], 2, mirror));
 spheres.push(new Sphere([-3, 0, -16], 2, ivory));
 spheres.push(new Sphere([7, 5, -18], 4, mirror));
 
+// spheres.push(new Triangle([ 1, -0.5, -12],[ 3, 4.5, -12],[ 6, -0.5, -12), red_rubber))
+
 
 
 export function Raytracer() {
     init()
     render(spheres, lights);
     draw();
-
+    demo()
 }
 
 

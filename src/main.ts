@@ -20,9 +20,9 @@ import { talk_to_moodle } from './moodle'
 
 import { LogRecord, logRecord } from './logrecords'
 import { tsFS } from './tsFS'
-import {LangString} from './lang'
-import {dragElement } from './split'
-import {Raytracer} from './raytracer'
+import { LangString } from './lang'
+import { dragElement } from './split'
+import { Raytracer } from './raytracer'
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
@@ -103,6 +103,13 @@ export class Main {
                 loader: (courseInfo: string) => {
                     console.log('%cMathcodeAPI.loader successful', 'background-color:red;color:white;')
                     console.log('courseInfo(raw): ', courseInfo)
+
+                    // // attach the dragger
+                    // console.log("vseparator",document.getElementById("vseparator"))
+                    dragElement(document.getElementById("vsplitbar"), "H");
+                    dragElement(document.getElementById("hsplitbar"), "V");
+
+
                 },
 
                 // MathcodeAPI.onClickSay("u00051",voice,"step","activity","topic")
@@ -202,11 +209,6 @@ export class Main {
         console.log('in Main.constructor()')
         console.log("Your screen resolution is: " + screen.width + "x" + screen.height);
 
-        // // attach the tragger
-        // console.log("vseparator",document.getElementById("vseparator"))
-        // dragElement(document.getElementById("vseparator"), "H");
-        // dragElement(document.getElementById("hseparator"), "V");
-
 
         /** Attaches the mathcode API to the window object so that you can discover it */
         Main.attachMathCodeAPI();
@@ -261,30 +263,33 @@ export class Main {
             // this.fullscreen = document.getElementById("fullscreen") as HTMLButtonElement;
 
 
+            if (this.download)
+                this.download.onclick = () => Main.editor.download("game.ts");
+            if (this.upload)
+                this.upload.onclick = () => Main.editor.upload();
+            if (this.files)
+                this.files.onclick = () => (window as any).MathcodeAPI.refreshFileExplorer(1);
 
-            this.download.onclick = () => Main.editor.download("game.ts");
-            this.upload.onclick = () => Main.editor.upload();
-            this.files.onclick = () => (window as any).MathcodeAPI.refreshFileExplorer(1);
+            if (this.run) {
+                this.run.onclick = async () => {
+                    console.log('clicked RUN')
+                    // this.run.disabled = false;  // was true
+                    // this.stop.disabled = false;
+                    // this.pause.disabled = false;
+                    // this.command.disabled = false;
+                    // this.fullscreen.disabled = false;
+                    try {
+                        // const fn = await this.editor.transpile(this.game.scope);
+                        //this.editorDiv.hidden = true;
+                        Main.editor.transpile()  // also runs
+                        // this.editor.runEditorCode()
 
-            this.run.onclick = async () => {
-                console.log('clicked RUN')
-                // this.run.disabled = false;  // was true
-                // this.stop.disabled = false;
-                // this.pause.disabled = false;
-                // this.command.disabled = false;
-                // this.fullscreen.disabled = false;
-                try {
-                    // const fn = await this.editor.transpile(this.game.scope);
-                    //this.editorDiv.hidden = true;
-                    Main.editor.transpile()  // also runs
-                    // this.editor.runEditorCode()
-
-                } catch (e) {   // transpile error.  show it in an alert
-                    alert(e);
-                    this.resetButtons();
-                }
-            };
-
+                    } catch (e) {   // transpile error.  show it in an alert
+                        alert(e);
+                        this.resetButtons();
+                    }
+                };
+            }
 
 
             // this.command.onclick = () => {
