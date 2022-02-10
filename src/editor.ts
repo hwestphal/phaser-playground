@@ -39,6 +39,8 @@ import lib_es2019_string from "./extraLibs/lib.es2019.string.d.ts.txt"
 import lib_es2020_bigint from "./extraLibs/lib.es2020.bigint.d.ts.txt"
 import lib_es2021_string from "./extraLibs/lib.es2021.string.d.ts.txt"
 
+import babylonjs from "./extraLibs/babylonjs.d.ts.txt"
+
 import lib_es2099 from "./extraLibs/lib.es2099.d.ts.txt"
 import lib_jsx_tiny from "./extraLibs/jsx_tiny.d.ts.txt"
 import mathcode from "./extraLibs/mathcode.d.ts.txt"
@@ -191,6 +193,8 @@ export class Editor {
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2020_bigint)
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2021_string)
 
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(babylonjs)
+
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2099)      // stuff that Typescript hasn't provided
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_jsx_tiny)    // my simply remix of the upper level call
         monaco.languages.typescript.typescriptDefaults.addExtraLib(mathcode)    // my simply remix of the upper level call
@@ -277,6 +281,7 @@ export class Editor {
     command(fileName: string) {
         console.log('clicked on command')
     }
+
 
 
     async transpile(scope: any = {}) {

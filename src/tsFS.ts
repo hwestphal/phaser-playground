@@ -567,6 +567,11 @@ trashdirFileExplorer(n: number){
     this.rmDir(n)
 }
 
+saveFileExplorer(s:string){
+    console.error('saveFileExplorer is not yet available')
+}
+
+
 // remove fileExplorder from the screen (restore canvas)
 eraseFileExplorer() {
     let canvasDiv = document.getElementById('canvasdiv')

@@ -7,7 +7,7 @@
 import { Editor } from "./editor";
 import { OnClickSay } from "./onClickSay"
 import *  as Prism from 'prismjs'
-// import { asciiMath, testAsciiMath } from './ASCIIMathML'
+import { asciiMath, testAsciiMath } from './ASCIIMathML'
 import { Log } from './utilities'
 
 import { VT52 } from './vt52'
@@ -104,6 +104,8 @@ export class Main {
                     console.log('%cMathcodeAPI.loader successful', 'background-color:red;color:white;')
                     console.log('courseInfo(raw): ', courseInfo)
 
+                    // testAsciiMath()  // needs element 'testmath'
+
                     // // attach the dragger
                     // console.log("vseparator",document.getElementById("vseparator"))
                     dragElement(document.getElementById("vsplitbar"), "H");
@@ -145,6 +147,11 @@ export class Main {
                     let fs = new tsFS()
                     fs.findFileExplorer(s)
                 },
+                saveFileExplorer: (s: string) => {
+                    let fs = new tsFS()
+                    fs.saveFileExplorer(s)
+                },
+
                 trashfileFileExplorer: (s: string) => {
                     let fs = new tsFS()
                     fs.trashfileFileExplorer(parseInt(s))
@@ -199,6 +206,22 @@ export class Main {
                     Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: code })
                     Main.editor.runEditorCode(codeString)
                 },
+
+                //// these are the buttons on the Editor
+                runEditor() {
+                    console.log('clicked RUN')
+                    this.eraseFileExplorer()    // in case it is open (also resets '2D')
+                    try {
+                        Main.editor.transpile()  // also runs
+                    } catch (e) {   // transpile error.  show it in an alert
+                        alert(e);
+                    }
+                },
+                submitEditor: (s: string) => {
+                },
+
+
+
             }
     }
 
