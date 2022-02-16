@@ -1,6 +1,8 @@
 // we save up log records in Window.localStorage, and bundle them back to the
 // server when the activity is completed.   data is persistent.
 
+import { talk_to_moodle } from "./moodle";
+
 // storage is an JSON object with an array of strings.  each string is a
 // JSON object (this way they can all be the 'same' as required for an array)
 
@@ -98,5 +100,6 @@ export class LogRecord {
 
         storage = JSON.stringify(sObj)
         localStorage.setItem(logObject,storage)
+
     }
 }
