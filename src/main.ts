@@ -111,6 +111,13 @@ export class Main {
                     dragElement(document.getElementById("vsplitbar"), "H");
                     dragElement(document.getElementById("hsplitbar"), "V");
 
+                    // hide the Moodle menu ('mathcode - COURSE NAME')
+                    let header = document.getElementById('page-header')
+                    if (header)
+                        header.style.display = 'none';
+                    else
+                        console.error('could not find page-header')
+
 
                 },
 
@@ -243,16 +250,17 @@ export class Main {
         // let fs = new tsFS()
         // fs.crud()
 
-        Raytracer()
+        // Raytracer()
 
         // LogRecord.readAndClear()  // initialize
         // LogRecord.add(1, 2, 3, 'zerodata')
         // LogRecord.add(11, 12, 13, 'onedata')
 
 
-        test_talk_to_moodle() // this is an async function
+        // test_talk_to_moodle() // this is an async function
 
-        testTree()
+        // testTree()
+
         // let treeview = new treeviewComponent('Tree','root label')
         // treeview.renderTree()
 
