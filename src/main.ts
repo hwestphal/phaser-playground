@@ -140,6 +140,14 @@ export class Main {
                     }
                 },
 
+                // utility to copy contents of a ID to the clipboard
+                copyToClipboard: (inputID:string) => {
+                    let txt = document.getElementById(inputID) as HTMLFormElement
+                    txt.select()  // won't work on tablet
+                    navigator.clipboard.writeText(txt.value)
+                    console.log(`%ccopied '${txt.value}' to clipboard`,'background-color:#ffE0E0;')
+                },
+
                 //////// these functions are for the file explorer
                 refreshFileExplorer: (n: number) => {
                     let fs = new tsFS()
@@ -255,7 +263,6 @@ export class Main {
         // LogRecord.readAndClear()  // initialize
         // LogRecord.add(1, 2, 3, 'zerodata')
         // LogRecord.add(11, 12, 13, 'onedata')
-
 
         // test_talk_to_moodle() // this is an async function
 
