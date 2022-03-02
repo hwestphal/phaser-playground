@@ -106,8 +106,9 @@ export class Main {
 
                     // testAsciiMath()  // needs element 'testmath'
 
-                    // // attach the dragger
-                    // console.log("vseparator",document.getElementById("vseparator"))
+                    // attach the dragger
+
+                    console.log("vsplitbar",document.getElementById("vsplitbar"))
                     dragElement(document.getElementById("vsplitbar"), "H");
                     dragElement(document.getElementById("hsplitbar"), "V");
 

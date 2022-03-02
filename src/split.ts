@@ -16,9 +16,12 @@ type MouseDown = {
 export var mouseDown: MouseDown; // remember mouse down info
 
 export function dragElement(element: HTMLElement, direction: 'H' | 'V') {
+    console.log('dragElement',direction)
+
     const lesson = document.getElementById("lesson");
     const editor = document.getElementById("editor");
     const canvas = document.getElementById("canvas") as HTMLCanvasElement
+    console.log(element)
 
     element.onmousedown = (e: any) => {
         console.log("split: mouse down: " + e.clientX);
