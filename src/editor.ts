@@ -200,13 +200,15 @@ export class Editor {
         monaco.languages.typescript.typescriptDefaults.addExtraLib(mathcode)    // my simply remix of the upper level call
 
         // this stuff has to go into the EVAL, since it doesn't see otherwise
-        // WARNING - it must be JAVASCRIPT
 
+        // must be JAVASCRIPT, not TYPESCRIPT
         this.systemDecl =
             `
             const JXG = window.JXG   // (window as any).JXG
             const Mathcode = window.Mathcode
             const BABYLON = window.BABYLON
+            let _canvas = document.getElementById("canvas")
+            let ctx = _canvas.getContext("2d")
             // const window.PlanetCute = new PlanetCute()
             // const PlanetCute = window.PlanetCute
             `
