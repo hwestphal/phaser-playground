@@ -112,7 +112,8 @@ export class Editor {
     storageKey: string
     safeDelay: number
 
-    systemDecl = ''     // hidden stuff that goes into all editors
+    systemDeclTS = ''     // hidden stuff that goes into all editors
+    systemDeclJS = ''   // same hidden stuff in JS
 
     prefixDecl = ''     // hidden decl for TS for THIS instance of the editor
     prefixCode = ''     // hidden code for THIS instance of the editor
@@ -201,14 +202,27 @@ export class Editor {
 
         // this stuff has to go into the EVAL, since it doesn't see otherwise
 
+        // TYPESCRIPT preloaded into editor
+        this.systemDeclTS =
+            `
+            const JXG = window.JXG   // (window as any).JXG
+            const Mathcode = window.Mathcode
+            const BABYLON = window.BABYLON
+            let _canvas = document.getElementById("canvas") as HTMLCanvasElement
+            var Canvas = _canvas.getContext("2d")!
+            // const window.PlanetCute = new PlanetCute()
+            // const PlanetCute = window.PlanetCute
+        `
+
+
         // must be JAVASCRIPT, not TYPESCRIPT
-        this.systemDecl =
+        this.systemDeclJS =
             `
             const JXG = window.JXG   // (window as any).JXG
             const Mathcode = window.Mathcode
             const BABYLON = window.BABYLON
             let _canvas = document.getElementById("canvas")
-            let ctx = _canvas.getContext("2d")
+            let Canvas = _canvas.getContext("2d")
             // const window.PlanetCute = new PlanetCute()
             // const PlanetCute = window.PlanetCute
             `
@@ -224,7 +238,7 @@ export class Editor {
             }`
 
 
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(this.systemDecl)
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(this.systemDeclTS)
         monaco.languages.typescript.typescriptDefaults.addExtraLib(this.prefixDecl)
 
         this.editor = monaco.editor.create(this.el, {
@@ -328,7 +342,7 @@ export class Editor {
     runEditorCode(editorCode:string) {
 
         let code = ''
-        code += this.systemDecl + "\r\n"
+        code += this.systemDeclJS + "\r\n"
         // but NOT prefixDecl
         code += this.prefixCode + "\r\n"
         code += editorCode + "\r\n"
