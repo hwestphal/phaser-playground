@@ -8,6 +8,24 @@ declare class VT52 {
     setCursor(x: number, y: number);
 }
 
+declare class Draw {
+    constructor(width:number,height:number);
+    writeColor(x:number,y:number,z:number)
+    putImage();
+
+
+    framebuffer:any;
+}
+
+declare class V3 {
+   constructor(x:number,y:number,z:number):V3;
+   add(other:V3):V3;
+   subtract(other:V3):V3;
+   dot(other:V3):number;
+   normalize():V3;
+   scale(other:V3):V3;
+   cross(other:V3):V3;
+}
 
 declare class PlanetCute {
     constructor(canvasID:string);

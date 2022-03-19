@@ -11,6 +11,7 @@ import { asciiMath, testAsciiMath } from './ASCIIMathML'
 import { Log } from './utilities'
 
 import { VT52 } from './vt52'
+import {Draw,V3} from './draw'
 import { PlanetCute } from "./planetcute";
 
 
@@ -86,6 +87,13 @@ export class Main {
 
             VT52: (): VT52 => {
                 return new VT52()
+            },
+            Draw: (width:number,height:number): Draw => {
+                console.log('in mathcode')
+                return new Draw(width,height)
+            },
+            V3: (x:number,y:number,z:number): V3 => {
+                return new V3(x,y,z)
             },
             PlanetCute: (): PlanetCute => {
                 return new PlanetCute()
