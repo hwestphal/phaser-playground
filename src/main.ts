@@ -3,6 +3,7 @@
 //   - remove the word 'export' from 'export declare'
 //   - you should also remove   /** @ignore */ and the line that follows
 
+import ts from 'typescript';
 
 import { Editor } from "./editor";
 import { OnClickSay } from "./onClickSay"
@@ -11,7 +12,7 @@ import { asciiMath, testAsciiMath } from './ASCIIMathML'
 import { Log } from './utilities'
 
 import { VT52 } from './vt52'
-import {Draw,V3} from './draw'
+import {Draw,V3,Ray} from './draw'
 import { PlanetCute } from "./planetcute";
 
 
@@ -83,17 +84,29 @@ export class Main {
     static attachMathCodeAPI() {   // NB - STATIC !!!
         // let onClickSay: OnClickSay
 
+        // remember to add these to NAMESPACE in mathcoode.d.ts.txt
         (window as any).Mathcode = {
 
             VT52: (): VT52 => {
                 return new VT52()
             },
-            Draw: (width:number,height:number): Draw => {
+            Draw: (width:number=800): Draw => {
                 console.log('in mathcode')
-                return new Draw(width,height)
+                return new Draw(width)
             },
             V3: (x:number,y:number,z:number): V3 => {
                 return new V3(x,y,z)
+            },
+            // Point3 and Color are just aliases for V3
+            Point3: (x:number,y:number,z:number): V3 => {
+                return new V3(x,y,z)
+            },
+            Color: (x:number,y:number,z:number): V3 => {
+                return new V3(x,y,z)
+            },
+
+            Ray: (origin:V3,direction:V3): Ray => {
+                return new Ray(origin,direction)
             },
             PlanetCute: (): PlanetCute => {
                 return new PlanetCute()
@@ -225,10 +238,11 @@ export class Main {
                     Main.editor.editor.setValue(codeString)
                 },
 
-                runInCanvas(paragraph: number, code: string) {
-                    let codeString = Buffer.from(code, 'base64').toString('binary');
-                    Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: code })
-                    Main.editor.runEditorCode(codeString)
+                runInCanvas(paragraph: number, code: string) {   // convert from TS to JS first !!
+                    let tsCode = Buffer.from(code, 'base64').toString('binary');
+                    Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: tsCode })
+                    let jsCode = ts.transpile(tsCode);
+                    Main.editor.runEditorCode(jsCode)
                 },
 
                 //// these are the buttons on the Editor

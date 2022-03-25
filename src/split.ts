@@ -23,6 +23,7 @@ export function dragElement(element: HTMLElement, direction: 'H' | 'V') {
     const canvas = document.getElementById("canvas") as HTMLCanvasElement
     console.log(element)
 
+    /*
     element.onmousedown = (e: any) => {
         console.log("split: mouse down: " + e.clientX);
         mouseDown = {
@@ -42,6 +43,7 @@ export function dragElement(element: HTMLElement, direction: 'H' | 'V') {
             document.onmousemove = document.onmouseup = null;
         }
     }
+    */
 
     function onMouseMove(e: any) {
         console.log("split: mouse move: " + e.clientX, direction);

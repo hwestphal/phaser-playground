@@ -24,8 +24,8 @@ import * as PlanetCute from './planetcute'
 
 import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
 // import lib_baby from "./extraLibs/baby.d.ts.txt";
-// import lib_dom from "./extraLibs/lib.dom_mini.d.ts.txt";
-import lib_dom from "./extraLibs/lib.dom.d.ts.txt";
+import lib_dom_mini from "./extraLibs/lib.dom_mini.d.ts.txt";
+// import lib_dom from "./extraLibs/lib.dom.d.ts.txt";
 import lib_promise from "./extraLibs/lib.es2015.promise.d.ts.txt";
 
 import lib_es2015_collection from "./extraLibs/lib.es2015.collection.d.ts.txt"
@@ -180,8 +180,8 @@ export class Editor {
 
         // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_baby_plus, "lib.baby.d.ts");
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es5, "lib.es5.d.ts");
-        // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom, "lib.dom_mini.d.ts");
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom, "lib.dom.d.ts");
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom_mini, "lib.dom_mini.d.ts");
+        // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom, "lib.dom.d.ts");
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_promise, "lib.es2015.promise.d.ts");
 
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2015_collection)
@@ -205,8 +205,9 @@ export class Editor {
         // TYPESCRIPT preloaded into editor
         this.systemDeclTS =
             `
+            const Mathcode:Mathcode = window.Mathcode
+            // const Mathcode = window.Mathcode
             const JXG = window.JXG   // (window as any).JXG
-            const Mathcode = window.Mathcode
             const BABYLON = window.BABYLON
             let _canvas = document.getElementById("canvas") as HTMLCanvasElement
             var Canvas = _canvas.getContext("2d")!
@@ -347,6 +348,8 @@ export class Editor {
         code += this.prefixCode + "\r\n"
         code += editorCode + "\r\n"
         code += this.commandCode + "\r\n"
+
+        console.log(code)
 
         // eval() is crazy dangerous because it runs in the local context
         // Function() is a bit safer, but not much
