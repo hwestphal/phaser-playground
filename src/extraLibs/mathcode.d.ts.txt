@@ -21,12 +21,14 @@ declare class VT52 {
 }
 
 declare class Draw {
-    constructor(width:number=800);
+    constructor(width?:number);
     writeColor(x:V3);
     putImage();
     framebuffer:any;
     render(rayColor:(r: Ray,world:any=null) => V3,world:any=null);
     test();
+    height:number;
+    width.number;
 }
 
 declare class V3 {

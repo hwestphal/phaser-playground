@@ -253,8 +253,9 @@ export class VT52 {
 
             // try several chars per clock tick (but 30 frames, so it can still be slow)
             for (let i = 0; i < 10; i++) {
-                let p = VT52.printBuffer.shift()!
-                this.printChar(p.char, p.color)
+                let p = VT52.printBuffer.shift()
+                if (p !== undefined)
+                    this.printChar(p.char, p.color)
             }
         }
         // refresh the VT52 screen buffer

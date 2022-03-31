@@ -13,9 +13,10 @@ type attributes = {
     strokeColor?: string
     strokeWidth?: number
     strokeColorOpacity?: number   // between 0 and 1
-    dash?: number            // 0:solid, 1:dotted, 2-5: short,medium,long dashes   
+    dash?: number            // 0:solid, 1:dotted, 2-5: short,medium,long dashes
     highlightStrokeColor?: string  // for mouse-over
     traced?: boolean
+    ticks?: object
 
     // polygon
     fillColor?: string
@@ -40,7 +41,7 @@ type attributes = {
     snapWidth?: number
 
 }
- 
+
 
 
 type JSXElement = {
@@ -52,17 +53,17 @@ type JSXElement = {
 }
 
 type Board = {      // JSG.Board - manages properties of a board
-    create(elementType: 'angle' | 'arc' | 'arrow' | 'axis' | 'bisector' | 
+    create(elementType: 'angle' | 'arc' | 'arrow' | 'axis' | 'bisector' |
     'button' | 'cardinalspline' | 'chart' | 'checkbox' | 'circle' |
     'circumcircle' | 'circumcirclearc' | 'circumcirclesector' | 'conic' |
     'curve' | 'curveddifference' | 'curveintersection' | 'curveunion' |
     'ellipse' | 'functiongraph' | 'glider' | 'grid' | 'group' |
-    'hatch' | 'hyperbola' | 'image' | 'input' | 'integral' | 'intersection' | 
-    'line' | 'metapostspline' | 'midpoint' | 'mirrorelement' | 'normal' | 
-    'perpendicular' | 'plot' | 'point' | 'polygon' | 'polygonalchain' | 
+    'hatch' | 'hyperbola' | 'image' | 'input' | 'integral' | 'intersection' |
+    'line' | 'metapostspline' | 'midpoint' | 'mirrorelement' | 'normal' |
+    'perpendicular' | 'plot' | 'point' | 'polygon' | 'polygonalchain' |
     'regularpolygon' | 'reflection' | 'riemannsum' | 'sector' | 'segment' | 'semicircle' |
-    'slider' | 'slopetriangle' | 'stepfunction' | 'tangent' | 
-    'tapemeasure' | 'text' | 'ticks' | 'tracecurve' | 'transform' | 
+    'slider' | 'slopetriangle' | 'stepfunction' | 'tangent' |
+    'tapemeasure' | 'text' | 'ticks' | 'tracecurve' | 'transform' |
     'turtle',
 
         coordinates: any[], attributes?: attributes): JSXElement
@@ -90,6 +91,6 @@ declare namespace JXG {
     export class Math{
         static Numerics: any
     }
-    
+
     function addEvent(a:any,eventType:string,c:()=>void,d:any):any
 }

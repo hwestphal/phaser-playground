@@ -88,11 +88,12 @@ export class Draw {
 
     aspectRatio = 16.0 / 9.0
 
-    constructor(width: number = 800) {
+    constructor(width?: number) {
 
         const height = (width / this.aspectRatio) | 0   // | 0 forces to an int
 
-
+        this.width = width || 800
+        
         this._canvas = document.getElementById("canvas") as HTMLCanvasElement
         this.Canvas = this._canvas.getContext("2d")
 
