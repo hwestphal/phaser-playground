@@ -205,12 +205,14 @@ export class Editor {
         // TYPESCRIPT preloaded into editor
         this.systemDeclTS =
             `
+            // const doc = document
             const Mathcode:Mathcode = window.Mathcode
             // const Mathcode = window.Mathcode
             const JXG = window.JXG   // (window as any).JXG
             const BABYLON = window.BABYLON
-            let _canvas = document.getElementById("canvas") as HTMLCanvasElement
-            var Canvas = _canvas.getContext("2d")!
+            // let _canvas = document.getElementById("canvas") as HTMLCanvasElement
+            let canvas = document.getElementById("canvas") as HTMLCanvasElement
+            // var ctx = canvas.getContext("2d")!   // this causes WebGL to fail
             // const window.PlanetCute = new PlanetCute()
             // const PlanetCute = window.PlanetCute
         `
@@ -219,11 +221,13 @@ export class Editor {
         // must be JAVASCRIPT, not TYPESCRIPT
         this.systemDeclJS =
             `
+            // const doc = document
             const JXG = window.JXG   // (window as any).JXG
             const Mathcode = window.Mathcode
             const BABYLON = window.BABYLON
-            let _canvas = document.getElementById("canvas")
-            let Canvas = _canvas.getContext("2d")
+            // let _canvas = document.getElementById("canvas")
+            let canvas = document.getElementById("canvas")
+            // let ctx =  canvas.getContext("2d")  // this causes WebGL to fail
             // const window.PlanetCute = new PlanetCute()
             // const PlanetCute = window.PlanetCute
             `
@@ -354,8 +358,8 @@ export class Editor {
         // eval() is crazy dangerous because it runs in the local context
         // Function() is a bit safer, but not much
 
-        let f = new Function(code)
-        f()
+        let f = new Function('document',code)
+        f(document)
     }
 
 

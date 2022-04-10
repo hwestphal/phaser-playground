@@ -151,7 +151,7 @@ const VT52pixelX = 13
 const VT52pixelY = 31
 
 const VT52rows = 24    // not 24 like the old terminal
-const VT52cols = 80
+const VT52cols = 80    // these MUST be even numbers
 
 const VT52vOffset = 20  // correct for characters (not for squares)
 const VT52font = "20px Courier"
@@ -167,7 +167,6 @@ type printable = {
 export class VT52 {
 
     ctx: CanvasRenderingContext2D
-
 
     // we use statics because the student might restart and restart his program
     // we don't want a new buffer each time, we want to clear and reuse the old one
@@ -285,20 +284,58 @@ export class VT52 {
     }
 
     /** position the cursor on the screen */
-    setCursor(x: number, y: number) {
-        this.cursorX = x
-        this.cursorY = y
+    setCursor(row: number, col: number) {
+        this.cursorX = row
+        this.cursorY = col
     }
 
+    colorPoint(col: number, row: number, color: string) {
 
+        this.ctx.fillStyle = color
+        this.ctx.fillRect(row * VT52pixelX, col * VT52pixelY, VT52pixelX, VT52pixelY);
+    }
 
+    colorXY(x: number, y: number, color: string = 'blue') {
+
+        x += Math.floor(VT52cols / 2)   // remember floor of -5.1 is -6 !!
+        y += Math.floor(VT52rows / 2)
+
+        this.ctx.fillStyle = color
+        this.ctx.fillRect(x * VT52pixelX, y * VT52pixelY, VT52pixelX, VT52pixelY);
+    }
+
+    drawAxisLines() {
+        this.ctx.fillStyle = '#D0D0D0'
+        let y = ((VT52rows / 2) + .5) * VT52pixelY
+        for (let x = 0; x < VT52cols; x++) {  // draw the x-axis at center height
+            console.log(x, y)
+            this.ctx.fillRect(x * VT52pixelX, y, VT52pixelX - 4, 1);
+        }
+        let x = ((VT52cols / 2) + .5) * VT52pixelX
+        for (let y = -0; y < VT52rows; y++) {  // draw the y-axis at midscreen
+            this.ctx.fillRect(x, y * VT52pixelY, 1, VT52pixelY - 3);
+        }
+    }
+
+    graph(func: Function, color: string = 'red') {
+        this.ctx.fillStyle = color
+        let halfcols = VT52cols / 2
+        let halfrows = VT52rows / 2
+        for (let x = -halfcols; x < halfcols; x += .05) {
+            let y = func(x)
+            let drawX = (x + halfcols +.5) * VT52pixelX
+            let drawY = (y + halfrows + .5) * VT52pixelY
+            // console.log('vt.graph', drawX, drawY)
+            this.ctx.fillRect(drawX, drawY, 2, 2);
+        }
+    }
 
 
     // full refresh of VT52 screen.
     drawScreen() {
 
         this.ctx.font = VT52font
-        this.ctx.clearRect(0, 0, dynamicX, dynamicY)   // transparent black
+        // this.ctx.clearRect(0, 0, dynamicX, dynamicY)   // transparent black
         this.ctx.beginPath()    // reset after clear
 
         for (let j = 0; j < VT52rows; j++) {
@@ -337,6 +374,9 @@ export class VT52 {
         // console.log(`printCRLF at ${this.cursorX},${this.cursorY}`)
         if (this.cursorY === (VT52rows - 1)) {
             // we are on the bottom line, so scroll up
+
+            // first, clear the screen
+            this.ctx.clearRect(0, 0, dynamicX, dynamicY)   // transparent black
             for (let i = VT52cols; i < VT52.displayCharBuffer.length; i++) {    // starting at 80 (second line)
                 VT52.displayCharBuffer[i - VT52cols] = VT52.displayCharBuffer[i]
                 VT52.displayColorBuffer[i - VT52cols] = VT52.displayColorBuffer[i]

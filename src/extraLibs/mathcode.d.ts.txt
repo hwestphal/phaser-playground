@@ -17,7 +17,13 @@ declare class VT52 {
     print(text?: string, color?: string): Promise<void>;
     printString(text?: string, color?: string): Promise<void>;
     printChar(charCode: number, charColor?: string): Promise<void>;
-    setCursor(x: number, y: number);
+    setCursor(row: number, col: number);
+    setCursor(row: number, col: number);
+    colorPoint(row: number, col: number, color: string);
+    colorXY(x: number, y: number, color?: string);
+    drawAxisLines();
+    graph(func:Function,color?:string);
+
 }
 
 declare class Draw {
@@ -121,3 +127,13 @@ declare class PlanetCute {
 }
 
 
+declare var Image: {
+    new(width?: number, height?: number): HTMLImageElement;
+};
+declare function setInterval(handler: TimerHandler, timeout?: number, ...arguments: any[]): number;
+declare function clearInterval(handle?: number): void;
+
+declare function setTimeout(handler: TimerHandler, timeout?: number, ...arguments: any[]): number;
+declare function clearTimeout(handle?: number): void;
+
+declare function requestAnimationFrame(callback: FrameRequestCallback): number;
