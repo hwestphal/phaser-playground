@@ -6,6 +6,7 @@ declare namespace Mathcode{
     function Color(x:number,y:number,z:number):V3;
     function Ray(origin: V3, direction: V3):Ray;
     function PlanetCute():PlanetCute;
+    function addObserver(type:'keypress'|'keydown'|'click'|'mousedown',handler:object):Observable;
 }
 
 
@@ -23,8 +24,8 @@ declare class VT52 {
     colorXY(x: number, y: number, color?: string);
     drawAxisLines();
     graph(func:Function,color?:string);
-
 }
+
 
 declare class Draw {
     constructor(width?:number);
@@ -137,3 +138,8 @@ declare function setTimeout(handler: TimerHandler, timeout?: number, ...argument
 declare function clearTimeout(handle?: number): void;
 
 declare function requestAnimationFrame(callback: FrameRequestCallback): number;
+
+declare function addEventListener<K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+declare function addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+declare function removeEventListener<K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+declare function removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;

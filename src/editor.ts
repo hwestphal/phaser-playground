@@ -48,6 +48,7 @@ import mathcode from "./extraLibs/mathcode.d.ts.txt"
 
 import { RuntimeAnimation } from "babylonjs/Animations/runtimeAnimation";
 import { Log } from "./utilities";
+import { Observable } from "./observer";
 
 // let x = JXG         // just to make sure webpack loads them
 // let y = BABYLON
@@ -333,7 +334,7 @@ export class Editor {
             const line = this.editor.getPosition()!.lineNumber
             const col = this.editor.getPosition()!.column;
 
-            console.log(sourceCode)
+            // console.log(sourceCode)
             Log.write({ 'action': 'editorRun', 'datacode': Log.EditorRun, data01:sourceCode, data02:line.toString(), data03:col.toString()})
 
             this.editorCode = output.outputFiles[0].text as string;
@@ -353,13 +354,16 @@ export class Editor {
         code += editorCode + "\r\n"
         code += this.commandCode + "\r\n"
 
-        console.log(code)
+        // console.log(code)
+
+        // wipe any observables from the last run
+        Observable.resetUserObservers()
 
         // eval() is crazy dangerous because it runs in the local context
         // Function() is a bit safer, but not much
 
-        let f = new Function('document',code)
-        f(document)
+        let f = new Function(code)
+        f()
     }
 
 

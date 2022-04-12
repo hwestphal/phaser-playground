@@ -25,6 +25,7 @@ import { tsFS } from './tsFS'
 import { LangString } from './lang'
 import { dragElement } from './split'
 import { Raytracer } from './raytracer'
+import { Observable } from './observer';
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
@@ -90,6 +91,12 @@ export class Main {
             VT52: (): VT52 => {
                 return new VT52()
             },
+
+            addObserver: (type:string, handler:Function) => {
+                Observable.addObserver('user',type,handler)
+            },
+
+
             Draw: (width:number=800): Draw => {
                 console.log('in mathcode')
                 return new Draw(width)
@@ -255,6 +262,15 @@ export class Main {
                         alert(e);
                     }
                 },
+                //// these are the buttons on the Editor
+                stopEditor() {
+                    try {
+                    console.log('clicked STOP')
+                    this.eraseFileExplorer()    // in case it is open (also resets '2D')
+                    Observable.resetUserObservers()
+                    throw 'stop'
+                    } catch(e){}  // we intentionally throwed, no error msg required
+                },
                 submitEditor: (s: string) => {
                 },
 
@@ -273,6 +289,13 @@ export class Main {
 
         /** Attaches the mathcode API to the window object so that you can discover it */
         Main.attachMathCodeAPI();
+
+        /** attaches the kybd and mouse events */
+        // Observable.setupObservables()
+        addEventListener('keydown', (e)=> Observable.notifyObservers('keydown',e))
+        addEventListener('keypress', (e)=> Observable.notifyObservers('keypress',e))
+        addEventListener('mousedown', (e)=> Observable.notifyObservers('mousedown',e))
+        addEventListener('click', (e)=> Observable.notifyObservers('click',e))
 
         // let str = new LangString()
         // str.testGetString()

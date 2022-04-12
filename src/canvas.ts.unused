@@ -1,5 +1,5 @@
 import { V2 } from './v2'
-import { Observable } from './paon'
+import { Observable, Observer } from './paon'
 
 ///////////////////////////////////////////////////////////////////////
 // palette

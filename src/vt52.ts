@@ -1,5 +1,7 @@
+import { Observable} from './observer'
+
+
 // import { Canvas } from "./canvas"
-// import { Observable } from "./paon"
 
 // import { ThinEngine } from "babylonjs/Engines/thinEngine"
 
@@ -166,6 +168,8 @@ type printable = {
 
 export class VT52 {
 
+    observables: Observable
+
     ctx: CanvasRenderingContext2D
 
     // we use statics because the student might restart and restart his program
@@ -219,6 +223,7 @@ export class VT52 {
         }, 32)   // 30 frames a second?
 
 
+        // this.observables = new Observable()
 
         // BabyEngine.addObserver('keydown', (data: KeyboardEvent) => {
         //     this.input(data)
@@ -285,11 +290,18 @@ export class VT52 {
 
     /** position the cursor on the screen */
     setCursor(row: number, col: number) {
+
+        col = Math.floor(col)   // convert to integer
+        row = Math.floor(row)
+
         this.cursorX = row
         this.cursorY = col
     }
 
     colorPoint(col: number, row: number, color: string) {
+
+        col = Math.floor(col)   // convert to integer
+        row = Math.floor(row)
 
         this.ctx.fillStyle = color
         this.ctx.fillRect(row * VT52pixelX, col * VT52pixelY, VT52pixelX, VT52pixelY);
@@ -297,8 +309,8 @@ export class VT52 {
 
     colorXY(x: number, y: number, color: string = 'blue') {
 
-        x += Math.floor(VT52cols / 2)   // remember floor of -5.1 is -6 !!
-        y += Math.floor(VT52rows / 2)
+        x += VT52cols / 2   // remember floor of -5.1 is -6 !!
+        y += VT52rows / 2
 
         this.ctx.fillStyle = color
         this.ctx.fillRect(x * VT52pixelX, y * VT52pixelY, VT52pixelX, VT52pixelY);
@@ -308,7 +320,7 @@ export class VT52 {
         this.ctx.fillStyle = '#D0D0D0'
         let y = ((VT52rows / 2) + .5) * VT52pixelY
         for (let x = 0; x < VT52cols; x++) {  // draw the x-axis at center height
-            console.log(x, y)
+            // console.log(x, y)
             this.ctx.fillRect(x * VT52pixelX, y, VT52pixelX - 4, 1);
         }
         let x = ((VT52cols / 2) + .5) * VT52pixelX
@@ -395,6 +407,26 @@ export class VT52 {
             this.cursorX = 0
         }
     }
+
+
+    // const handleKeys = {
+    //     'KeyW': () => console.log('Up'),
+    //     'KeyA': () => console.log('Left'),
+    //     'KeyS': () => console.log('Down'),
+    //     'KeyD': () => console.log('Right'),
+    //     'default':() => console.log('default'),
+    // };
+
+
+    // addEventListener(type:string,handler:object){
+    //     console.log('got here')
+
+    //     let thisObserver = handler as Observer;  // nothing-burger, just make TS happy
+    //     Observable.addObserver(type,thisObserver,handler)
+    // }
+
+
+
 
 
     // input(data: object) {
