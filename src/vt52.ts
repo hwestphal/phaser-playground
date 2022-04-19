@@ -1,143 +1,7 @@
-import { Observable} from './observer'
+import { Observable } from './observer'
 
-
-// import { Canvas } from "./canvas"
-
-// import { ThinEngine } from "babylonjs/Engines/thinEngine"
-
-// // this implements the different playgrounds for the student
-
-
-
-// /**
-//  * The Product interface declares the operations that all concrete products must
-//  * implement.
-//  */
-// // interface IWorld {
-// //     operation(): string
-// // }
-
-// /** This is the factory, use the concrete classes below (like VT52) */
-// // export abstract class World {   // exports as a type, always use a concrete class like 'VT52'
-// //     height: number = 1024  // height and width in pixels
-// //     width: number = 1280
-// //     canvas: Canvas
-
-// //     constructor(tag: string) {
-// //         this.canvas = new Canvas(tag)
-// //     }
-// // }
-
-// const pixelX = 7
-// const pixelY = 10
-// const rows = 24
-// const cols = 40
-// const vOffset = 10  // correct for characters (not for squares)
-
-
-// export class VT52 extends Canvas {
-//     public buffer: number[]
-//     public cursorX: number = 0
-//     public cursorY: number = 0
-
-
-//     constructor(canvasTag: string = 'canvas') {
-//         super(canvasTag)
-
-//         // width should always be 640.  640 / 80 is 8 pixels across, which defines the character size
-//         console.assert(this.width >= 640, 'expect VT52 canvas to be 640 px wide')
-//         console.assert(this.height >= 480, 'expect VT52 canvas to be 480 px high')
-
-//         this.buffer = Array(rows * cols).fill(0)
-
-//         // hook the keyboard events for this canvas
-//         this.kybdObservable.addObserver('keypress', this.kybdKey, this)
-//         this.testVT52()
-//     }
-
-//     testVT52() {
-//         this.drawScreen()
-//         this.printString('now is the time for all good men to come to the aid of the party.')
-//         this.printString('\nnow is the time for all good men to come to the aid of the party.\n\nWalla Walla Washington.')
-//         this.drawScreen()
-
-//         for (let i = 0; i < 20; i++) {
-//             this.printString(`\ncounting ${i}`)
-//         }
-//         this.drawScreen()
-//         // // subscript to mouse and keyboard events
-//         // this.mouseObservable.addObserver('mousedown', this.mouseSoftKey, this)
-//         // this.animationObservable.addObserver('tick', this.animate, this)
-//         // // and publish when we have a new key (mouse or kybd)
-//         // this.answerReceived = new Observable()
-
-//     }
-//     kybdKey(event: KeyboardEvent) {
-//         console.log('kybdKey', event.key)
-//         this.printChar(event.charCode)
-//         this.drawScreen()
-//     }
-
-//     // full refresh of screen.
-//     drawScreen() {  // 640 / 40 = 16 bits across    480/24 = 20 bits down
-//         this.ctx.font = "12px Courier"
-//         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-
-//         for (let j = 0; j < rows; j++) {
-//             for (let i = 0; i < cols; i++) {
-
-//                 let charCode = this.buffer[j * cols + i]
-//                 if (charCode === 0) {
-//                     this.ctx.fillStyle = 'blue'
-//                     this.ctx.fillRect(i * pixelX + 4, j * pixelY + 6, 2, 2)
-//                 } else {
-//                     // console.log('charCode', j, i, charCode)
-//                     let charString: string = String.fromCharCode(charCode)
-//                     this.ctx.fillStyle = "black"
-//                     this.ctx.fillText(charString, i * pixelX, j * pixelY + vOffset)
-//                 }
-//             }
-//         }
-//     }
-
-//     printString(chars: string) {
-//         chars.split('').forEach((char) => this.printChar(char.charCodeAt(0)))
-//     }
-
-
-//     printChar(charCode: number) {
-//         console.assert(this.cursorX < cols, `cursorX should always be less than ${cols}`)
-//         if (charCode === 10) {  // force CRLF
-//             this.print()
-//         } else {
-//             this.buffer[cols * this.cursorY + this.cursorX] = charCode
-//             this.cursorX += 1   // horizontal cursor position
-//             if (this.cursorX >= cols) {
-//                 this.print()
-//             }
-//         }
-//     }
-
-//     print() {
-//         console.log(`printCRLF at ${this.cursorX},${this.cursorY}`)
-//         if (this.cursorY === (rows - 1)) {
-//             // we are on the bottom line, so scroll up
-//             for (let i = cols; i < this.buffer.length; i++) {
-//                 this.buffer[i - cols] = this.buffer[i]
-//                 this.buffer[i] = 0
-//             }
-//             this.cursorX = 0   // cursorY remains the bottom row
-//         } else {
-//             // just drop the cursor to the next line
-//             this.cursorY += 1
-//             this.cursorX = 0
-//         }
-//     }
-// }
-
-
-
-
+// TODO: add sounds
+// https://www.buildbox.com/13-places-to-find-free-game-sound-effects/
 
 
 // some defines for the VT52
@@ -241,7 +105,7 @@ export class VT52 {
 
         // time to twiddle the cursor.  it is NOT in the display buffer
         let charString = '_'
-        this.ctx.fillStyle = this.cursorOn ? 'white' : 'black'
+        this.ctx.fillStyle = (this.cursorOn || VT52.printBuffer.length > 0) ? 'white' : 'black'
         this.ctx.fillText(charString, this.cursorX * VT52pixelX, this.cursorY * VT52pixelY + VT52vOffset)
         // a call to drawScreen() will erase the cursor, but it reappears quickly
 
@@ -253,6 +117,16 @@ export class VT52 {
     }
 
     printDaemon() {
+
+        let oldCursorSuppress = this.cursorSuppress
+        this.cursorSuppress = true;     // don't want cursors while printing
+
+        // erase the cursor, just to be sure
+        let charString = '_'
+        this.ctx.fillStyle = 'white'
+        this.ctx.fillText(charString, this.cursorX * VT52pixelX, this.cursorY * VT52pixelY + VT52vOffset)
+
+
         if (VT52.printBuffer.length > 0) {
 
             // try several chars per clock tick (but 30 frames, so it can still be slow)
@@ -264,12 +138,8 @@ export class VT52 {
         }
         // refresh the VT52 screen buffer
         this.drawScreen()
+        this.cursorSuppress = oldCursorSuppress
 
-        // } else {
-        //     // there may be a Promise waiting for this to finish
-        //     // if resolve() is not undefined, then fire it and set it undefined
-        //     this.vt52print()
-        // }
     }
 
 
@@ -277,16 +147,41 @@ export class VT52 {
     /////// public methods ////////////////
     ///////////////////////////////////////
 
-    print(text: string = '', color: string = 'black') {
-        this.printString(text, color)  // use printString to load the queue
+    textToString(text: string | number | boolean):string {
+        let stringText:string
+        if (typeof text == 'string')
+            stringText = text
+        if (typeof text == 'number')
+            stringText = text.toString()
+        if (typeof text == 'boolean')
+            stringText = text ? 'true' : 'false'
+        return stringText
+    }
+
+    print(text: string | number | boolean = '', color: string = 'black') {
+        let stringText = this.textToString(text)
+        this.printString(stringText, color)  // use printString to load the queue
         VT52.printBuffer.push({ char: 10, color: color })  // and add a newline
     }
 
     /** print, leave the cursor at the end of the text */
     printString(text: string = '', color: string = 'green') {
+        let stringText = this.textToString(text)
         // process the string into the printBuffer queue, that's all
-        text.split('').forEach((char) => VT52.printBuffer.push({ char: char.charCodeAt(0), color: color }))
+        stringText.split('').forEach((char) => VT52.printBuffer.push({ char: char.charCodeAt(0), color: color }))
+
+        // sanity check - if over 200,000 chars in buffer then we are in an infinite loop
+        if (VT52.printBuffer.length > 200000) {
+            throw ('I think we are in an infinite loop')
+        }
     }
+
+    sound(url?: string) {
+        let pixUrl = "pix/" + url
+        let sound = new Audio(pixUrl)
+        sound.play()
+    }
+
 
     /** position the cursor on the screen */
     setCursor(row: number, col: number) {
@@ -335,7 +230,7 @@ export class VT52 {
         let halfrows = VT52rows / 2
         for (let x = -halfcols; x < halfcols; x += .05) {
             let y = func(x)
-            let drawX = (x + halfcols +.5) * VT52pixelX
+            let drawX = (x + halfcols + .5) * VT52pixelX
             let drawY = (y + halfrows + .5) * VT52pixelY
             // console.log('vt.graph', drawX, drawY)
             this.ctx.fillRect(drawX, drawY, 2, 2);
@@ -369,6 +264,7 @@ export class VT52 {
 
     printChar(charCode: number, charColor: string) {
         console.assert(this.cursorX < VT52cols, `cursorX should always be less than ${VT52cols}`)
+
         if (charCode === 10) {  // force CRLF
             this.printCRLF()
         } else {

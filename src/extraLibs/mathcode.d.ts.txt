@@ -14,8 +14,7 @@ declare namespace Mathcode{
 declare class VT52 {
     constructor(canvasID: string ='canvas');
 
-    print(text: string, color?: string): Promise<void>;
-    print(text?: string, color?: string): Promise<void>;
+    print(text: string|number|boolean, color?: string): Promise<void>;
     printString(text?: string, color?: string): Promise<void>;
     printChar(charCode: number, charColor?: string): Promise<void>;
     setCursor(row: number, col: number);
@@ -24,6 +23,7 @@ declare class VT52 {
     colorXY(x: number, y: number, color?: string);
     drawAxisLines();
     graph(func:Function,color?:string);
+    sound(url:string);
 }
 
 

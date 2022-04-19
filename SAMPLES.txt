@@ -110,6 +110,10 @@ let v = Mathcode.VT52()
 for (let i=0;i<10;i++)
   v.printString('0123456789',i%2?'red':'green')
 
+
+
+
+
 ///////////////////////////////////////////////////////
 
 let p = Mathcode.PlanetCute() as PlanetCute

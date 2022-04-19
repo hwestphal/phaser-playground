@@ -93,8 +93,8 @@ export class OnClickSay {
         msg.voice = this.englishVoices[selectedVoice] // Note: some voices don't support altering params
         msg.lang = this.englishVoices[selectedVoice].lang  // usually en-US or en-GB
         msg.volume = 1 // 0 to 1
-        msg.rate = 1.0 // 0.1 to 1.0
-        msg.pitch = 1 // 0 to 2
+        msg.rate = 0.9 // 0.1 to 1.0
+        msg.pitch = .9 // 0 to 2
         msg.onstart = (event) => {
             this.synthRunning = true
             // console.log(`'Speech Starts ${event}`)
