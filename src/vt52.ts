@@ -58,6 +58,9 @@ export class VT52 {
     halfSeconds = 0  // force cursor right away
     cursorOn = true // used for state of flashing cursor
 
+    board: any   // used for JXG graphing
+    boundingBox: number[]  //[x1,y1,x2,y2]
+
     constructor(canvasID: string = 'canvas') {
 
 
@@ -147,8 +150,8 @@ export class VT52 {
     /////// public methods ////////////////
     ///////////////////////////////////////
 
-    textToString(text: string | number | boolean):string {
-        let stringText:string
+    textToString(text: string | number | boolean): string {
+        let stringText: string
         if (typeof text == 'string')
             stringText = text
         if (typeof text == 'number')
@@ -211,30 +214,15 @@ export class VT52 {
         this.ctx.fillRect(x * VT52pixelX, y * VT52pixelY, VT52pixelX, VT52pixelY);
     }
 
-    drawAxisLines() {
-        this.ctx.fillStyle = '#D0D0D0'
-        let y = ((VT52rows / 2) + .5) * VT52pixelY
-        for (let x = 0; x < VT52cols; x++) {  // draw the x-axis at center height
-            // console.log(x, y)
-            this.ctx.fillRect(x * VT52pixelX, y, VT52pixelX - 4, 1);
-        }
-        let x = ((VT52cols / 2) + .5) * VT52pixelX
-        for (let y = -0; y < VT52rows; y++) {  // draw the y-axis at midscreen
-            this.ctx.fillRect(x, y * VT52pixelY, 1, VT52pixelY - 3);
-        }
+    drawAxisLines(boundingBox:number[] = [-3, 3, 3, -3]) {
+        // just sets up JSXGraph with some reasonable defaults
+        this.boundingBox = boundingBox  // keep for later    [x1,y1,x2,y2]
+        this.board = (window as any).JXG.JSXGraph.initBoard('canvasdiv', { boundingbox:boundingBox , axis: true })
     }
 
-    graph(func: Function, color: string = 'red') {
-        this.ctx.fillStyle = color
-        let halfcols = VT52cols / 2
-        let halfrows = VT52rows / 2
-        for (let x = -halfcols; x < halfcols; x += .05) {
-            let y = func(x)
-            let drawX = (x + halfcols + .5) * VT52pixelX
-            let drawY = (y + halfrows + .5) * VT52pixelY
-            // console.log('vt.graph', drawX, drawY)
-            this.ctx.fillRect(drawX, drawY, 2, 2);
-        }
+    graph(func: Function, color: string = 'blue') {
+        // run graph from boundingbox x1 to x2
+        this.board.create('functiongraph',[func, this.boundingBox[0], this.boundingBox[2]], { axis:true, strokeColor: color })
     }
 
 

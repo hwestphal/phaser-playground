@@ -21,7 +21,7 @@ declare class VT52 {
     setCursor(row: number, col: number);
     colorPoint(row: number, col: number, color: string);
     colorXY(x: number, y: number, color?: string);
-    drawAxisLines();
+    drawAxisLines(boundingBox?:number[]);
     graph(func:Function,color?:string);
     sound(url:string);
 }

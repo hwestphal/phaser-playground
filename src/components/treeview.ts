@@ -1,4 +1,3 @@
-import { stringifyStyle } from '@vue/shared'
 import { createTrue, isConditionalExpression, nodeModuleNameResolver } from 'typescript'
 import { bakeryDispenser, DOM, unicodeHeavyPlus } from '../DOM'
 import { MForms } from '../mforms'

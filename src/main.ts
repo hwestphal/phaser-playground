@@ -7,7 +7,6 @@ import ts from 'typescript';
 
 import { Editor } from "./editor";
 import { OnClickSay } from "./onClickSay"
-import *  as Prism from 'prismjs'
 import { asciiMath, testAsciiMath } from './ASCIIMathML'
 import { Log } from './utilities'
 
@@ -319,7 +318,7 @@ export class Main {
 
 
         Main.onClickSay = new OnClickSay()
-        this.expandCodestr()   // not static, so use 'this'
+        // this.expandCodestr()   // not static, so use 'this'
 
 
 
@@ -404,31 +403,29 @@ export class Main {
         // this.fullscreen.disabled = true;
     }
 
-    expandCodestr() {
-        console.log('about to expand CODESTR blocks')
-        let elements = document.getElementsByClassName('codestr')
-        for (let i = 0; i < elements.length; i++) {   // HTMLElements not iterable ?!?
-            let codestrElement = elements[i] as HTMLElement
-            let codestr = codestrElement.dataset.code
-            console.log('before', codestrElement, codestr)
+    // expandCodestr() {
+    //     console.log('about to expand CODESTR blocks')
+    //     let elements = document.getElementsByClassName('codestr')
+    //     for (let i = 0; i < elements.length; i++) {   // HTMLElements not iterable ?!?
+    //         let codestrElement = elements[i] as HTMLElement
+    //         let codestr = codestrElement.dataset.code
+    //         console.log('before', codestrElement, codestr)
 
-            if (codestr) {      // might be undefined
+    //         if (codestr) {      // might be undefined
 
 
-                // PHP specialcharacters() converts five elements, we must switch them back
-                codestr = codestr.replaceAll(`&amp;`, `&`)
-                codestr = codestr.replaceAll(`&quot;`, `&`)
-                codestr = codestr.replaceAll(`&#039;`, `'`)
-                codestr = codestr.replaceAll(`&lt;`, `<`)
-                codestr = codestr.replaceAll(`&gt;`, `>`)
+    //             // PHP specialcharacters() converts five elements, we must switch them back
+    //             codestr = codestr.replaceAll(`&amp;`, `&`)
+    //             codestr = codestr.replaceAll(`&quot;`, `&`)
+    //             codestr = codestr.replaceAll(`&#039;`, `'`)
+    //             codestr = codestr.replaceAll(`&lt;`, `<`)
+    //             codestr = codestr.replaceAll(`&gt;`, `>`)
 
-                console.log('after', codestr)
+    //             console.log('after', codestr)
 
-                // and write back into the page
-                elements[i].innerHTML = Prism.highlight(codestr, Prism.languages.javascript, 'javascript');
-            }
-        }
-    }
+    //         }
+    //     }
+    // }
 
 }
 

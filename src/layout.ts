@@ -1,5 +1,5 @@
 // layout is jquery and flexbox
-import * as $ from "jquery";
+// import * as $ from "jquery";
 
 
 
@@ -17,7 +17,7 @@ import * as $ from "jquery";
 //     handleSelector: ".splitter",
 //     resizeHeight: false
 //   });
- 
+
 //   $(".panel-top").resizable({
 //     handleSelector: ".splitter-horizontal",
 //     resizeWidth: false
@@ -49,11 +49,11 @@ import * as $ from "jquery";
 //     flex-direction: row;
 //     border: 1px solid silver;
 //     overflow: hidden;
-    
+
 //     /* avoid browser level touch actions */
 //     xtouch-action: none;
 //   }
-  
+
 //   .panel-left {
 //     flex: 0 0 auto;
 //     /* only manually resize */
@@ -65,15 +65,15 @@ import * as $ from "jquery";
 //     background: #838383;
 //     color: white;
 //   }
-  
+
 //   .splitter {
 //     flex: 0 0 auto;
-//     width: 18px;  
+//     width: 18px;
 //     background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/vsizegrip.png) center center no-repeat #535353;
 //     min-height: 200px;
-//     cursor: col-resize;  
+//     cursor: col-resize;
 //   }
-  
+
 //   .panel-right {
 //     flex: 1 1 auto;
 //     /* resizable */
@@ -83,10 +83,10 @@ import * as $ from "jquery";
 //     min-width: 200px;
 //     background: #eee;
 //   }
-  
-  
+
+
 //   /* vertical panel */
-  
+
 //   .panel-container-vertical {
 //     display: flex;
 //     flex-direction: column;
@@ -94,7 +94,7 @@ import * as $ from "jquery";
 //     border: 1px solid silver;
 //     overflow: hidden;
 //   }
-  
+
 //   .panel-top {
 //     flex: 0 0 auto;
 //     /* only manually resize */
@@ -105,14 +105,14 @@ import * as $ from "jquery";
 //     background: #838383;
 //     color: white;
 //   }
-  
+
 //   .splitter-horizontal {
 //     flex: 0 0 auto;
 //     height: 18px;
 //     background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/hsizegrip.png) center center no-repeat #535353;
 //     cursor: row-resize;
 //   }
-  
+
 //   .panel-bottom {
 //     flex: 1 1 auto;
 //     /* resizable */
@@ -120,14 +120,14 @@ import * as $ from "jquery";
 //     min-height: 200px;
 //     background: #eee;
 //   }
-  
+
 //   label {
 //     font-size: 1.2em;
 //     display: block;
 //     font-weight: bold;
 //     margin: 30px 0 10px;
 //   }
-  
+
 //   pre {
 //     margin: 20px;
 //     padding: 10px;

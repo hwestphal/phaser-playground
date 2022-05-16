@@ -6,7 +6,6 @@ import { ITag } from './T'
 // import { OnClickSay } from './onClickSay.ts.movedtoSRC'
 // import { EditorInstance } from './editorInstance'
 // import { LessonFactory, drillMathDispatch } from './drillMath'
-import *  as Prism from 'prismjs'
 import { config } from './T'
 
 import { asciiMath, testAsciiMath } from './ASCIIMathML'

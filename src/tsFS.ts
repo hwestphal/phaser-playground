@@ -5,7 +5,6 @@ import { LZString } from "lzstring.ts"
 import { join, basename, dirname, format, parse, normalize } from "path-browserify"
 import { MForms } from './mforms'
 import { DOM } from "./DOM"
-import { assert } from "@vue/compiler-core"
 
 // the key/name of fileObjects in localstore is 'FileSystem_${fileNumber}'.
 //   representing the file ./     there is also a ../

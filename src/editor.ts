@@ -216,6 +216,7 @@ export class Editor {
             // var ctx = canvas.getContext("2d")!   // this causes WebGL to fail
             // const window.PlanetCute = new PlanetCute()
             // const PlanetCute = window.PlanetCute
+            let VT = Mathcode.VT52()
         `
 
 
@@ -231,7 +232,8 @@ export class Editor {
             // let ctx =  canvas.getContext("2d")  // this causes WebGL to fail
             // const window.PlanetCute = new PlanetCute()
             // const PlanetCute = window.PlanetCute
-            `
+            let VT = Mathcode.VT52()
+`
 
         this.prefixDecl =
             `declare function answer(myAnswer:string|number|number[]):bool;`

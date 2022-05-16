@@ -1,6 +1,6 @@
 // this is a static class, there should only be one instance of it
 
-import { isEmptyObject } from "jquery"
+// import { isEmptyObject } from "jquery"
 import { isConditionalExpression } from "typescript"
 
 

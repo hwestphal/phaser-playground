@@ -1,7 +1,6 @@
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const smp = new SpeedMeasurePlugin()
 
-const { VueLoaderPlugin } = require("vue-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const path = require('path');
@@ -19,10 +18,6 @@ module.exports = smp.wrap({
     mode: "development",
     module: {
         rules: [
-            {
-                test: /\.vue$/,
-                use: "vue-loader"
-            },
             {
                 test: /\.png$/,
                 use: {
@@ -78,7 +73,6 @@ module.exports = smp.wrap({
     },
     plugins: [
         new MonacoWebpackPlugin(),
-        new VueLoaderPlugin(),
         new MiniCssExtractPlugin({
           filename: "[name].css"
         })
