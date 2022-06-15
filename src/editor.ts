@@ -349,6 +349,7 @@ export class Editor {
 
     runEditorCode(editorCode:string) {
 
+
         let code = ''
         code += this.systemDeclJS + "\r\n"
         // but NOT prefixDecl

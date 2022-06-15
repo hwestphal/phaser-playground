@@ -40,6 +40,13 @@ type attributes = {
     // slider
     snapWidth?: number
 
+    // chart
+    chartStyle?: string
+    width?:number
+    colorArray?:string[]
+    labels?:any[]
+
+
 }
 
 
@@ -66,8 +73,11 @@ type Board = {      // JSG.Board - manages properties of a board
     'tapemeasure' | 'text' | 'ticks' | 'tracecurve' | 'transform' |
     'turtle',
 
-        coordinates: any[], attributes?: attributes): JSXElement
-    defaultAxes: any
+    coordinates: any[], attributes?: attributes): JSXElement
+
+
+    defaultAxes: any,
+    unsuspendUpdate(),
 }
 
 

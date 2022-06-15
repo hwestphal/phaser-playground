@@ -1,3 +1,4 @@
+import { hasOnlyExpressionInitializer } from 'typescript'
 import { Observable } from './observer'
 
 // TODO: add sounds
@@ -45,6 +46,9 @@ export class VT52 {
     static displayCharBuffer: number[]
     static displayColorBuffer: string[]
 
+    initialized = false
+    canvasID = 'canvas'
+
     cursorX: number = 0
     cursorY: number = 0
 
@@ -62,15 +66,20 @@ export class VT52 {
     boundingBox: number[]  //[x1,y1,x2,y2]
 
     constructor(canvasID: string = 'canvas') {
+        this.initialized = false
+        this.canvasID = canvasID
+        // we DO NOT initialize right away, because that interferes with Babylon
 
+    }
 
-        let canvas = document.getElementById(canvasID) as HTMLCanvasElement
+    initialize() {
+        let canvas = document.getElementById(this.canvasID) as HTMLCanvasElement
         if (!canvas) {
-            throw `Could not find HTML ID '${canvasID}'`;
+            throw `Could not find HTML ID '${this.canvasID}'`;
         } else {
             this.ctx = canvas.getContext('2d')!
             if (!this.ctx) {
-                throw `Could not find attach canvas context to HTML ID '${canvasID}'`;
+                throw `Could not find attach canvas context to HTML ID '${this.canvasID}'`;
             }
             var scale = 1;
             canvas.width = 1048 * scale;
@@ -89,6 +98,7 @@ export class VT52 {
             this.cursorDaemon();
         }, 32)   // 30 frames a second?
 
+        this.initialized = true
 
         // this.observables = new Observable()
 
@@ -162,6 +172,7 @@ export class VT52 {
     }
 
     print(text: string | number | boolean = '', color: string = 'black') {
+
         let stringText = this.textToString(text)
         this.printString(stringText, color)  // use printString to load the queue
         VT52.printBuffer.push({ char: 10, color: color })  // and add a newline
@@ -169,6 +180,10 @@ export class VT52 {
 
     /** print, leave the cursor at the end of the text */
     printString(text: string = '', color: string = 'green') {
+        if (!this.initialized)
+            this.initialize()
+
+
         let stringText = this.textToString(text)
         // process the string into the printBuffer queue, that's all
         stringText.split('').forEach((char) => VT52.printBuffer.push({ char: char.charCodeAt(0), color: color }))
@@ -214,15 +229,20 @@ export class VT52 {
         this.ctx.fillRect(x * VT52pixelX, y * VT52pixelY, VT52pixelX, VT52pixelY);
     }
 
-    drawAxisLines(boundingBox:number[] = [-3, 3, 3, -3]) {
+    drawAxisLines(boundingBox: number[] = [-3, 3, 3, -3]) {
+        if (!this.initialized)
+            this.initialize()
+
         // just sets up JSXGraph with some reasonable defaults
         this.boundingBox = boundingBox  // keep for later    [x1,y1,x2,y2]
-        this.board = (window as any).JXG.JSXGraph.initBoard('canvasdiv', { boundingbox:boundingBox , axis: true })
+        this.board = (window as any).JXG.JSXGraph.initBoard('canvasdiv', { boundingbox: boundingBox, axis: true })
     }
 
     graph(func: Function, color: string = 'blue') {
+        if (!this.initialized)
+            this.initialize()
         // run graph from boundingbox x1 to x2
-        this.board.create('functiongraph',[func, this.boundingBox[0], this.boundingBox[2]], { axis:true, strokeColor: color })
+        this.board.create('functiongraph', [func, this.boundingBox[0], this.boundingBox[2]], { axis: true, strokeColor: color })
     }
 
 
@@ -251,6 +271,8 @@ export class VT52 {
 
 
     printChar(charCode: number, charColor: string) {
+        if (!this.initialized)
+            this.initialize()
         console.assert(this.cursorX < VT52cols, `cursorX should always be less than ${VT52cols}`)
 
         if (charCode === 10) {  // force CRLF

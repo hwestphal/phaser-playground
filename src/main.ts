@@ -246,7 +246,7 @@ export class Main {
 
                 runInCanvas(paragraph: number, code: string) {   // convert from TS to JS first !!
                     let tsCode = Buffer.from(code, 'base64').toString('binary');
-                    Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: tsCode })
+                    Log.write({ 'action': 'runInCanvas', 'datacode': Log.RunInCanvas, 'step': paragraph, 'activity': 0, 'topic': 0, data01: tsCode })
                     let jsCode = ts.transpile(tsCode);
                     Main.editor.runEditorCode(jsCode)
                 },
