@@ -139,7 +139,8 @@ export class Main {
                     dragElement(document.getElementById("vsplitbar"), "H");
                     dragElement(document.getElementById("hsplitbar"), "V");
 
-                    // hide the Moodle menu ('mathcode - COURSE NAME')
+
+                    // // hide the Moodle menu ('mathcode - COURSE NAME')
                     let header = document.getElementById('page-header')
                     if (header)
                         header.style.display = 'none';
@@ -271,6 +272,7 @@ export class Main {
                     } catch(e){}  // we intentionally throwed, no error msg required
                 },
                 submitEditor: (s: string) => {
+                    console.log('arrived in Submit')
                 },
 
 

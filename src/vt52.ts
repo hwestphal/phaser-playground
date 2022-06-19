@@ -290,6 +290,8 @@ export class VT52 {
 
     printCRLF() {   // basic print+CRLF, NOT EXPOSED TO USER
         // console.log(`printCRLF at ${this.cursorX},${this.cursorY}`)
+        if (!this.initialized)
+            this.initialize()
         if (this.cursorY === (VT52rows - 1)) {
             // we are on the bottom line, so scroll up
 
@@ -311,6 +313,12 @@ export class VT52 {
             // just drop the cursor to the next line
             this.cursorY += 1
             this.cursorX = 0
+        }
+    }
+
+    clear(){        // ugly, but visually easy to understand
+        for (let i=0; i<30;i++){
+            this.print("\n")
         }
     }
 

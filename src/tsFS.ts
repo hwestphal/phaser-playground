@@ -573,6 +573,8 @@ saveFileExplorer(s:string){
 
 // remove fileExplorder from the screen (restore canvas)
 eraseFileExplorer() {
+
+    return;     // TODO: fix this for twollayer canvas
     let canvasDiv = document.getElementById('canvasdiv')
     if (canvasDiv) {
         canvasDiv.innerHTML = ''

@@ -90,10 +90,20 @@
             </div>
             <div id="editor"></div>
             <div id="hseparator"></div>
-            <div id="canvasdiv">
+
+            <!-- two canvas, one above the other -->
+            <div id="canvasdiv" style="position: relative;">
+                <canvas id="canvas3d"
+                  style="position: absolute; left: 0; top: 0; z-index: 0;" height="1280" width="768" touch-action="none"></canvas>
+                <canvas id="canvas"
+                  style="position: absolute; left: 0; top: 0; z-index: 1;" height="1280" width="768" touch-action="none"></canvas>
+               </div>
+
+
+            <!--div id="canvasdiv">
                 <canvas id="canvas" height="1280" width="768" touch-action="none">
                 </canvas></div>
-        </div>
+        </div-->
     </div>
 
     <script>

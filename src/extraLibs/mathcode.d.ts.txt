@@ -24,6 +24,7 @@ declare class VT52 {
     drawAxisLines(boundingBox?:number[]);
     graph(func:Function,color?:string);
     sound(url:string);
+    clear();
 }
 
 

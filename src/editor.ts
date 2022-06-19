@@ -213,9 +213,11 @@ export class Editor {
             const BABYLON = window.BABYLON
             // let _canvas = document.getElementById("canvas") as HTMLCanvasElement
             let canvas = document.getElementById("canvas") as HTMLCanvasElement
+            let canvas3d = document.getElementById("canvas3d") as HTMLCanvasElement
             // var ctx = canvas.getContext("2d")!   // this causes WebGL to fail
             // const window.PlanetCute = new PlanetCute()
             // const PlanetCute = window.PlanetCute
+            const engine = new BABYLON.Engine(canvas3d, true);
             let VT = Mathcode.VT52()
         `
 
@@ -229,9 +231,11 @@ export class Editor {
             const BABYLON = window.BABYLON
             // let _canvas = document.getElementById("canvas")
             let canvas = document.getElementById("canvas")
+            let canvas3d = document.getElementById("canvas3d")
             // let ctx =  canvas.getContext("2d")  // this causes WebGL to fail
             // const window.PlanetCute = new PlanetCute()
             // const PlanetCute = window.PlanetCute
+            const engine = new BABYLON.Engine(canvas3d, true);
             let VT = Mathcode.VT52()
 `
 
