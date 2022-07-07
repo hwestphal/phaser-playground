@@ -11,7 +11,7 @@ import { asciiMath, testAsciiMath } from './ASCIIMathML'
 import { Log } from './utilities'
 
 import { VT52 } from './vt52'
-import {Draw,V3,Ray} from './draw'
+import { Draw, V3, Ray } from './draw'
 import { PlanetCute } from "./planetcute";
 
 
@@ -91,28 +91,28 @@ export class Main {
                 return new VT52()
             },
 
-            addObserver: (type:string, handler:Function) => {
-                Observable.addObserver('user',type,handler)
+            addObserver: (type: string, handler: Function) => {
+                Observable.addObserver('user', type, handler)
             },
 
 
-            Draw: (width:number=800): Draw => {
+            Draw: (width: number = 800): Draw => {
                 console.log('in mathcode')
                 return new Draw(width)
             },
-            V3: (x:number,y:number,z:number): V3 => {
-                return new V3(x,y,z)
+            V3: (x: number, y: number, z: number): V3 => {
+                return new V3(x, y, z)
             },
             // Point3 and Color are just aliases for V3
-            Point3: (x:number,y:number,z:number): V3 => {
-                return new V3(x,y,z)
+            Point3: (x: number, y: number, z: number): V3 => {
+                return new V3(x, y, z)
             },
-            Color: (x:number,y:number,z:number): V3 => {
-                return new V3(x,y,z)
+            Color: (x: number, y: number, z: number): V3 => {
+                return new V3(x, y, z)
             },
 
-            Ray: (origin:V3,direction:V3): Ray => {
-                return new Ray(origin,direction)
+            Ray: (origin: V3, direction: V3): Ray => {
+                return new Ray(origin, direction)
             },
             PlanetCute: (): PlanetCute => {
                 return new PlanetCute()
@@ -134,10 +134,15 @@ export class Main {
                     // testAsciiMath()  // needs element 'testmath'
 
                     // attach the dragger
+                    let v = document.getElementById("vsplitbar")
+                    if (v) {
+                        dragElement(document.getElementById("vsplitbar"), "H");
+                    }
 
-                    console.log("vsplitbar",document.getElementById("vsplitbar"))
-                    dragElement(document.getElementById("vsplitbar"), "H");
-                    dragElement(document.getElementById("hsplitbar"), "V");
+                    let h = document.getElementById("hsplitbar")
+                    if (h) {
+                        dragElement(document.getElementById("hsplitbar"), "V");
+                    }
 
 
                     // // hide the Moodle menu ('mathcode - COURSE NAME')
@@ -146,6 +151,26 @@ export class Main {
                         header.style.display = 'none';
                     else
                         console.error('could not find page-header')
+
+                    let header2 = document.getElementsByClassName('secondary-navigation')
+                    console.log('header 2', header2)
+                    for (let item of header2) {
+                        // console.log(item);
+                        (item as HTMLDivElement).style.display = 'none'
+                    }
+
+
+                    // this gets rid of some of the wasted space at the top
+                    // document.getElementById("topofscroll").style.marginTop = "0px";
+                    // document.getElementById("topofscroll").style.paddingTop = "0px";
+
+                    document.getElementById("page").style.marginTop = "5px";  // leave a bit
+
+
+                    // if (header2)
+                    //     header2.style.display = 'none';
+                    // else
+                    //     console.error('could not find secondary header')
 
 
                 },
@@ -170,12 +195,27 @@ export class Main {
                 },
 
                 // utility to copy contents of a ID to the clipboard
-                copyToClipboard: (inputID:string) => {
+                copyToClipboard: (inputID: string) => {
                     let txt = document.getElementById(inputID) as HTMLFormElement
                     txt.select()  // won't work on tablet
                     navigator.clipboard.writeText(txt.value)
-                    console.log(`%ccopied '${txt.value}' to clipboard`,'background-color:#ffE0E0;')
+                    console.log(`%ccopied '${txt.value}' to clipboard`, 'background-color:#ffE0E0;')
                 },
+
+
+                // utility to copy contents of a ID to the clipboard
+                popquizSubmit: (inputID: string) => {
+                    // pick up the popquiz value and update the form before submit
+                    let id = 'a' + inputID + 1
+                    let txt = document.getElementById(id) as HTMLFormElement
+                    if (txt !== null) {
+                        console.log(`%cpopquiz '${txt.value}'`, 'background-color:#ffE0E0;')
+                    } else {
+                        console.log(`%cpopquiz - could not find ${id} '`, 'background-color:#ffE0E0;')
+
+                    }
+                },
+
 
                 //////// these functions are for the file explorer
                 refreshFileExplorer: (n: number) => {
@@ -265,11 +305,11 @@ export class Main {
                 //// these are the buttons on the Editor
                 stopEditor() {
                     try {
-                    console.log('clicked STOP')
-                    this.eraseFileExplorer()    // in case it is open (also resets '2D')
-                    Observable.resetUserObservers()
-                    throw 'stop'
-                    } catch(e){}  // we intentionally throwed, no error msg required
+                        console.log('clicked STOP')
+                        this.eraseFileExplorer()    // in case it is open (also resets '2D')
+                        Observable.resetUserObservers()
+                        throw 'stop'
+                    } catch (e) { }  // we intentionally throwed, no error msg required
                 },
                 submitEditor: (s: string) => {
                     console.log('arrived in Submit')
@@ -293,10 +333,10 @@ export class Main {
 
         /** attaches the kybd and mouse events */
         // Observable.setupObservables()
-        addEventListener('keydown', (e)=> Observable.notifyObservers('keydown',e))
-        addEventListener('keypress', (e)=> Observable.notifyObservers('keypress',e))
-        addEventListener('mousedown', (e)=> Observable.notifyObservers('mousedown',e))
-        addEventListener('click', (e)=> Observable.notifyObservers('click',e))
+        addEventListener('keydown', (e) => Observable.notifyObservers('keydown', e))
+        addEventListener('keypress', (e) => Observable.notifyObservers('keypress', e))
+        addEventListener('mousedown', (e) => Observable.notifyObservers('mousedown', e))
+        addEventListener('click', (e) => Observable.notifyObservers('click', e))
 
         // let str = new LangString()
         // str.testGetString()
