@@ -1,41 +1,52 @@
 export function testMindMap() {
     let sourceCode =
-        `- Programming
-something I love
-  - Web Development
-    - Front-end development
-(stuff for the browsers)
-      - Languages
-        - HTML
-        - CSS
-        - JavaScript
-      - Tools
-        - Bootstrap
-    - Back-end development
-(stuff for the server)
-      - Languages
-        - PHP
-        - Python
-      - Frameworks
-        - Django
-        - Symphony
-  - Desktop development,
-which is something pretty hard that
-most web developers can't do
-ahsdlkjhaslkdhjaslkdjhasd
-aslñdjhalskdjhalskdjhaskldj
-    - Something
-    - Something
-  - Mobile development
-    - Android
-    - iOS
-    - Some other stuff
-no one cares about
-    - LOLWAT
-`;
+`- Test MindMap
+  - Test2 Start with Programming
+   - Hello World, Three Ways
+   - JavaScript and TypeScript
+   - Variables, Strings, Comments
+   - Numbers and Arithmetic
+   - Booleans and Conditions
+   - Loops and Blocks
+  - Pong with VT52 Graphics
+   - Quick Review of JS
+   - Bouncing
+   - Functions
+   - Animation
+   - Moving the Pong Paddle
+   - Keeping Score
+   - Adding Sounds
+   - Pong !
+  - Flappy Birds
+   - Scrolling
+   - Random Numbers
+   - Finish the Game Yourself
+  - Finding Prime Numbers
+   - Array Basics
+   - Breakout
+   - The Sieve of Eratosthenes
+   - Mutability
+   - Arrays of Arrays
+   - Sorting an Array
+   - Factors, Prime Factors, LCM
+  - Space Invaders
+   - Object Basics
+   - Different Invaders, Same Code
+   - Looping Down the Screen
+   - Adding a Cannon
+   - Sounds and Scoreboard
+   - Review, What Comes Next
+  - Scratchpad for old Steps
+   - Scratchpad for old Paragraphs
+  - Snake Game
+   - Write a Snake Game
+  - Towers of Hanoi
+ - `;
 
     // let items = parseList(sourceCode)
-    let pm = new mindmap(sourceCode, 'mapcanvas')
+    console.log('%cTESTING mindmap', 'background-color:yellow;', sourceCode, 'canvas')
+
+    let pm = new mindmap(sourceCode, 'canvas')
     pm.drawMindMap()
 }
 
@@ -51,12 +62,12 @@ let labelPaddingRight = 10;
 let DEBUG = false;
 
 let textFilter = { label: 'Text Filter (regex)', type: 'text', val: "." }
-let fontSize = { label: "Font size", model: "fontSize", min: 5, max: 50, val: 13 }
-let connectorWidth = { label: 'Connector width', model: "connectorWidth", min: 20, max: 100, val: 65 }
-let connectorSteepness = { label: 'Connector steepness', min: 0.1, max: 1, step: 0.01, val: 0.65 }
-let connectorLineWidth = { label: 'Line width', min: 0.5, max: 10, step: 0.25, val: 4.5 }
-let nodeMarginTop = { label: ' Top margin', min: 0, max: 50, val: 5 }
-let nodeMarginBottom = { label: ' Bottom margin', min: 0, max: 50, val: 5 }
+let fontSize = { label: "Font size", model: "fontSize", min: 5, max: 50, val: 16 }
+let connectorWidth = { label: 'Connector width', model: "connectorWidth", min: 20, max: 100, val: 50 }
+let connectorSteepness = { label: 'Connector steepness', min: 0.1, max: 1, step: 0.01, val: 0.7 }
+let connectorLineWidth = { label: 'Line width', min: 0.5, max: 10, step: 0.25, val: 2.0 }
+let nodeMarginTop = { label: ' Top margin', min: 0, max: 50, val: 1 }
+let nodeMarginBottom = { label: ' Bottom margin', min: 0, max: 50, val: 1 }
 let useGrayscale = { label: 'Use grayscale', type: 'boolean', val: false }
 
 
@@ -324,7 +335,7 @@ export class mindmap {
         let currentTree = this.parseObjectBranch(parsed[0], true);
         currentTree = currentTree.children[0]
         currentTree.isRoot = true;
-        console.log('currentTree', currentTree)
+        // console.log('currentTree', currentTree)
         this.regenerateDiagram(currentTree);
     }
 
@@ -354,8 +365,8 @@ export class mindmap {
                 let beautifulDrawing = currentTree.draw();
 
                 // Resize canvas to the size of the map plus some margin
-                canvas.width = beautifulDrawing.width + 25;
-                canvas.height = beautifulDrawing.height + 25;
+                canvas.width = 2000 //beautifulDrawing.width + 25;
+                canvas.height = 2000 //beautifulDrawing.height + 25;
 
                 console.log("Canvas", canvas.width, canvas.height);
 
@@ -365,7 +376,7 @@ export class mindmap {
             }
         }
         else
-            console.error('no Canvas')
+            console.error('no Canvas: ' + this.canvasID)
     }
 }
 
@@ -423,7 +434,7 @@ function parseList(text: string): item[] {
             // to one with lower depth than current item
             while (currentItemDepth <= currentParentDepth) {
 
-                currentParent = currentParent.parent ?? currentParent  // up as high as we can
+                currentParent = currentParent.parent || currentParent  // up as high as we can
                 currentParentDepth = currentParent.depth
             }
 

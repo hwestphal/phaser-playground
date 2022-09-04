@@ -25,6 +25,7 @@ import { LangString } from './lang'
 import { dragElement } from './split'
 import { Raytracer } from './raytracer'
 import { Observable } from './observer';
+import { mindmap, testMindMap } from './mindmap';
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
@@ -123,7 +124,7 @@ export class Main {
 
 
             (window as any).MathcodeAPI = {
-                version: '1.0',
+                version: '1.1',
 
                 DOM: new DOMclass(),   // exposes the DOM utilities
 
@@ -132,6 +133,7 @@ export class Main {
                     console.log('courseInfo(raw): ', courseInfo)
 
                     // testAsciiMath()  // needs element 'testmath'
+                    // testMindMap()  // needs element 'canvas'
 
                     // attach the dragger
                     let v = document.getElementById("vsplitbar")
@@ -245,6 +247,14 @@ export class Main {
                     fs.trashfileFileExplorer(parseInt(s))
                 },
 
+                mindmap:(content: string, canvas: string) => {
+                    console.log('drawing mindmap',content, canvas)
+                    let pm = new mindmap(content, canvas)
+                    pm.drawMindMap()
+                    // testMindMap()
+                },
+
+
                 // // expose the Split library...
                 // Split:(a:any,b:any)=>{
                 //     console.log(window,a,b);
@@ -311,11 +321,9 @@ export class Main {
                         throw 'stop'
                     } catch (e) { }  // we intentionally throwed, no error msg required
                 },
-                submitEditor: (s: string) => {
+                submitEditor (s: string)  {
                     console.log('arrived in Submit')
                 },
-
-
 
             }
     }
