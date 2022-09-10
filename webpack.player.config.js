@@ -1,12 +1,9 @@
-const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
-const smp = new SpeedMeasurePlugin()
-
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const path = require('path');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
-module.exports = smp.wrap({
+module.exports = {
     // devtool: 'inline-source-map',
     devtool: 'eval-source-map',
 
@@ -50,18 +47,14 @@ module.exports = smp.wrap({
             // { test: /phaser-split\.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["Phaser"] } } },
             // { test: /p2\.js$/, exclude: '/node_modules/', use: { loader: "expose-loader", options: { exposes: ["p2"] } } },
 
-        ]
+        ],
+
+        // this line gets rid of a harmless error message 'cannot resolve perf_hooks'
+        noParse:[require.resolve('typescript/lib/typescript.js')],
     },
 
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],
-        alias: {
-            // this isn't technically needed, since the default `vue` entry for bundlers
-            // is a simple `export * from '@vue/runtime-dom`. However having this
-            // extra re-export somehow causes webpack to always invalidate the module
-            // on the first HMR update and causes the page to reload.
-            vue: "@vue/runtime-dom"
-        }
     },
 
 
@@ -86,4 +79,4 @@ module.exports = smp.wrap({
         injectClient: false,
         disableHostCheck: true
         }
-})
+}
