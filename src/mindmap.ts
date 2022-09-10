@@ -63,11 +63,11 @@ let DEBUG = false;
 
 let textFilter = { label: 'Text Filter (regex)', type: 'text', val: "." }
 let fontSize = { label: "Font size", model: "fontSize", min: 5, max: 50, val: 16 }
-let connectorWidth = { label: 'Connector width', model: "connectorWidth", min: 20, max: 100, val: 50 }
+let connectorWidth = { label: 'Connector width', model: "connectorWidth", min: 20, max: 100, val: 80 }
 let connectorSteepness = { label: 'Connector steepness', min: 0.1, max: 1, step: 0.01, val: 0.7 }
 let connectorLineWidth = { label: 'Line width', min: 0.5, max: 10, step: 0.25, val: 2.0 }
-let nodeMarginTop = { label: ' Top margin', min: 0, max: 50, val: 1 }
-let nodeMarginBottom = { label: ' Bottom margin', min: 0, max: 50, val: 1 }
+let nodeMarginTop = { label: ' Top margin', min: 0, max: 50, val: 0 }
+let nodeMarginBottom = { label: ' Bottom margin', min: 0, max: 50, val: 0 }
 let useGrayscale = { label: 'Use grayscale', type: 'boolean', val: false }
 
 
@@ -366,7 +366,7 @@ export class mindmap {
 
                 // Resize canvas to the size of the map plus some margin
                 canvas.width = 2000 //beautifulDrawing.width + 25;
-                canvas.height = 2000 //beautifulDrawing.height + 25;
+                canvas.height = beautifulDrawing.height + 25;
 
                 console.log("Canvas", canvas.width, canvas.height);
 
