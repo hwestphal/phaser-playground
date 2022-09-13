@@ -258,7 +258,8 @@ export class Editor {
         this.editor = monaco.editor.create(this.el, {
             automaticLayout: true,
             language: "typescript",
-            scrollBeyondLastLine: false,
+            scrollBeyondLastLine: true,
+
             value: window.localStorage.getItem(this.storageKey) || this.initFile,
             minimap: {
                 enabled: false

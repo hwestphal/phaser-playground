@@ -146,35 +146,6 @@ export class Main {
                         dragElement(document.getElementById("hsplitbar"), "V");
                     }
 
-
-                    // // hide the Moodle menu ('mathcode - COURSE NAME')
-                    let header = document.getElementById('page-header')
-                    if (header)
-                        header.style.display = 'none';
-                    else
-                        console.error('could not find page-header')
-
-                    let header2 = document.getElementsByClassName('secondary-navigation')
-                    console.log('header 2', header2)
-                    for (let item of header2) {
-                        // console.log(item);
-                        (item as HTMLDivElement).style.display = 'none'
-                    }
-
-
-                    // this gets rid of some of the wasted space at the top
-                    // document.getElementById("topofscroll").style.marginTop = "0px";
-                    // document.getElementById("topofscroll").style.paddingTop = "0px";
-
-                    document.getElementById("page").style.marginTop = "5px";  // leave a bit
-
-
-                    // if (header2)
-                    //     header2.style.display = 'none';
-                    // else
-                    //     console.error('could not find secondary header')
-
-
                 },
 
                 // MathcodeAPI.onClickSay("u00051",voice,"step","activity","topic")
@@ -290,13 +261,13 @@ export class Main {
                 },
 
                 copyToEditor(paragraph: number, code: string) {
-                    let codeString = Buffer.from(code, 'base64').toString('binary');
+                    let codeString = window.atob(code)
                     Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: code })
                     Main.editor.editor.setValue(codeString)
                 },
 
                 runInCanvas(paragraph: number, code: string) {   // convert from TS to JS first !!
-                    let tsCode = Buffer.from(code, 'base64').toString('binary');
+                    let tsCode = window.atob(code)
                     Log.write({ 'action': 'runInCanvas', 'datacode': Log.RunInCanvas, 'step': paragraph, 'activity': 0, 'topic': 0, data01: tsCode })
                     let jsCode = ts.transpile(tsCode);
                     Main.editor.runEditorCode(jsCode)
