@@ -48,14 +48,14 @@ export function dragElement(element: HTMLElement, direction: 'H' | 'V') {
 
 
     function onMouseMove(e: any) {
-        console.log("split: mouse move: " + e.clientX, direction);
+        // console.log("split: mouse move: " + e.clientX, direction);
 
         let delta = {
             x: e.clientX - mouseDown.e.clientX,
             y: e.clientY - mouseDown.e.clientY
         };
 
-        console.log('delta',delta)
+        // console.log('delta',delta)
 
         let lesson = document.getElementById("lesson");
         let editor = document.getElementById("editor");

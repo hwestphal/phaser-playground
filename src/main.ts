@@ -136,16 +136,16 @@ export class Main {
                     // testMindMap()  // needs element 'canvas'
 
                     // attach the dragger
+                    let h = document.getElementById("hsplitbar")
+
+                    if (h) {
+                        dragElement(h, "V");
+                    }
+
                     let v = document.getElementById("vsplitbar")
                     if (v) {
-                        dragElement(document.getElementById("vsplitbar"), "H");
-                    }
-
-                    let h = document.getElementById("hsplitbar")
-                    if (h) {
-                        dragElement(document.getElementById("hsplitbar"), "V");
-                    }
-
+                        dragElement(v, "H");
+                    } 
                 },
 
                 // MathcodeAPI.onClickSay("u00051",voice,"step","activity","topic")
@@ -218,8 +218,8 @@ export class Main {
                     fs.trashfileFileExplorer(parseInt(s))
                 },
 
-                mindmap:(content: string, canvas: string) => {
-                    console.log('drawing mindmap',content, canvas)
+                mindmap: (content: string, canvas: string) => {
+                    console.log('drawing mindmap', content, canvas)
                     let pm = new mindmap(content, canvas)
                     pm.drawMindMap()
                     // testMindMap()
@@ -292,7 +292,7 @@ export class Main {
                         throw 'stop'
                     } catch (e) { }  // we intentionally throwed, no error msg required
                 },
-                submitEditor (s: string)  {
+                submitEditor(s: string) {
                     console.log('arrived in Submit')
                 },
 

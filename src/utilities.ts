@@ -41,7 +41,9 @@ export class Log {
     static write(payload: HostMsg) {
 
         console.log('in writeMoodleLog', payload)
-
+        console.error('rewrite this')
+        return;
+        
         // a bit of a hack.  sometimes we don't know the step, activity, topic
         // (for example, working in the editor and running code)
         // but we want to be able to query the log for all records

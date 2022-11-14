@@ -39,6 +39,7 @@ type attributes = {
 
     // slider
     snapWidth?: number
+    withlabel?:boolean
 
     // chart
     chartStyle?: string
@@ -46,7 +47,9 @@ type attributes = {
     colorArray?:string[]
     labels?:any[]
 
-
+    // curve
+    curveType?:string
+    
 }
 
 
@@ -73,19 +76,14 @@ type Board = {      // JSG.Board - manages properties of a board
     'tapemeasure' | 'text' | 'ticks' | 'tracecurve' | 'transform' |
     'turtle',
 
-    coordinates: any[], attributes?: attributes): JSXElement
-
+    coordinates: any[], attributes?: attributes): JSXElement,
+    options: any,
 
     defaultAxes: any,
     unsuspendUpdate(),
 }
 
 
-type math ={
-
-    brd1.create('text',[-6,-3,function(){ return 'Sum='+(JXG.Math.Numerics.riemannsum(f,s.Value(),'left',a.Value(),b.Value())).toFixed(4); }]);
-
-}
 
 declare namespace JXG {
     export class JSXGraph {
