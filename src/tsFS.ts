@@ -547,7 +547,7 @@ fileExplorer(dirNum: number, isModeSave: boolean = false, errMsg: string = 'an e
     HTML += `\n      </table>`
     HTML += `\n  </div>`
 
-    let canvasDiv = document.getElementById('canvasdiv')
+    let canvasDiv = document.getElementById('jxgbox')
     if (canvasDiv) {
         canvasDiv.innerHTML = HTML
     }
@@ -575,7 +575,7 @@ saveFileExplorer(s:string){
 eraseFileExplorer() {
 
     return;     // TODO: fix this for twollayer canvas
-    let canvasDiv = document.getElementById('canvasdiv')
+    let canvasDiv = document.getElementById('jxgbox')
     if (canvasDiv) {
         canvasDiv.innerHTML = ''
         // add back the canvas element that was inside

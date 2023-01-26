@@ -20,11 +20,11 @@ export function dragElement(element: HTMLElement, direction: 'H' | 'V') {
 
 
     element.onmousedown = (e: any) => {
-        console.log("split: mouse down: " + e.clientX);
+        // console.log("split: mouse down: " + e.clientX);
         let lesson = document.getElementById("lesson");
         let editor = document.getElementById("editor");
         let canvas = document.getElementById("canvas") as HTMLCanvasElement
-        console.log('lesson, editor, canvas', lesson, editor, canvas)
+        // console.log('lesson, editor, canvas', lesson, editor, canvas)
 
         mouseDown = {
             e: e,
@@ -37,11 +37,11 @@ export function dragElement(element: HTMLElement, direction: 'H' | 'V') {
             canvasHeight: canvas.offsetHeight,
         };
 
-        console.log('mouseDown', mouseDown)
+        // console.log('mouseDown', mouseDown)
 
         document.onmousemove = onMouseMove
         document.onmouseup = () => {
-            console.log("mouse up")
+            // console.log("mouse up")
             document.onmousemove = document.onmouseup = null;
         }
     }

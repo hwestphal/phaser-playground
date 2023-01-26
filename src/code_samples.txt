@@ -3,7 +3,7 @@ const JXG = (window as any).JXG
 
 const canvas = document.getElementById("canvas")!; // Get the canvas element
 
-let board = JXG.JSXGraph.initBoard('canvasdiv', { boundingbox: [-10, 10, 10, -10], axis: true })
+let board = JXG.JSXGraph.initBoard('jxgbox', { boundingbox: [-10, 10, 10, -10], axis: true })
 let p = board.create('point', [-3, 1]);
 let p2 = board.create('point', [3, 1], { name: 'X', size: 5 });
 

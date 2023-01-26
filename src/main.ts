@@ -145,7 +145,7 @@ export class Main {
                     let v = document.getElementById("vsplitbar")
                     if (v) {
                         dragElement(v, "H");
-                    } 
+                    }
                 },
 
                 // MathcodeAPI.onClickSay("u00051",voice,"step","activity","topic")
@@ -353,8 +353,12 @@ export class Main {
         // monaco.editor.createModel(lib_baby, 'typescript', monaco.Uri.parse(babyUri));
 
         this.editorDiv = document.getElementById("editor") as HTMLDivElement
+        console.log('%clooking for editor div element', 'background-color:blue;color:white;')
         if (this.editorDiv) {  // if page has an editor div
+            console.log('%cSTARTING EDITOR', 'background-color:blue;color:white;')
+
             Main.editor = new Editor(this.editorDiv, this.template);  // static !!
+            console.log('%c seems to have started', 'background-color:blue;color:white;')
 
             // this.game = undefined //new GameLauncher(800, 600);
             this.download = document.getElementById("download") as HTMLButtonElement;
@@ -403,8 +407,9 @@ export class Main {
             //     // this.pause.innerText = paused ? "Pause" : "Continue";
             //     // this.fullscreen.disabled = !paused;
             // };
+        } else {
+            console.log('%cdid not find editor div element', 'background-color:blue;color:white;')
         }
-
         // this.fullscreen.onclick = () => this.game.fullScreen = true;
 
 

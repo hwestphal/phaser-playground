@@ -123,7 +123,7 @@ export class Editor {
     commandCode = ''
 
     constructor(el: HTMLElement, initFile: string) {
-        // console.log('NOT STARTING EDITOR')
+        // console.log('%cSTARTING EDITOR','background-color:blue;color:white;')
         // return;
         this.el = el
         this.initFile = initFile
@@ -213,12 +213,12 @@ export class Editor {
             const BABYLON = window.BABYLON
             // let _canvas = document.getElementById("canvas") as HTMLCanvasElement
             let canvas = document.getElementById("canvas") as HTMLCanvasElement
-            let canvas2D = document.getElementById("canvas2D") as HTMLCanvasElement
-            let canvas3D = document.getElementById("canvas3D") as HTMLCanvasElement
+            // let canvas2D = document.getElementById("canvas2D") as HTMLCanvasElement
+            // let canvas3D = document.getElementById("canvas3D") as HTMLCanvasElement
             // var ctx = canvas.getContext("2d")!   // this causes WebGL to fail
             // const window.PlanetCute = new PlanetCute()
             // const PlanetCute = window.PlanetCute
-            const engine = new BABYLON.Engine(canvas3D, true);
+            const engine = new BABYLON.Engine(canvas, true);
             let VT = Mathcode.VT52()
         `
 
@@ -232,12 +232,12 @@ export class Editor {
             const BABYLON = window.BABYLON
             // let _canvas = document.getElementById("canvas")
             let canvas = document.getElementById("canvas")
-            let canvas2D = document.getElementById("canvas2D")
-            let canvas3D = document.getElementById("canvas3D")
+            // let canvas2D = document.getElementById("canvas2D")
+            // let canvas3D = document.getElementById("canvas3D")
             // let ctx =  canvas.getContext("2d")  // this causes WebGL to fail
             // const window.PlanetCute = new PlanetCute()
             // const PlanetCute = window.PlanetCute
-            const engine = new BABYLON.Engine(canvas3D, true);
+            const engine = new BABYLON.Engine(canvas, true);
             let VT = Mathcode.VT52()
 `
 
@@ -317,7 +317,7 @@ export class Editor {
 
     async transpile(scope: any = {}) {
         // return;
-        // console.log('in transpile()', scope)
+        console.log('in transpile()', scope)
         const names = Object.keys(scope);
         const args = names.map((key) => scope[key]);
         const model = this.editor.getModel();   // typescript needs a typeguard to be happy

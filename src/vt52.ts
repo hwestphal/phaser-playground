@@ -235,7 +235,7 @@ export class VT52 {
 
         // just sets up JSXGraph with some reasonable defaults
         this.boundingBox = boundingBox  // keep for later    [x1,y1,x2,y2]
-        this.board = (window as any).JXG.JSXGraph.initBoard('canvasdiv', { boundingbox: boundingBox, axis: true })
+        this.board = (window as any).JXG.JSXGraph.initBoard('jxgbox', { boundingbox: boundingBox, axis: true })
     }
 
     graph(func: Function, color: string = 'blue') {
