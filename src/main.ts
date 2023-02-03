@@ -148,6 +148,11 @@ export class Main {
                     }
                 },
 
+
+                logAnswerToQuestion: (paragraphUniq:string,bakery0:string)=>{
+                    console.log('in logAnswerToQuestion()');
+                },
+
                 // MathcodeAPI.onClickSay("u00051",voice,"step","activity","topic")
                 onClickSay: (utterID: string, voiceN: number, step: number, activity: number, topic: number) => {
                     // console.log(`onClickSay: (utterID: ${utterID}, voiceN: ${voiceN}, step: ${step}, activity: ${activity}, topic: ${topic})`)

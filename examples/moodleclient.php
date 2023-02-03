@@ -34,7 +34,7 @@
 // tb:  or call http://localhost/moodle/login/token.php?username=tberend&password=miche11e&service=moodle_mobile_app
 
 
-      var token = '760ed1fbee1280b887e6628691cca74e'; // tom berend's token
+      var token = 'f83604cf102d205dd378a65f5151fd69'; // tom berend's token
 
 
       let functionname = 'mod_mathcode_view_page';
