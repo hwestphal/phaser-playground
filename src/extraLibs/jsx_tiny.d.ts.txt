@@ -13,10 +13,14 @@ type attributes = {
     strokeColor?: string
     strokeWidth?: number
     strokeColorOpacity?: number   // between 0 and 1
-    dash?: number            // 0:solid, 1:dotted, 2-5: short,medium,long dashes
+    dash?: string            // 0:solid, 1:dotted, 2-5: short,medium,long dashes
     highlightStrokeColor?: string  // for mouse-over
     traced?: boolean
     ticks?: object
+
+    // circle
+     keepAspectRatio?:boolean
+     method?:string
 
     // polygon
     fillColor?: string
@@ -68,7 +72,7 @@ type Board = {      // JSG.Board - manages properties of a board
     'circumcircle' | 'circumcirclearc' | 'circumcirclesector' | 'conic' |
     'curve' | 'curveddifference' | 'curveintersection' | 'curveunion' |
     'ellipse' | 'functiongraph' | 'glider' | 'grid' | 'group' |
-    'hatch' | 'hyperbola' | 'image' | 'input' | 'integral' | 'intersection' |
+    'hatch' | 'hyperbola' | 'image' | 'input' | 'integral' | 'intersection' | 'otherintersection' |
     'line' | 'metapostspline' | 'midpoint' | 'mirrorelement' | 'normal' |
     'perpendicular' | 'plot' | 'point' | 'polygon' | 'polygonalchain' |
     'regularpolygon' | 'reflection' | 'riemannsum' | 'sector' | 'segment' | 'semicircle' |
