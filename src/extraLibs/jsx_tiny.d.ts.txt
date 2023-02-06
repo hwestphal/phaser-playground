@@ -4,6 +4,8 @@ type attributes = {
     size?: number
     face?: string
     fixed?: boolean    // cannot be dragged  (also for lines)
+    visible?:boolean
+    style?: string | number
 
     // line
     firstArrow?: boolean | object   // eg: {type:4 size:8}
@@ -18,6 +20,7 @@ type attributes = {
     traced?: boolean
     ticks?: object
 
+
     // circle
      keepAspectRatio?:boolean
      method?:string
@@ -25,6 +28,13 @@ type attributes = {
     // polygon
     fillColor?: string
     fillOpacity?:number
+    withLines?: boolean
+    hasInnerPoints?: boolean
+    vertices?: any
+
+    // angle
+    radius?: number
+    arc2?: any
 
     // board
     boundingbox?: number[]
@@ -45,6 +55,7 @@ type attributes = {
     snapWidth?: number
     withlabel?:boolean
 
+
     // chart
     chartStyle?: string
     width?:number
@@ -54,6 +65,8 @@ type attributes = {
     // curve
     curveType?:string
 
+    // transform
+    type?: string
 }
 
 
@@ -63,11 +76,17 @@ type JSXElement = {
     Y: () => number | number
     Value: () => number | number
     moveTo: (location: any, mSec?: number) => void
-    L: () => number   // length
-}
+    L: () => number
+    bindTo: (transformation:any) => void
+    startAnimation: ( direction:number, stepCount:number, delay:number) => void
+    stopAnimation: () => ()
+    visit: () => void
+    vertices?: any
 
+}
 type Board = {      // JSG.Board - manages properties of a board
-    create(elementType: 'angle' | 'arc' | 'arrow' | 'axis' | 'bisector' |
+/*
+    create(elementType:'angle' | 'arc' | 'arrow' | 'axis' | 'bisector' |
     'button' | 'cardinalspline' | 'chart' | 'checkbox' | 'circle' |
     'circumcircle' | 'circumcirclearc' | 'circumcirclesector' | 'conic' |
     'curve' | 'curveddifference' | 'curveintersection' | 'curveunion' |
@@ -79,9 +98,10 @@ type Board = {      // JSG.Board - manages properties of a board
     'slider' | 'slopetriangle' | 'stepfunction' | 'tangent' |
     'tapemeasure' | 'text' | 'ticks' | 'tracecurve' | 'transform' |
     'turtle',
+*/
+    create(elementType:string, coordinates: any[], attributes?: attributes): JSXElement,
 
-    coordinates: any[], attributes?: attributes): JSXElement,
-    options: any,
+      options: any,
 
     defaultAxes: any,
     unsuspendUpdate(),
