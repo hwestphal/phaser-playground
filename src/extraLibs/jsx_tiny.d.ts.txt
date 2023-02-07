@@ -72,16 +72,19 @@ type attributes = {
 
 
 type JSXElement = {
-    X: () => number | number
-    Y: () => number | number
-    Value: () => number | number
+    X: () => number
+    Y: () => number
+    Value: () => number
     moveTo: (location: any, mSec?: number) => void
     L: () => number
     bindTo: (transformation:any) => void
+    visit?: any
+    vertices?: any
+    content?: any
+    needsUpdate?: boolean
+    on:(trigger:string,action:any) => any
     startAnimation: ( direction:number, stepCount:number, delay:number) => void
     stopAnimation: () => ()
-    visit: () => void
-    vertices?: any
 
 }
 type Board = {      // JSG.Board - manages properties of a board
