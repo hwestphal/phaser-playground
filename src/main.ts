@@ -62,7 +62,7 @@ export class Main {
     command: HTMLButtonElement
     // fullscreen: HTMLButtonElement
 
-    template = "let app = new Baby()"
+    template = "// for information about this editor visit https://microsoft.github.io/monaco-editor/"  // the code that appears first time
 
     static onClickSay: OnClickSay      // we'll put an instance here
 
@@ -149,7 +149,7 @@ export class Main {
                 },
 
 
-                logAnswerToQuestion: (paragraphUniq:string,bakery0:string)=>{
+                logAnswerToQuestion: (paragraphUniq: string, bakery0: string) => {
                     console.log('in logAnswerToQuestion()');
                 },
 
@@ -275,13 +275,32 @@ export class Main {
                     let tsCode = window.atob(code)
                     Log.write({ 'action': 'runInCanvas', 'datacode': Log.RunInCanvas, 'step': paragraph, 'activity': 0, 'topic': 0, data01: tsCode })
                     let jsCode = ts.transpile(tsCode);
+
+                    // before we do anything else, we WIPE OUT any previous
+                    // content of <div id='jxgbox'>
+                    // if someone wants a canvas, they add their own
+                    let jxgDiv = document.getElementById('jxgbox')
+                    console.log('removing with method 2')
+                    while (jxgDiv.firstChild) {
+                        jxgDiv.firstChild.remove()
+                    }
+
+
                     Main.editor.runEditorCode(jsCode)
                 },
 
                 //// these are the buttons on the Editor
                 runEditor() {
-                    console.log('clicked RUN')
+                    console.log('clicked RUN #1')
                     this.eraseFileExplorer()    // in case it is open (also resets '2D')
+
+                    let jxgDiv = document.getElementById('jxgbox')
+                    console.log('removing with method 1')
+                    while (jxgDiv.lastElementChild) {
+                        console.log('removing',jxgDiv.lastElementChild)
+                        jxgDiv.removeChild(jxgDiv.lastElementChild);
+                      }
+
                     try {
                         Main.editor.transpile()  // also runs
                     } catch (e) {   // transpile error.  show it in an alert
@@ -385,13 +404,26 @@ export class Main {
 
             if (this.run) {
                 this.run.onclick = async () => {
-                    console.log('clicked RUN')
+                    console.log('clicked RUN #2')
                     // this.run.disabled = false;  // was true
                     // this.stop.disabled = false;
                     // this.pause.disabled = false;
                     // this.command.disabled = false;
-                    // this.fullscreen.disabled = false;
+                    let jxgDiv = document.getElementById('jxgbox')
+                    console.log('removing with method 1')
+                    while (jxgDiv.lastElementChild) {
+                        console.log('removing',jxgDiv.lastElementChild)
+                        jxgDiv.removeChild(jxgDiv.lastElementChild);
+                      }
+
+                      // this.fullscreen.disabled = false;
+
                     try {
+
+                    // before we do anything else, we WIPE OUT any previous
+                    // content of <div id='jxgbox'>
+                    // if someone wants a canvas, they add their own
+
                         // const fn = await this.editor.transpile(this.game.scope);
                         //this.editorDiv.hidden = true;
                         Main.editor.transpile()  // also runs

@@ -67,6 +67,34 @@ type attributes = {
 
     // transform
     type?: string
+
+    // 3D
+    xAxis?:object
+    yAxis?:object
+    zAxis?:object
+    axesPosition?:string
+    xAxis?:object
+    xPlaneFront?:object
+    xPlaneRear?:object
+    yPlaneFront?:object
+    yPlaneRear?:object
+    zPlaneFront?:object
+    zPlaneRear?:object
+
+    xPlaneRearYAxis?:object
+    xPlaneRearZAxis?:object
+    yPlaneFrontXAxis?:object
+    yPlaneFrontZAxis?:object
+    zPlaneFrontXAxis?:object
+    zPlaneFrontYAxis?:object
+
+    // point3d
+    point1?: object
+    point2?: object
+
+    // functiongraph3D
+    stepsU?:number
+    stepsV?:number
 }
 
 
@@ -74,6 +102,7 @@ type attributes = {
 type JSXElement = {
     X: () => number
     Y: () => number
+    Z: () => number
     Value: () => number
     moveTo: (location: any, mSec?: number) => void
     L: () => number
@@ -84,7 +113,11 @@ type JSXElement = {
     needsUpdate?: boolean
     on:(trigger:string,action:any) => any
     startAnimation: ( direction:number, stepCount:number, delay:number) => void
-    stopAnimation: () => ()
+    stopAnimation: () => void
+    addParents:(parents:any[]) => void
+    create(elementType:string, coordinates: any[] | function , attributes?: attributes)=> JSXElement
+    point1?: object
+    point2?: object
 
 }
 type Board = {      // JSG.Board - manages properties of a board
@@ -102,7 +135,7 @@ type Board = {      // JSG.Board - manages properties of a board
     'tapemeasure' | 'text' | 'ticks' | 'tracecurve' | 'transform' |
     'turtle',
 */
-    create(elementType:string, coordinates: any[], attributes?: attributes): JSXElement,
+    create(elementType:string, coordinates: number[] | function, attributes?: attributes): JSXElement,
 
       options: any,
 
@@ -128,4 +161,5 @@ declare namespace JXG {
     }
 
     function addEvent(a:any,eventType:string,c:()=>void,d:any):any
+    function toFixed(a:any,b:number):number
 }

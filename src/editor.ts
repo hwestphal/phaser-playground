@@ -44,6 +44,7 @@ import babylonjs from "./extraLibs/babylonjs.d.ts.txt"
 import lib_es2099 from "./extraLibs/lib.es2099.d.ts.txt"
 import lib_jsx_tiny from "./extraLibs/jsx_tiny.d.ts.txt"
 import mathcode from "./extraLibs/mathcode.d.ts.txt"
+import matter from "./extraLibs/matter.d.ts.txt"
 
 
 import { RuntimeAnimation } from "babylonjs/Animations/runtimeAnimation";
@@ -200,6 +201,7 @@ export class Editor {
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2099)      // stuff that Typescript hasn't provided
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_jsx_tiny)    // my simply remix of the upper level call
         monaco.languages.typescript.typescriptDefaults.addExtraLib(mathcode)    // my simply remix of the upper level call
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(matter)    // my simply remix of the upper level call
 
         // this stuff has to go into the EVAL, since it doesn't see otherwise
 
@@ -211,14 +213,16 @@ export class Editor {
             // const Mathcode = window.Mathcode
             const JXG = window.JXG   // (window as any).JXG
             const BABYLON = window.BABYLON
+            const Matter = window.Matter
             // let _canvas = document.getElementById("canvas") as HTMLCanvasElement
-            let canvas = document.getElementById("canvas") as HTMLCanvasElement
+            // let canvas = document.getElementById("canvas") as HTMLCanvasElement
+            let jxgbox = document.getElementById("jxgbox")
             // let canvas2D = document.getElementById("canvas2D") as HTMLCanvasElement
             // let canvas3D = document.getElementById("canvas3D") as HTMLCanvasElement
             // var ctx = canvas.getContext("2d")!   // this causes WebGL to fail
             // const window.PlanetCute = new PlanetCute()
             // const PlanetCute = window.PlanetCute
-            const engine = new BABYLON.Engine(canvas, true);
+            // const engine = new BABYLON.Engine(canvas, true);
             let VT = Mathcode.VT52()
         `
 
@@ -230,14 +234,16 @@ export class Editor {
             const JXG = window.JXG   // (window as any).JXG
             const Mathcode = window.Mathcode
             const BABYLON = window.BABYLON
+            const Matter = window.Matter
             // let _canvas = document.getElementById("canvas")
-            let canvas = document.getElementById("canvas")
+            // let canvas = document.getElementById("canvas")
+            let jxgbox = document.getElementById("jxgbox")
             // let canvas2D = document.getElementById("canvas2D")
             // let canvas3D = document.getElementById("canvas3D")
             // let ctx =  canvas.getContext("2d")  // this causes WebGL to fail
             // const window.PlanetCute = new PlanetCute()
             // const PlanetCute = window.PlanetCute
-            const engine = new BABYLON.Engine(canvas, true);
+            // const engine = new BABYLON.Engine(canvas, true);
             let VT = Mathcode.VT52()
 `
 

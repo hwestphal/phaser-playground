@@ -40,7 +40,7 @@ export class OnClickSay {
         this.voices = this.synth.getVoices()
         this.voices.forEach(voice => {
             // console.log(voice.voiceURI)
-            if (voice.voiceURI.toLowerCase().indexOf('english') > 0 )  {
+            if (voice.voiceURI.toLowerCase().indexOf('english') > 0) {
                 // console.log(voice)
                 this.englishVoices.push(voice)
             }
@@ -129,14 +129,47 @@ export class OnClickSay {
 
         if (!wasRunning) {
             this.synthRunning = true // try to prevent a second speaker from starting
-            let sentences = text.split('.')
+            // split the line on colon, exclaim, question, dash, rejoin on period, and finally split on period
+            // BUT NOT COMMA, it makes the text disjointed
+            let sentences = text.split(':').join('.').split('!').join('.').split('?').join('.').split(' - ').join('.').split('.')
+            // i think i could have split with regex, but
             for (let i = 0; i < sentences.length; i++) {
-                let toSay = this.sayit(voiceN)  // also sets voice as a side effect, bleech
-                toSay.text = sentences[i]
-                speechSynthesis.speak(toSay)
+
+                // very rare special case for a long sentence with no punctuation, break it into two on a spac
+                if (sentences[i].length > 250) {  // a long sentence
+                    let toSay1 = this.sayit(voiceN)
+                    toSay1.text = this.splitLongSentence(sentences[i], 0)
+                    speechSynthesis.speak(toSay1)
+                    let toSay2 = this.sayit(voiceN)
+                    toSay2.text = this.splitLongSentence(sentences[i], 1)
+                    speechSynthesis.speak(toSay2)
+                } else {
+                    // sentence broken on punctuations seems short enough
+                    let toSay = this.sayit(voiceN)  // also sets voice as a side effect, bleech
+                    toSay.text = sentences[i]
+                    speechSynthesis.speak(toSay)
+                }
             }
             this.synthRunning = false
         }
+    }
+
+    splitLongSentence(s: string, n: number) {
+
+
+        let middle = Math.floor(s.length / 2);
+        let before = s.lastIndexOf(' ', middle);  // look for space near middle
+        let after = s.indexOf(' ', middle + 1);
+
+        if (middle - before < after - middle) {
+            middle = before;
+        } else {
+            middle = after;
+        }
+
+        // return either the first part or the second part
+        // console.log('splitLong',s,n,s.slice(0, middle),s.slice(middle + 1))
+        return (n == 0) ? s.slice(0, middle) : s.slice(middle + 1);
     }
 
 }
