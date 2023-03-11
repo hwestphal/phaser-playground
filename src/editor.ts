@@ -141,7 +141,7 @@ export class Editor {
             noLib: true,
             sourceMap: false,
             strict: false,
-            alwaysStrict:false,
+            alwaysStrict: false,
 
             noImplicitAny: false,
 
@@ -257,7 +257,7 @@ export class Editor {
 
 
 
-        this.prefixCode=
+        this.prefixCode =
             `function answer(myAnswer){
                 return (myAnswer == '42')
             }`
@@ -315,7 +315,7 @@ export class Editor {
         input.click();
     }
 
-    copyToEditor(code:string){
+    copyToEditor(code: string) {
         this.editor.setValue(code)
     }
 
@@ -337,15 +337,22 @@ export class Editor {
         if (model !== null) {
             const resource = model.uri;
 
-            const crud =monaco.editor.getModelMarkers({ resource })
-            console.log('crud',crud);
+            const crud = monaco.editor.getModelMarkers({ resource })
+            console.log('crud', crud);
 
             const errors = monaco.editor.getModelMarkers({ resource })
-                .map((m) => m.code=='6133'?'':`Line ${m.startLineNumber}: ${m.message}`)
-                .join("\n");
-            if (errors.length > 0) {
+            let errorString = ''
+            errors.forEach(m => {
+                switch (m.code) {
+                    case '6133':        // ignore 'unused local' errors
+                        break;
+                    default:
+                        errorString +=  `Line ${m.startLineNumber}: ${m.message}\n`;
+                }
+            });
+           if (errorString.length > 0) {
                 // alert('errors coming')    //
-                alert(errors)    //
+                alert(errorString)    //
                 return
             }
 
@@ -359,7 +366,7 @@ export class Editor {
             const col = this.editor.getPosition()!.column;
 
             // console.log(sourceCode)
-            Log.write({ 'action': 'editorRun', 'datacode': Log.EditorRun, data01:sourceCode, data02:line.toString(), data03:col.toString()})
+            Log.write({ 'action': 'editorRun', 'datacode': Log.EditorRun, data01: sourceCode, data02: line.toString(), data03: col.toString() })
 
             this.editorCode = output.outputFiles[0].text as string;
             this.runEditorCode(this.editorCode)      // and run the whole mess
@@ -369,7 +376,7 @@ export class Editor {
     }
 
 
-    runEditorCode(editorCode:string) {
+    runEditorCode(editorCode: string) {
 
 
         let code = ''

@@ -14,7 +14,10 @@ type attributes = {
     straightLast?: boolean   // extend past last point
     strokeColor?: string
     strokeWidth?: number
+    strokeOpacity?:number
     strokeColorOpacity?: number   // between 0 and 1
+    fontSize?:number
+    fontUnit?:string
     dash?: string            // 0:solid, 1:dotted, 2-5: short,medium,long dashes
     highlightStrokeColor?: string  // for mouse-over
     traced?: boolean

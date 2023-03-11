@@ -283,12 +283,16 @@ export class Main {
 
                     // before we do anything else, we WIPE OUT any previous
                     // content of <div id='jxgbox'>
-                    // if someone wants a canvas, they add their own
+                    // then add back a simple canvas
                     let jxgDiv = document.getElementById('jxgbox')
                     console.log('removing with method 2')
                     while (jxgDiv.firstChild) {
                         jxgDiv.firstChild.remove()
                     }
+                    let canv = document.createElement("canvas")
+                    canv.id= 'canvas'
+                    jxgDiv.appendChild(canv)
+
 
 
                     Main.editor.runEditorCode(jsCode)
@@ -305,6 +309,9 @@ export class Main {
                         console.log('removing', jxgDiv.lastElementChild)
                         jxgDiv.removeChild(jxgDiv.lastElementChild);
                     }
+                    let canv = document.createElement("canvas")
+                    canv.id= 'canvas'
+                    jxgDiv.appendChild(canv)
 
                     try {
                         Main.editor.transpile()  // also runs
