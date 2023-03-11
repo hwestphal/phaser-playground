@@ -133,6 +133,7 @@ export class Editor {
 
 
 
+
         monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
             allowNonTsExtensions: true,
             inlineSourceMap: true,
@@ -140,11 +141,12 @@ export class Editor {
             noLib: true,
             sourceMap: false,
             strict: false,
+            alwaysStrict:false,
 
             noImplicitAny: false,
 
             noUnusedParameters: false,       // easier for beginners
-            noUnusedLocals: false,
+            noUnusedLocals: true,            // i filter those errors out from the alert
 
             strictFunctionTypes: true,
             strictNullChecks: true,
@@ -238,6 +240,7 @@ export class Editor {
             // let _canvas = document.getElementById("canvas")
             // let canvas = document.getElementById("canvas")
             let jxgbox = document.getElementById("jxgbox")
+
             // let canvas2D = document.getElementById("canvas2D")
             // let canvas3D = document.getElementById("canvas3D")
             // let ctx =  canvas.getContext("2d")  // this causes WebGL to fail
@@ -245,6 +248,8 @@ export class Editor {
             // const PlanetCute = window.PlanetCute
             // const engine = new BABYLON.Engine(canvas, true);
             let VT = Mathcode.VT52()
+
+            let currentParagraph = "jxgbox"
 `
 
         this.prefixDecl =
@@ -331,8 +336,12 @@ export class Editor {
 
         if (model !== null) {
             const resource = model.uri;
+
+            const crud =monaco.editor.getModelMarkers({ resource })
+            console.log('crud',crud);
+
             const errors = monaco.editor.getModelMarkers({ resource })
-                .map((m) => `Line ${m.startLineNumber}: ${m.message}`)
+                .map((m) => m.code=='6133'?'':`Line ${m.startLineNumber}: ${m.message}`)
                 .join("\n");
             if (errors.length > 0) {
                 // alert('errors coming')    //
@@ -365,7 +374,6 @@ export class Editor {
 
         let code = ''
         code += this.systemDeclJS + "\r\n"
-        // but NOT prefixDecl
         code += this.prefixCode + "\r\n"
         code += editorCode + "\r\n"
         code += this.commandCode + "\r\n"

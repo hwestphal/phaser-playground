@@ -95,6 +95,9 @@ type attributes = {
     // functiongraph3D
     stepsU?:number
     stepsV?:number
+
+    // text
+    cssStyle?:string
 }
 
 

@@ -146,6 +146,11 @@ export class Main {
                     if (v) {
                         dragElement(v, "H");
                     }
+
+                    // start loading the voices
+                    this.onClickSay = new OnClickSay()
+                    this.onClickSay.onClickSay(' .',0)       // empty utter, but makes sure we are ready
+
                 },
 
 
@@ -297,9 +302,9 @@ export class Main {
                     let jxgDiv = document.getElementById('jxgbox')
                     console.log('removing with method 1')
                     while (jxgDiv.lastElementChild) {
-                        console.log('removing',jxgDiv.lastElementChild)
+                        console.log('removing', jxgDiv.lastElementChild)
                         jxgDiv.removeChild(jxgDiv.lastElementChild);
-                      }
+                    }
 
                     try {
                         Main.editor.transpile()  // also runs
@@ -412,17 +417,17 @@ export class Main {
                     let jxgDiv = document.getElementById('jxgbox')
                     console.log('removing with method 1')
                     while (jxgDiv.lastElementChild) {
-                        console.log('removing',jxgDiv.lastElementChild)
+                        console.log('removing', jxgDiv.lastElementChild)
                         jxgDiv.removeChild(jxgDiv.lastElementChild);
-                      }
+                    }
 
-                      // this.fullscreen.disabled = false;
+                    // this.fullscreen.disabled = false;
 
                     try {
 
-                    // before we do anything else, we WIPE OUT any previous
-                    // content of <div id='jxgbox'>
-                    // if someone wants a canvas, they add their own
+                        // before we do anything else, we WIPE OUT any previous
+                        // content of <div id='jxgbox'>
+                        // if someone wants a canvas, they add their own
 
                         // const fn = await this.editor.transpile(this.game.scope);
                         //this.editorDiv.hidden = true;
