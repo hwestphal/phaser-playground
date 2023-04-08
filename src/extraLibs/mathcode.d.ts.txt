@@ -25,6 +25,7 @@ declare class VT52 {
     graph(func:Function,color?:string);
     sound(url:string);
     clear();
+    drawKeyboard(board:Board, width:number, height:number, handler:string);
 }
 
 

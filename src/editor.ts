@@ -148,7 +148,7 @@ export class Editor {
             noUnusedParameters: false,       // easier for beginners
             noUnusedLocals: true,            // i filter those errors out from the alert
 
-            strictFunctionTypes: true,
+            strictFunctionTypes: true,       // show the error, it will run anyhow
             strictNullChecks: true,
 
             allowUnreachableCode: true,
@@ -216,6 +216,7 @@ export class Editor {
             const JXG = window.JXG   // (window as any).JXG
             const BABYLON = window.BABYLON
             const Matter = window.Matter
+            const document = window.document
             // let _canvas = document.getElementById("canvas") as HTMLCanvasElement
             // let canvas = document.getElementById("canvas") as HTMLCanvasElement
             let jxgbox = document.getElementById("jxgbox")
@@ -237,6 +238,7 @@ export class Editor {
             const Mathcode = window.Mathcode
             const BABYLON = window.BABYLON
             const Matter = window.Matter
+            const document = window.document
             // let _canvas = document.getElementById("canvas")
             // let canvas = document.getElementById("canvas")
             let jxgbox = document.getElementById("jxgbox")
@@ -248,7 +250,7 @@ export class Editor {
             // const PlanetCute = window.PlanetCute
             // const engine = new BABYLON.Engine(canvas, true);
             let VT = Mathcode.VT52()
-
+//
             let currentParagraph = "jxgbox"
 `
 
@@ -345,9 +347,10 @@ export class Editor {
             errors.forEach(m => {
                 switch (m.code) {
                     case '6133':        // ignore 'unused local' errors
+                    case '7044':        // ignore parameter not typed errors
                         break;
                     default:
-                        errorString +=  `Line ${m.startLineNumber}: ${m.message}\n`;
+                        errorString +=  `Line ${m.startLineNumber}: ${m.message} (${m.code})\n`;
                 }
             });
            if (errorString.length > 0) {
@@ -366,7 +369,7 @@ export class Editor {
             const col = this.editor.getPosition()!.column;
 
             // console.log(sourceCode)
-            Log.write({ 'action': 'editorRun', 'datacode': Log.EditorRun, data01: sourceCode, data02: line.toString(), data03: col.toString() })
+            Log.writeMoodleLog({ 'action': 'editorRun', 'datacode': Log.EditorRun, data01: sourceCode, data02: line.toString(), data03: col.toString() })
 
             this.editorCode = output.outputFiles[0].text as string;
             this.runEditorCode(this.editorCode)      // and run the whole mess

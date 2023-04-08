@@ -165,6 +165,10 @@ declare namespace JXG {
     export class Math{
         static Numerics: any
     }
+    export class CanvasRenderer{
+        static context: any
+    }
+
 
     function addEvent(a:any,eventType:string,c:()=>void,d:any):any
     function toFixed(a:any,b:number):number

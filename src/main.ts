@@ -27,6 +27,7 @@ import { Raytracer } from './raytracer'
 import { Observable } from './observer';
 import { mindmap, testMindMap } from './mindmap';
 
+
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
 // not sure if this is useful
@@ -149,7 +150,7 @@ export class Main {
 
                     // start loading the voices
                     this.onClickSay = new OnClickSay()
-                    this.onClickSay.onClickSay(' .',0)       // empty utter, but makes sure we are ready
+                    this.onClickSay.onClickSay(' .', 0)       // empty utter, but makes sure we are ready
 
                 },
 
@@ -159,15 +160,15 @@ export class Main {
                 },
 
                 // MathcodeAPI.onClickSay("u00051",voice,"step","activity","topic")
-                onClickSay: (utterID: string, voiceN: number, step: number, activity: number, topic: number) => {
+                onClickSay: (utterID: string, voiceN: number, paragraph: string) => {
                     // console.log(`onClickSay: (utterID: ${utterID}, voiceN: ${voiceN}, step: ${step}, activity: ${activity}, topic: ${topic})`)
 
                     let sayThis = document.getElementById(utterID)  // : HTMLElement or null
                     if (!sayThis) {     // might be null
-                        Log.write({ 'action': 'log', 'datacode': Log.Error, 'data01': `could not find HTML ID '${utterID}'`, 'step': step, 'activity': activity, 'topic': topic })
+                        Log.writeMoodleLog({ 'action': 'log', 'datacode': Log.Error, 'data01': `could not find HTML ID '${utterID}' for paragraph '${paragraph}'` })
                     } else {
 
-                        Log.write({ 'action': 'log', 'datacode': Log.ClickSpeaker, 'data01': utterID, 'data02': sayThis.innerHTML.substring(0, 30), 'step': step, 'activity': activity, 'topic': topic })
+                        Log.writeMoodleLog({ 'action': 'log', 'datacode': Log.ClickSpeaker, 'data01': sayThis.innerHTML.substring(0, 40), 'uniq': paragraph })
 
                         if (!this.onClickSay)
                             this.onClickSay = new OnClickSay()
@@ -245,7 +246,7 @@ export class Main {
                 // },
 
                 // student clicks into reflection, have they finished all challenges?
-                readyToReflect: (step: number, activity: number, topic: number): boolean => {
+                readyToReflect: (step: string): boolean => {
                     // console.log(`readyToReflect: (${step}:number,${activity}:number,${topic}:number)`)
 
                     // this version is neutered
@@ -253,44 +254,44 @@ export class Main {
 
                     if (!readyToReflect) {
                         // if NOT ready, then use 1001, data01 describes what is missing
-                        Log.write({ 'action': 'readyToReflect', 'datacode': 1001, 'data01': 'code challenge', 'step': step, 'activity': activity, 'topic': topic })
+                        Log.writeMoodleLog({ 'action': 'readyToReflect', 'datacode': 1001, 'data01': 'code challenge', 'uniq': step })
                         alert('checking whether you are reading to finish ' + step.toString())
                     } else {
                         // if ready, then use 1002.  and set a flag so don't have to check again
-                        Log.write({ 'action': 'readyToReflect', 'datacode': Log.ReadyToReflect, 'step': step, 'activity': activity, 'topic': topic })
+                        Log.writeMoodleLog({ 'action': 'readyToReflect', 'datacode': Log.ReadyToReflect, 'uniq': step })
                     }
                     return readyToReflect
                 },
 
 
                 // MathcodeAPI.completeStep("00051","step","activity","topic")
-                completeStep: (id: string, step: number, activity: number, topic: number) => {
+                completeStep: (id: string, uniq: string) => {
                     // alert('complete step')
-                    Log.write({ 'action': 'completeStep', 'datacode': Log.CompleteStep, 'step': step, 'activity': activity, 'topic': topic })
+                    Log.writeMoodleLog({ 'action': 'completeStep', 'datacode': Log.CompleteStep, 'uniq': uniq, })
                     return (true)  // whetherh we can go ahead
                 },
 
-                copyToEditor(paragraph: number, code: string) {
+                copyToEditor(paragraph: string, code: string) {
                     let codeString = window.atob(code)
-                    Log.write({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'step': paragraph, 'activity': 0, 'topic': 0, data01: code })
+                    Log.writeMoodleLog({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'uniq': paragraph, data01: code })
                     Main.editor.editor.setValue(codeString)
                 },
 
-                runInCanvas(paragraph: number, code: string) {   // convert from TS to JS first !!
+                runInCanvas(paragraph: string, code: string) {   // convert from TS to JS first !!
                     let tsCode = window.atob(code)
-                    Log.write({ 'action': 'runInCanvas', 'datacode': Log.RunInCanvas, 'step': paragraph, 'activity': 0, 'topic': 0, data01: tsCode })
+                    Log.writeMoodleLog({ 'action': 'runInCanvas', 'datacode': Log.RunInCanvas, 'uniq': paragraph, data01: tsCode })
                     let jsCode = ts.transpile(tsCode);
 
                     // before we do anything else, we WIPE OUT any previous
                     // content of <div id='jxgbox'>
                     // then add back a simple canvas
                     let jxgDiv = document.getElementById('jxgbox')
-                    console.log('removing with method 2')
+                    // console.log('removing with method 2')
                     while (jxgDiv.firstChild) {
                         jxgDiv.firstChild.remove()
                     }
                     let canv = document.createElement("canvas")
-                    canv.id= 'canvas'
+                    canv.id = 'canvas'
                     jxgDiv.appendChild(canv)
 
 
@@ -300,17 +301,17 @@ export class Main {
 
                 //// these are the buttons on the Editor
                 runEditor() {
-                    console.log('clicked RUN #1')
+                    // console.log('clicked RUN #1')
                     this.eraseFileExplorer()    // in case it is open (also resets '2D')
 
                     let jxgDiv = document.getElementById('jxgbox')
-                    console.log('removing with method 1')
+                    // console.log('removing with method 1')
                     while (jxgDiv.lastElementChild) {
-                        console.log('removing', jxgDiv.lastElementChild)
+                        // console.log('removing', jxgDiv.lastElementChild)
                         jxgDiv.removeChild(jxgDiv.lastElementChild);
                     }
                     let canv = document.createElement("canvas")
-                    canv.id= 'canvas'
+                    canv.id = 'canvas'
                     jxgDiv.appendChild(canv)
 
                     try {

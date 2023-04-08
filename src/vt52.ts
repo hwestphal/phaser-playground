@@ -1,5 +1,6 @@
 import { hasOnlyExpressionInitializer } from 'typescript'
 import { Observable } from './observer'
+import { JXG } from './jxg'
 
 // TODO: add sounds
 // https://www.buildbox.com/13-places-to-find-free-game-sound-effects/
@@ -316,11 +317,48 @@ export class VT52 {
         }
     }
 
-    clear(){        // ugly, but visually easy to understand
-        for (let i=0; i<30;i++){
+    clear() {        // ugly, but visually easy to understand
+        for (let i = 0; i < 30; i++) {
             this.print("\n")
         }
     }
+
+
+    ///////////////////////////////////////////////////////////
+    /////////////// tools for JSXGraph ////////////////////////
+    ///////////////////////////////////////////////////////////
+
+
+    // the keyboard draws above the zeroline, from zero to width, from zero to height
+    drawKeyboard(jsxBoard: JXG.Board, width: number, height: number, handler: string) {
+        let buttonWidth = width / 3   // button has 3px on all sides
+        let buttonHeight = height / 4
+
+        let keys = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9'], ['-', '.', '0']]
+
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 3; j++) {
+
+                jsxBoard.create('text', [j * buttonWidth + .2, i * buttonHeight + .2,
+                `<button \
+             style='font-size:40px; \
+                width:${550 / 3 - 5}px; \
+                text-align:center; \
+                padding-top:10px; \
+                box-shadow:3px 7px grey; \
+                padding-bottom:10px; \
+                border-radius:15px; \
+                border:solid 5px blue; \
+                background-color:#f4fff4' \
+             onClick='${handler}(\"${keys[3 - i][j]}\")';> \
+             ${keys[3 - i][j]} \
+             </button>`])
+            }
+        }
+
+    }
+
+    // onClick='${handler}(\"${keys[3 - i][j]}\")';> \
 
 
     // const handleKeys = {

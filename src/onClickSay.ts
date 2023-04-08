@@ -17,7 +17,7 @@ export class OnClickSay {
 
     // we need to load the voices before we can use them
     loadVoicesWhenAvailable() {
-        console.log('loadVoicesWhenAvailable() ')
+        // console.log('loadVoicesWhenAvailable() ')
         this.voices = this.synth.getVoices()
         if (this.voices.length !== 0) {
             // console.log('voices already loaded')
@@ -135,41 +135,28 @@ export class OnClickSay {
             // i think i could have split with regex, but
             for (let i = 0; i < sentences.length; i++) {
 
-                // very rare special case for a long sentence with no punctuation, break it into two on a spac
-                if (sentences[i].length > 250) {  // a long sentence
-                    let toSay1 = this.sayit(voiceN)
-                    toSay1.text = this.splitLongSentence(sentences[i], 0)
-                    speechSynthesis.speak(toSay1)
-                    let toSay2 = this.sayit(voiceN)
-                    toSay2.text = this.splitLongSentence(sentences[i], 1)
-                    speechSynthesis.speak(toSay2)
-                } else {
-                    // sentence broken on punctuations seems short enough
-                    let toSay = this.sayit(voiceN)  // also sets voice as a side effect, bleech
-                    toSay.text = sentences[i]
-                    speechSynthesis.speak(toSay)
-                }
+                // sentence broken on punctuations frequently short enough
+                let toSay = this.sayit(voiceN)  // also sets voice as a side effect, bleech
+                toSay.text = sentences[i]
+                speechSynthesis.speak(toSay)
+
+                // longer sentences fail.
+                // a known bug. The workaround is to issue a resume every 14 seconds.
+                // https://stackoverflow.com/questions/57667357/speech-synthesis-problem-with-long-texts-pause-mid-speaking
+
+                let r = setInterval(() => {
+                    console.log('speech keep-alive',speechSynthesis.speaking);
+                    if (!speechSynthesis.speaking) {
+                        clearInterval(r);
+                    } else {
+                        speechSynthesis.pause();
+                        speechSynthesis.resume();
+                    }
+                }, 14000);
             }
             this.synthRunning = false
         }
     }
 
-    splitLongSentence(s: string, n: number) {
-
-
-        let middle = Math.floor(s.length / 2);
-        let before = s.lastIndexOf(' ', middle);  // look for space near middle
-        let after = s.indexOf(' ', middle + 1);
-
-        if (middle - before < after - middle) {
-            middle = before;
-        } else {
-            middle = after;
-        }
-
-        // return either the first part or the second part
-        // console.log('splitLong',s,n,s.slice(0, middle),s.slice(middle + 1))
-        return (n == 0) ? s.slice(0, middle) : s.slice(middle + 1);
-    }
 
 }

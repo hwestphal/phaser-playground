@@ -17,7 +17,7 @@ type attributes = {
     strokeColor?: string
     strokeWidth?: number
     strokeColorOpacity?: number   // between 0 and 1
-    dash?: number            // 0:solid, 1:dotted, 2-5: short,medium,long dashes   
+    dash?: number            // 0:solid, 1:dotted, 2-5: short,medium,long dashes
     highlightStrokeColor?: string  // for mouse-over
     traced?: boolean
 
@@ -43,10 +43,10 @@ type attributes = {
     snapWidth?: number
 
 }
- 
 
 
-type JSXElement = {
+
+export type JSXElement = {
     X: () => number | number
     Y: () => number | number
     Value: () => number | number
@@ -54,18 +54,18 @@ type JSXElement = {
     L: () => number   // length
 }
 
-type Board = {      // JSG.Board - manages properties of a board
-    create(elementType: 'angle' | 'arc' | 'arrow' | 'axis' | 'bisector' | 
+export type Board = {      // JSG.Board - manages properties of a board
+    create(elementType: 'angle' | 'arc' | 'arrow' | 'axis' | 'bisector' |
     'button' | 'cardinalspline' | 'chart' | 'checkbox' | 'circle' |
     'circumcircle' | 'circumcirclearc' | 'circumcirclesector' | 'conic' |
     'curve' | 'curveddifference' | 'curveintersection' | 'curveunion' |
     'ellipse' | 'functiongraph' | 'glider' | 'grid' | 'group' |
-    'hatch' | 'hyperbola' | 'image' | 'input' | 'integral' | 'intersection' | 
-    'line' | 'metapostspline' | 'midpoint' | 'mirrorelement' | 'normal' | 
-    'perpendicular' | 'plot' | 'point' | 'polygon' | 'polygonalchain' | 
+    'hatch' | 'hyperbola' | 'image' | 'input' | 'integral' | 'intersection' |
+    'line' | 'metapostspline' | 'midpoint' | 'mirrorelement' | 'normal' |
+    'perpendicular' | 'plot' | 'point' | 'polygon' | 'polygonalchain' |
     'regularpolygon' | 'reflection' | 'riemannsum' | 'sector' | 'segment' | 'semicircle' |
-    'slider' | 'slopetriangle' | 'stepfunction' | 'tangent' | 
-    'tapemeasure' | 'text' | 'ticks' | 'tracecurve' | 'transform' | 
+    'slider' | 'slopetriangle' | 'stepfunction' | 'tangent' |
+    'tapemeasure' | 'text' | 'ticks' | 'tracecurve' | 'transform' |
     'turtle',
 
         coordinates: any[], attributes?: attributes): JSXElement
@@ -109,7 +109,7 @@ declare namespace JXG {
 // // function along x axis   [function, {startX, endX}]
 // board.create('functiongraph', [(x:number)=> Math.sin(x),-Math.PI,4*Math.PI])
 
-// // a dynamic graph using p.X to scale 
+// // a dynamic graph using p.X to scale
 // let p = board.create('point',[1,1],{size:4,name:'A'});
 // board.create('functiongraph', [(x:number)=> p.X()*Math.sin(x)],{dash:1});
 
