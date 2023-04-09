@@ -8,7 +8,6 @@ import ts from 'typescript';
 import { Editor } from "./editor";
 import { OnClickSay } from "./onClickSay"
 import { asciiMath, testAsciiMath } from './ASCIIMathML'
-import { Log } from './utilities'
 
 import { VT52 } from './vt52'
 import { Draw, V3, Ray } from './draw'
@@ -26,7 +25,7 @@ import { dragElement } from './split'
 import { Raytracer } from './raytracer'
 import { Observable } from './observer';
 import { mindmap, testMindMap } from './mindmap';
-
+import { Buffer } from "buffer";
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
 
@@ -46,10 +45,32 @@ async function test_talk_to_moodle() {
     await talk_to_moodle()
 }
 
+// a HostMsg is really just a log entry
+export interface HostMsg {
+    datacode: string;
+    id: number;              // moodleID
+    textbook: string;       // one day will have multiple textbooks running
+    data01?: string;
+    data02?: string;
+    data03?: string;
+    data04?: string;
+    data05?: string;
+    data06?: string;
+
+    uniq?: string;
+}
+
+
+
 
 
 
 export class Main {
+
+    static moodleID: number     // might be several textbooks, but only one moodle person
+    static prevUniq = ''        // best guess, in case we don't have one for a log record
+
+
 
     editorDiv: HTMLDivElement
     static editor: Editor
@@ -129,9 +150,11 @@ export class Main {
 
                 DOM: new DOMclass(),   // exposes the DOM utilities
 
-                loader: (courseInfo: string) => {
+                loader: (courseInfo: string, moodleID: number) => {
                     console.log('%cMathcodeAPI.loader successful', 'background-color:red;color:white;')
-                    console.log('courseInfo(raw): ', courseInfo)
+                    console.log('courseInfo(raw): ', courseInfo, 'moodleID', moodleID)
+
+                    this.moodleID = moodleID
 
                     // testAsciiMath()  // needs element 'testmath'
                     // testMindMap()  // needs element 'canvas'
@@ -148,6 +171,7 @@ export class Main {
                         dragElement(v, "H");
                     }
 
+
                     // start loading the voices
                     this.onClickSay = new OnClickSay()
                     this.onClickSay.onClickSay(' .', 0)       // empty utter, but makes sure we are ready
@@ -160,15 +184,15 @@ export class Main {
                 },
 
                 // MathcodeAPI.onClickSay("u00051",voice,"step","activity","topic")
-                onClickSay: (utterID: string, voiceN: number, paragraph: string) => {
+                onClickSay: (utterID: string, voiceN: number, paragraph: string, textbook: string) => {
                     // console.log(`onClickSay: (utterID: ${utterID}, voiceN: ${voiceN}, step: ${step}, activity: ${activity}, topic: ${topic})`)
 
                     let sayThis = document.getElementById(utterID)  // : HTMLElement or null
                     if (!sayThis) {     // might be null
-                        Log.writeMoodleLog({ 'action': 'log', 'datacode': Log.Error, 'data01': `could not find HTML ID '${utterID}' for paragraph '${paragraph}'` })
+                        this.writeMoodleLog({ 'datacode': 'LOG_Error', 'id': this.moodleID, 'textbook': textbook, 'data01': `could not find HTML ID '${utterID}' for paragraph '${paragraph}'` })
                     } else {
 
-                        Log.writeMoodleLog({ 'action': 'log', 'datacode': Log.ClickSpeaker, 'data01': sayThis.innerHTML.substring(0, 40), 'uniq': paragraph })
+                        this.writeMoodleLog({ 'datacode': 'LOG_ClickSay', 'id': this.moodleID, 'textbook': textbook, 'data01': sayThis.innerHTML.substring(0, 40), 'uniq': paragraph })
 
                         if (!this.onClickSay)
                             this.onClickSay = new OnClickSay()
@@ -246,7 +270,7 @@ export class Main {
                 // },
 
                 // student clicks into reflection, have they finished all challenges?
-                readyToReflect: (step: string): boolean => {
+                readyToReflect: (step: string, textbook: string): boolean => {
                     // console.log(`readyToReflect: (${step}:number,${activity}:number,${topic}:number)`)
 
                     // this version is neutered
@@ -254,32 +278,32 @@ export class Main {
 
                     if (!readyToReflect) {
                         // if NOT ready, then use 1001, data01 describes what is missing
-                        Log.writeMoodleLog({ 'action': 'readyToReflect', 'datacode': 1001, 'data01': 'code challenge', 'uniq': step })
+                        this.writeMoodleLog({ 'datacode': 'LOG_NotReadyToReflect', 'id': this.moodleID, 'textbook': textbook, 'data01': 'code challenge', 'uniq': step })
                         alert('checking whether you are reading to finish ' + step.toString())
                     } else {
                         // if ready, then use 1002.  and set a flag so don't have to check again
-                        Log.writeMoodleLog({ 'action': 'readyToReflect', 'datacode': Log.ReadyToReflect, 'uniq': step })
+                        this.writeMoodleLog({ 'datacode': 'Log_ReadyToReflect', 'id': this.moodleID, 'textbook': textbook, 'uniq': step })
                     }
                     return readyToReflect
                 },
 
 
                 // MathcodeAPI.completeStep("00051","step","activity","topic")
-                completeStep: (id: string, uniq: string) => {
+                completeStep: (id: string, uniq: string, textbook: string) => {
                     // alert('complete step')
-                    Log.writeMoodleLog({ 'action': 'completeStep', 'datacode': Log.CompleteStep, 'uniq': uniq, })
+                    this.writeMoodleLog({ 'datacode': 'Log_CompleteStep', 'id': this.moodleID, 'textbook': textbook, 'uniq': uniq, })
                     return (true)  // whetherh we can go ahead
                 },
 
-                copyToEditor(paragraph: string, code: string) {
+                copyToEditor(paragraph: string, code: string, textbook: string) {
                     let codeString = window.atob(code)
-                    Log.writeMoodleLog({ 'action': 'copyToEditor', 'datacode': Log.CopyToEditor, 'uniq': paragraph, data01: code })
+                    this.writeMoodleLog({ 'datacode': 'Log_CopyToEditor', 'id': this.moodleID, 'textbook': textbook, 'uniq': paragraph, data01: code })
                     Main.editor.editor.setValue(codeString)
                 },
 
-                runInCanvas(paragraph: string, code: string) {   // convert from TS to JS first !!
+                runInCanvas(paragraph: string, code: string, textbook: string) {   // convert from TS to JS first !!
                     let tsCode = window.atob(code)
-                    Log.writeMoodleLog({ 'action': 'runInCanvas', 'datacode': Log.RunInCanvas, 'uniq': paragraph, data01: tsCode })
+                    this.writeMoodleLog({ 'datacode': 'Log_RunInCanvas', 'id': this.moodleID, 'textbook': textbook, 'uniq': paragraph, data01: tsCode })
                     let jsCode = ts.transpile(tsCode);
 
                     // before we do anything else, we WIPE OUT any previous
@@ -503,7 +527,56 @@ export class Main {
     //     }
     // }
 
+
+    static writeMoodleLog(payload: HostMsg) {
+
+        console.log('in writeMoodleLog', payload)
+
+        // a bit of a hack.  sometimes we don't know the UNIQ who called us
+        // (for example, working in the editor and running code)
+        // but we want to be able to query the log for all records
+        // so we simply use the PREVIOUS UNIQ (usually that got us here)
+
+        if (payload.uniq == undefined)
+            payload.uniq = this.prevUniq
+        else
+            this.prevUniq = payload.uniq
+
+
+
+        let JsonData = JSON.stringify(payload)
+        console.log('JsonData:', JsonData)
+
+        /*
+        let xhr = new XMLHttpRequest();
+        // let formData = new FormData(); // Currently empty
+
+        xhr.open("POST", "ajax.php?payload="+JsonData, true);
+        //Send the proper header information along with the request
+        // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.setRequestHeader("Content-type", "application/json");
+
+        xhr.send();  // should be JsonData
+*/
+
+        /////////////////////
+
+        // same using Beacon API   https://developer.mozilla.org/en-US/docs/Web/API/Beacon_API
+
+        // The Beacon API is used to send an asynchronous and non-blocking request to a web server.
+        // The request does not expect a response. The browser guarantees to initiate beacon requests
+        // before the page is unloaded and to run them to completion.
+
+        // The main use case for the Beacon API is to send analytics such as client-side events or session data to the server.
+
+        let base64 = Buffer.from(JsonData,'utf8').toString('base64');
+        console.log('base64',base64)
+        navigator.sendBeacon("ajax.php?payload="+base64);
+    }
+
 }
+
+
 
 let main = new Main()
 

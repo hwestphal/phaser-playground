@@ -48,7 +48,6 @@ import matter from "./extraLibs/matter.d.ts.txt"
 
 
 import { RuntimeAnimation } from "babylonjs/Animations/runtimeAnimation";
-import { Log } from "./utilities";
 import { Observable } from "./observer";
 
 // let x = JXG         // just to make sure webpack loads them
@@ -350,10 +349,10 @@ export class Editor {
                     case '7044':        // ignore parameter not typed errors
                         break;
                     default:
-                        errorString +=  `Line ${m.startLineNumber}: ${m.message} (${m.code})\n`;
+                        errorString += `Line ${m.startLineNumber}: ${m.message} (${m.code})\n`;
                 }
             });
-           if (errorString.length > 0) {
+            if (errorString.length > 0) {
                 // alert('errors coming')    //
                 alert(errorString)    //
                 return
@@ -369,7 +368,7 @@ export class Editor {
             const col = this.editor.getPosition()!.column;
 
             // console.log(sourceCode)
-            Log.writeMoodleLog({ 'action': 'editorRun', 'datacode': Log.EditorRun, data01: sourceCode, data02: line.toString(), data03: col.toString() })
+            // Log.writeMoodleLog({'datacode': 'LOG_EditorRun', data01: sourceCode, data02: line.toString(), data03: col.toString() })
 
             this.editorCode = output.outputFiles[0].text as string;
             this.runEditorCode(this.editorCode)      // and run the whole mess

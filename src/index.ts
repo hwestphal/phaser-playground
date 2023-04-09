@@ -8,7 +8,6 @@ import { Editor } from "./editor";
 import { OnClickSay } from "./onClickSay"
 // import {TerminalJS } from './terminal'
 // import { asciiMath, testAsciiMath } from './ASCIIMathML'
-import { Log } from './utilities'
 
 import { DOM } from './DOM'
 import { MForms } from './mforms'
