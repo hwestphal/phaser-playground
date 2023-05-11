@@ -18,7 +18,6 @@ import { testTree, treeviewComponent } from "./components/treeview";
 import { DOMclass } from "./DOM";
 import { talk_to_moodle } from './moodle'
 
-import { LogRecord, logRecord } from './logrecords'
 import { tsFS } from './tsFS'
 import { LangString } from './lang'
 import { dragElement } from './split'
@@ -59,7 +58,6 @@ export interface HostMsg {
 
     uniq?: string;
 }
-
 
 
 
@@ -189,10 +187,10 @@ export class Main {
 
                     let sayThis = document.getElementById(utterID)  // : HTMLElement or null
                     if (!sayThis) {     // might be null
-                        this.writeMoodleLog({ 'datacode': 'LOG_Error', 'id': this.moodleID, 'textbook': textbook, 'data01': `could not find HTML ID '${utterID}' for paragraph '${paragraph}'` })
+                        writeMoodleLog({ 'datacode': 'LOG_Error', 'id': this.moodleID, 'textbook': textbook, 'data01': `could not find HTML ID '${utterID}' for paragraph '${paragraph}'` })
                     } else {
 
-                        this.writeMoodleLog({ 'datacode': 'LOG_ClickSay', 'id': this.moodleID, 'textbook': textbook, 'data01': sayThis.innerHTML.substring(0, 40), 'uniq': paragraph })
+                        writeMoodleLog({ 'datacode': 'LOG_ClickSay', 'id': this.moodleID, 'textbook': textbook, 'data01': sayThis.innerHTML.substring(0, 40), 'uniq': paragraph })
 
                         if (!this.onClickSay)
                             this.onClickSay = new OnClickSay()
@@ -278,11 +276,11 @@ export class Main {
 
                     if (!readyToReflect) {
                         // if NOT ready, then use 1001, data01 describes what is missing
-                        this.writeMoodleLog({ 'datacode': 'LOG_NotReadyToReflect', 'id': this.moodleID, 'textbook': textbook, 'data01': 'code challenge', 'uniq': step })
+                        writeMoodleLog({ 'datacode': 'LOG_NotReadyToReflect', 'id': this.moodleID, 'textbook': textbook, 'data01': 'code challenge', 'uniq': step })
                         alert('checking whether you are reading to finish ' + step.toString())
                     } else {
                         // if ready, then use 1002.  and set a flag so don't have to check again
-                        this.writeMoodleLog({ 'datacode': 'Log_ReadyToReflect', 'id': this.moodleID, 'textbook': textbook, 'uniq': step })
+                        writeMoodleLog({ 'datacode': 'Log_ReadyToReflect', 'id': this.moodleID, 'textbook': textbook, 'uniq': step })
                     }
                     return readyToReflect
                 },
@@ -291,19 +289,19 @@ export class Main {
                 // MathcodeAPI.completeStep("00051","step","activity","topic")
                 completeStep: (id: string, uniq: string, textbook: string) => {
                     // alert('complete step')
-                    this.writeMoodleLog({ 'datacode': 'Log_CompleteStep', 'id': this.moodleID, 'textbook': textbook, 'uniq': uniq, })
+                    writeMoodleLog({ 'datacode': 'Log_CompleteStep', 'id': this.moodleID, 'textbook': textbook, 'uniq': uniq, })
                     return (true)  // whetherh we can go ahead
                 },
 
                 copyToEditor(paragraph: string, code: string, textbook: string) {
                     let codeString = window.atob(code)
-                    this.writeMoodleLog({ 'datacode': 'Log_CopyToEditor', 'id': this.moodleID, 'textbook': textbook, 'uniq': paragraph, data01: code })
+                    writeMoodleLog({ 'datacode': 'Log_CopyToEditor', 'id': this.moodleID, 'textbook': textbook, 'uniq': paragraph, data01: code })
                     Main.editor.editor.setValue(codeString)
                 },
 
                 runInCanvas(paragraph: string, code: string, textbook: string) {   // convert from TS to JS first !!
                     let tsCode = window.atob(code)
-                    this.writeMoodleLog({ 'datacode': 'Log_RunInCanvas', 'id': this.moodleID, 'textbook': textbook, 'uniq': paragraph, data01: tsCode })
+                    writeMoodleLog({ 'datacode': 'Log_RunInCanvas', 'id': this.moodleID, 'textbook': textbook, 'uniq': paragraph, data01: tsCode })
                     let jsCode = ts.transpile(tsCode);
 
                     // before we do anything else, we WIPE OUT any previous
@@ -357,10 +355,35 @@ export class Main {
                     console.log('arrived in Submit')
                 },
 
+                snapQuestion(uniq: string, textbook: string, bakery: number, question: string, answer: string) {
+                    // expose the answer and write it to the log
+                    console.log('snapQuestion()', uniq, textbook, bakery, question, answer)
+                    // id  Annn is input text
+                    //     Bnnn is answer (hidden, make visibility:visible)
+                    //     Cnnn is verify button (visible, make visiblility:hidden)
+                    let A = document.getElementById('A' + bakery) as HTMLInputElement
+                    let B = document.getElementById('B' + bakery)
+                    let C = document.getElementById('C' + bakery)
+
+                    let myAnswer = A.value
+                    B.style.display = 'block'
+                    C.style.display = 'none'
+
+                    writeMoodleLog({ 'datacode': 'LOG_SnapQuestion', 'id': this.moodleID, 'textbook': textbook, 'data01': question, 'data02': answer, 'data03': myAnswer, 'uniq': uniq })
+                },
+
+                // sometimes the host wants to write without a refresh
+                writeLog(payload64: string) {
+                    let b = Buffer.from(payload64, 'base64')
+                    const msg: HostMsg = JSON.parse(b.toString())
+
+                    writeMoodleLog(msg);
+                },
+
+
             }
+
     }
-
-
 
     constructor() {
 
@@ -569,9 +592,9 @@ export class Main {
 
         // The main use case for the Beacon API is to send analytics such as client-side events or session data to the server.
 
-        let base64 = Buffer.from(JsonData,'utf8').toString('base64');
-        console.log('base64',base64)
-        navigator.sendBeacon("ajax.php?payload="+base64);
+        let base64 = Buffer.from(JsonData, 'utf8').toString('base64');
+        console.log('base64', base64)
+        navigator.sendBeacon("ajax.php?payload=" + base64);
     }
 
 }
@@ -584,6 +607,54 @@ let main = new Main()
 
 
 
+
+
+let prevUniq = '';
+function writeMoodleLog(payload: HostMsg) {
+
+    console.log('in writeMoodleLog', payload)
+
+    // a bit of a hack.  sometimes we don't know the UNIQ who called us
+    // (for example, working in the editor and running code)
+    // but we want to be able to query the log for all records
+    // so we simply use the PREVIOUS UNIQ (usually that got us here)
+
+    if (payload.uniq == undefined)
+        payload.uniq = prevUniq
+    else
+        prevUniq = payload.uniq
+
+
+
+    let JsonData = JSON.stringify(payload)
+    console.log('JsonData:', JsonData)
+
+    /*
+    let xhr = new XMLHttpRequest();
+    // let formData = new FormData(); // Currently empty
+
+    xhr.open("POST", "ajax.php?payload="+JsonData, true);
+    //Send the proper header information along with the request
+    // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("Content-type", "application/json");
+
+    xhr.send();  // should be JsonData
+*/
+
+    /////////////////////
+
+    // same using Beacon API   https://developer.mozilla.org/en-US/docs/Web/API/Beacon_API
+
+    // The Beacon API is used to send an asynchronous and non-blocking request to a web server.
+    // The request does not expect a response. The browser guarantees to initiate beacon requests
+    // before the page is unloaded and to run them to completion.
+
+    // The main use case for the Beacon API is to send analytics such as client-side events or session data to the server.
+
+    let base64 = Buffer.from(JsonData, 'utf8').toString('base64');
+    console.log('base64', base64)
+    navigator.sendBeacon("ajax.php?payload=" + base64);
+}
 
 
 
