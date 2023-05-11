@@ -381,6 +381,64 @@ export class Main {
                 },
 
 
+                // this function called when a tab is clicked
+                tabButton(thisTab: number, nTabs: number, tabPrefix: string) {
+                    let tabName;
+
+                    // clear ALL tabs
+                    for (var i = 1; i <= nTabs; i++) {
+                        tabName = tabPrefix + i.toString();
+                        console.log('clearing ID', tabName)
+                        document.getElementById(tabName).style.display = 'none';
+                    }
+
+                    // now set the one we want
+                    tabName = tabPrefix + thisTab.toString();
+                    console.log('setting ID ', tabName)
+                    document.getElementById(tabName).style.display = 'block';
+                },
+
+                wSpinnerPrefix: '',
+                wSpinnerVowel: '',
+                wSpinnerSuffix: '',
+
+                wordSpinner: function(pvs: string, letters: string) {
+                    console.log('wordspinner', pvs, letters)
+                    // shift all the existing words down
+                    document.getElementById('spin3').innerHTML = document.getElementById('spin2').innerHTML;
+                    document.getElementById('spin2').innerHTML = document.getElementById('spin1').innerHTML;
+                    document.getElementById('spin1').innerHTML = document.getElementById('spin0').innerHTML;
+
+                    if (pvs == 'p') { this.wSpinnerPrefix = letters; }
+                    else {
+                        if (pvs == 'v') { this.wSpinnerVowel = letters; }
+                        else { this.wSpinnerSuffix = letters; }
+                    }
+
+                    console.log('pre',this.wSpinnerPrefix,'vow',this.wSpinnerVowel,'suf',this.wSpinnerSuffix)
+                    document.getElementById('spin0').innerHTML = this.wSpinnerPrefix + this.wSpinnerVowel + this.wSpinnerSuffix;
+                },
+
+
+                wordSpinnerPlusE: function(pvs: string, letters: string) {
+
+                    // shift all the existing words down
+                    document.getElementById('spin3').innerHTML = document.getElementById('spin2').innerHTML;
+                    document.getElementById('spin2').innerHTML = document.getElementById('spin1').innerHTML;
+                    document.getElementById('spin1').innerHTML = document.getElementById('spin0').innerHTML;
+
+                    if (pvs == 'p') { this.wSpinnerPrefix = letters; }
+                    else {
+                        if (pvs == 'v') { this.wSpinnerVowel = letters; }
+                        else { this.wSpinnerSuffix = letters; }
+                    }
+
+                    document.getElementById('spin0').innerHTML = this.wSpinnerPrefix + this.wSpinnerVowel + this.wSpinnerSuffix + 'e';
+                }
+
+
+
+
             }
 
     }
