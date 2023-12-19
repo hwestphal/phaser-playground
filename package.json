@@ -23,8 +23,8 @@
         "lzstring.ts": "^2.0.2",
         "mathlive": "^0.69.9",
         "mini-css-extract-plugin": "^2.6.1",
-        "monaco-editor": "^0.34.0",
-        "monaco-editor-webpack-plugin": "^7.0.1",
+        "monaco-editor": "^0.45.0",
+        "monaco-editor-webpack-plugin": "^7.1.0",
         "npm": "^8.19.1",
         "path-browserify": "^1.0.1",
         "raw-loader": "^4.0.2",
@@ -35,7 +35,7 @@
         "webpack": "^5.74.0",
         "webpack-cli": "^4.10.0"
     },
-    "devDependencies": {
+        "devDependencies": {
         "@types/path-browserify": "^1.0.0"
     }
 }
