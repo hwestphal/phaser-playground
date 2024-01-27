@@ -97,7 +97,7 @@ function generateHTML()
         return ($HTML);
     }
 
-    public function showReflection()
+    function showReflection()
     {
         $HTML = '';
 
@@ -201,8 +201,8 @@ function generateHTML()
         $HTML .= "  </div>";
         return ($HTML);
     }
-    public function testTextStep()
-    {
-        $this->testAbstract();
-    }
-}
+    // public function testTextStep()
+    // {
+    //     $this->testAbstract();
+    // }
+// }

@@ -22,6 +22,7 @@ import * as monaco from "monaco-editor";
 import * as BABYLON from 'babylonjs';
 import * as PlanetCute from './planetcute'
 
+
 import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
 // import lib_baby from "./extraLibs/baby.d.ts.txt";
 import lib_dom_mini from "./extraLibs/lib.dom_mini.d.ts.txt";
@@ -42,10 +43,13 @@ import lib_es2021_string from "./extraLibs/lib.es2021.string.d.ts.txt"
 import babylonjs from "./extraLibs/babylonjs.d.ts.txt"
 
 import lib_es2099 from "./extraLibs/lib.es2099.d.ts.txt"
-import lib_jsx_tiny from "./extraLibs/jsx_tiny.d.ts.txt"
+
+// import lib_jsx_tiny from "./extraLibs/jsx_tiny.d.ts.txt"
+// import lib_jsxgraph from "./extraLibs/jsxgraph.d.ts.txt"
+
 import mathcode from "./extraLibs/mathcode.d.ts.txt"
 import matter from "./extraLibs/matter.d.ts.txt"
-
+import TSX from "./extraLibs/jsxgraph.d.ts.txt"
 
 import { RuntimeAnimation } from "babylonjs/Animations/runtimeAnimation";
 import { Observable } from "./observer";
@@ -131,8 +135,6 @@ export class Editor {
         this.safeDelay = 5000
 
 
-
-
         monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
             allowNonTsExtensions: true,
             inlineSourceMap: true,
@@ -200,7 +202,10 @@ export class Editor {
         monaco.languages.typescript.typescriptDefaults.addExtraLib(babylonjs)
 
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2099)      // stuff that Typescript hasn't provided
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_jsx_tiny)    // my simply remix of the upper level call
+
+        // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_jsx_tiny)    // my simply remix of the upper level call
+
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(TSX)    // wrapper version
         monaco.languages.typescript.typescriptDefaults.addExtraLib(mathcode)    // my simply remix of the upper level call
         monaco.languages.typescript.typescriptDefaults.addExtraLib(matter)    // my simply remix of the upper level call
 
@@ -211,8 +216,9 @@ export class Editor {
             `
             // const doc = document
             const Mathcode:Mathcode = window.Mathcode
+            // const JSXGraph.JSXGraph = window.JSXGraph
             // const Mathcode = window.Mathcode
-            const JXG = window.JXG   // (window as any).JXG
+            // const JXG = window.JXG   // (window as any).JXG
             const BABYLON = window.BABYLON
             const Matter = window.Matter
             const document = window.document
@@ -226,15 +232,17 @@ export class Editor {
             // const PlanetCute = window.PlanetCute
             // const engine = new BABYLON.Engine(canvas, true);
             let VT = Mathcode.VT52()
-        `
+            const JSXGraph = new TSX.JSXGraph()
+            `
 
 
         // must be JAVASCRIPT, not TYPESCRIPT
         this.systemDeclJS =
             `
             // const doc = document
-            const JXG = window.JXG   // (window as any).JXG
+            // const JXG = window.JXG   // (window as any).JXG
             const Mathcode = window.Mathcode
+            // const JSXGraph = window.TSX
             const BABYLON = window.BABYLON
             const Matter = window.Matter
             const document = window.document
@@ -249,6 +257,7 @@ export class Editor {
             // const PlanetCute = window.PlanetCute
             // const engine = new BABYLON.Engine(canvas, true);
             let VT = Mathcode.VT52()
+            const JSXGraph = window.TSX.JSXGraph()
 //
             let currentParagraph = "jxgbox"
 `
@@ -270,6 +279,7 @@ export class Editor {
         this.editor = monaco.editor.create(this.el, {
             automaticLayout: true,
             language: "typescript",
+            // language: "javascript",
             scrollBeyondLastLine: true,
 
             value: window.localStorage.getItem(this.storageKey) || this.initFile,

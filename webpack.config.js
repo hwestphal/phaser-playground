@@ -46,19 +46,22 @@ const config = {
                 loader: 'ts-loader', options: { transpileOnly: true },
                 exclude: ['/node_modules/'],
             },
-            {
+            {   {
+                //         test: /\.ttf$/,
+                //         use: ['file-loader']
+        
                 test: /\.txt$/i,
                 exclude: '/node_modules/',
                 use: 'raw-loader'
             },
-            // {
-            //     test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-            //     type: 'asset',
-            // },
             {
                 test: /\.ttf$/,
-                use: ['file-loader']
-            },
+                type: 'asset/resource'
+              },
+        //    {
+        //         test: /\.ttf$/,
+        //         use: ['file-loader']
+        //     },
             {
                 test: /\.css$/,
                 use: [

@@ -10,6 +10,7 @@ import { OnClickSay } from "./onClickSay"
 import { asciiMath, testAsciiMath } from './ASCIIMathML'
 
 import { VT52 } from './vt52'
+import { TSX } from './jsxgraph'
 import { Draw, V3, Ray } from './draw'
 import { PlanetCute } from "./planetcute";
 
@@ -94,7 +95,7 @@ export class Main {
 
     //         VT52: () => {
     //             console.log('Mathcode.loader()')
-    //             console.log('Mathcode.loader successful')
+    //             console.log('Mathcode.loader successful')class JSXB
     //             return new VT52()
     //         },
     //     }
@@ -104,6 +105,14 @@ export class Main {
     /** Attaches the mathcode API to the window object so that you can discover it */
     static attachMathCodeAPI() {   // NB - STATIC !!!
         // let onClickSay: OnClickSay
+
+        (window as any).TSX = {
+
+            JSXGraph: (): TSX.JSXGraph => {
+                console.log('called TSX TSX init')
+                return new TSX.JSXGraph()
+            },
+        };
 
         // remember to add these to NAMESPACE in mathcoode.d.ts.txt
         (window as any).Mathcode = {
@@ -415,7 +424,7 @@ export class Main {
                         else { this.wSpinnerSuffix = letters; }
                     }
 
-                    console.log('pre',this.wSpinnerPrefix,'vow',this.wSpinnerVowel,'suf',this.wSpinnerSuffix)
+                    console.log('pre', this.wSpinnerPrefix, 'vow', this.wSpinnerVowel, 'suf', this.wSpinnerSuffix)
                     document.getElementById('spin0').innerHTML = this.wSpinnerPrefix + this.wSpinnerVowel + this.wSpinnerSuffix;
                 },
 
@@ -638,7 +647,7 @@ export class Main {
         xhr.setRequestHeader("Content-type", "application/json");
 
         xhr.send();  // should be JsonData
-*/
+    */
 
         /////////////////////
 

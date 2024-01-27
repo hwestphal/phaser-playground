@@ -7,8 +7,13 @@ declare namespace Mathcode{
     function Ray(origin: V3, direction: V3):Ray;
     function PlanetCute():PlanetCute;
     function addObserver(type:'keypress'|'keydown'|'click'|'mousedown',handler:object):Observable;
+    function JSXBoard():JSXBoard;
 }
 
+//declare class JSXBoard {
+//    constructor(canvasID: string ='jxgbox');
+//    initboard(canvasID: string ='jxgbox);
+//}
 
 
 declare class VT52 {

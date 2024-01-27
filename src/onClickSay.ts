@@ -38,6 +38,9 @@ export class OnClickSay {
         }
 
         this.voices = this.synth.getVoices()
+
+        // console.log(this.voices);
+
         this.voices.forEach(voice => {
             // console.log(voice.voiceURI)
             if (voice.voiceURI.toLowerCase().indexOf('english') > 0) {
@@ -45,6 +48,8 @@ export class OnClickSay {
                 this.englishVoices.push(voice)
             }
         })
+
+        // console.log(this.englishVoices);
 
         // if (this.synthRunning) {     // someone clicked, likelywants to STOP the playback
         //     this.synthCancelled = true

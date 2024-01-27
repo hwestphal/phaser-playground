@@ -26,10 +26,14 @@ module.exports = {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader']
             },
+            // {
+            //     test: /\.ttf$/,
+            //     use: ['file-loader']
+            // },
             {
                 test: /\.ttf$/,
-                use: ['file-loader']
-            },
+                type: 'asset/resource'
+              },
             {
                 test: /\.tsx?$/,
                 use: { loader: 'ts-loader', options: { transpileOnly: true } },
