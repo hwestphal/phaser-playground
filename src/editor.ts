@@ -25,7 +25,7 @@ import * as PlanetCute from './planetcute'
 
 import lib_es5 from "./extraLibs/lib.es5.d.ts.txt";
 // import lib_baby from "./extraLibs/baby.d.ts.txt";
-import lib_dom_mini from "./extraLibs/lib.dom_mini.d.ts.txt";
+// import lib_dom_mini from "./extraLibs/lib.dom_mini.d.ts.txt";
 // import lib_dom from "./extraLibs/lib.dom.d.ts.txt";
 import lib_promise from "./extraLibs/lib.es2015.promise.d.ts.txt";
 
@@ -45,11 +45,11 @@ import babylonjs from "./extraLibs/babylonjs.d.ts.txt"
 import lib_es2099 from "./extraLibs/lib.es2099.d.ts.txt"
 
 // import lib_jsx_tiny from "./extraLibs/jsx_tiny.d.ts.txt"
-// import lib_jsxgraph from "./extraLibs/jsxgraph.d.ts.txt"
+import lib_jsxgraph from "./extraLibs/jsxgraph.d.ts.txt"
 
 import mathcode from "./extraLibs/mathcode.d.ts.txt"
 // import matter from "./extraLibs/matter.d.ts.txt"
-import TSX from "./extraLibs/jsxgraph.d.ts.txt"
+// import TSX from "./extraLibs/jsxgraph.d.ts.txt"
 
 import { RuntimeAnimation } from "babylonjs/Animations/runtimeAnimation";
 import { Observable } from "./observer";
@@ -185,7 +185,7 @@ export class Editor {
 
         // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_baby_plus, "lib.baby.d.ts");
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es5, "lib.es5.d.ts");
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom_mini, "lib.dom_mini.d.ts");
+        // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom_mini, "lib.dom_mini.d.ts");
         // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_dom, "lib.dom.d.ts");
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_promise, "lib.es2015.promise.d.ts");
 
@@ -205,7 +205,7 @@ export class Editor {
 
         // monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_jsx_tiny)    // my simply remix of the upper level call
 
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(TSX)    // wrapper version
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_jsxgraph)    // wrapper version
         monaco.languages.typescript.typescriptDefaults.addExtraLib(mathcode)    // my simply remix of the upper level call
         // monaco.languages.typescript.typescriptDefaults.addExtraLib(matter)    // my simply remix of the upper level call
 
@@ -233,7 +233,7 @@ export class Editor {
 
             const Mathcode:Mathcode = window.Mathcode
             const VT = Mathcode.VT52()
-            const JSXGraph = Mathcode.JSXGraph()
+            const JSXGraph = TSX.JSXGraph() as TSX.JSXGraph
             `
 
 
