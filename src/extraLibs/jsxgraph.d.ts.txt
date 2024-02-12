@@ -1,19 +1,20 @@
 declare namespace TSX {
-    /** JXG.Composition */
-    interface CompositionAttributes {
-    }
-    /** This is the basic class for geometry elements like points, circles and lines. */
     interface GeometryElementAttributes {
-        /** Determines the elements border-style. Possible values are: 0 for a solid line 1 for a dotted line 2 for a line with small dashes 3 for a line with medium dashes
-       /* 4 for a line with big dashes 5 for a line with alternating medium and big dashes and large gaps 6 for a line with alternating medium and big dashes and small
-       /* gaps 7 for a dotted line. Needs JXG.GeometryElement#linecap set to "round" for round dots.The dash patterns are defined in JXG.AbstractRenderer#dashArray. */
+        /** Color of the element. */
+        color?: String;
+        /** Opacity of the element (between 0 and 1). */
+        opacity?: Number;
+        /** Creates a grid to support the user with element placement. */
+        grid?: Boolean;
+        /**  ???. */
+        axis?: Boolean;
+        /** Determines the elements border-style. Possible values are: 0 for a solid line 1 for a dotted line 2 for a line with small dashes 3 for a line with medium dashes 4 for a line with big dashes 5 for a line with alternating medium and big dashes and large gaps 6 for a line with alternating medium and big dashes and small gaps 7 for a dotted line. Needs JXG.GeometryElement#linecap set to ”round” for round dots.The dash patterns are defined in JXG.AbstractRenderer#dashArray. */
         dash?: Number;
         /** If true, the dash pattern is multiplied by strokeWidth / 2. */
         dashScale?: Boolean;
         /** If draft.draft: true the element will be drawn in grey scale colors (as default) to visualize that it's only a draft. */
         draft?: Object;
-        /** If the element is dragged it will be moved on mousedown or touchstart to the top of its layer. Works only for SVG renderer and for simple elements consisting of
-       /* one SVG node. */
+        /** If the element is dragged it will be moved on mousedown or touchstart to the top of its layer. Works only for SVG renderer and for simple elements consisting of one SVG node. */
         dragToTopOfLayer?: Boolean;
         /** The fill color of this geometry element. */
         fillColor?: String;
@@ -21,46 +22,31 @@ declare namespace TSX {
         fillOpacity?: Number;
         /** If true the element is fixed and can not be dragged around. The element will be repositioned on zoom and moveOrigin events. */
         fixed?: Boolean;
-        /** If true the element is fixed and can not be dragged around. The element will even stay at its position on zoom and moveOrigin events. Only free elements like
-       /* points, texts, curves can be frozen. */
+        /** If true the element is fixed and can not be dragged around. The element will even stay at its position on zoom and moveOrigin events. Only free elements like points, texts, curves can be frozen. */
         frozen?: Boolean;
         /** Gradient type. Possible values are 'linear'. 'radial' or null. */
         gradient?: String;
-        /** Angle (in radians) of the gradiant in case the gradient is of type 'linear'. If the angle is 0, the first color is on the left and the second color is on the
-       /* right. If the angle is &pi;/2 the first color is on top and the second color at the bottom. */
+        /** Angle (in radians) of the gradiant in case the gradient is of type 'linear'. If the angle is 0, the first color is on the left and the second color is on the right. If the angle is π/2 the first color is on top and the second color at the bottom. */
         gradientAngle?: Number;
-        /** From the SVG specification: ‘cx’, ‘cy’ and ‘r’ define the largest (i.e., outermost) circle for the radial gradient. The gradient will be drawn such
-       /* that the 100% gradient stop is mapped to the perimeter of this largest (i.e., outermost) circle. For radial gradients in canvas this is the value 'x1'. Takes a
-       /* value between 0 and 1. */
+        /** From the SVG specification: ‘cx’, ‘cy’ and ‘r’ define the largest (i.e., outermost) circle for the radial gradient. The gradient will be drawn such that the 100% gradient stop is mapped to the perimeter of this largest (i.e., outermost) circle. For radial gradients in canvas this is the value 'x1'. Takes a value between 0 and 1. */
         gradientCX?: Number;
-        /** From the SVG specification: ‘cx’, ‘cy’ and ‘r’ define the largest (i.e., outermost) circle for the radial gradient. The gradient will be drawn such
-       /* that the 100% gradient stop is mapped to the perimeter of this largest (i.e., outermost) circle. For radial gradients in canvas this is the value 'y1'. Takes a
-       /* value between 0 and 1. */
+        /** From the SVG specification: ‘cx’, ‘cy’ and ‘r’ define the largest (i.e., outermost) circle for the radial gradient. The gradient will be drawn such that the 100% gradient stop is mapped to the perimeter of this largest (i.e., outermost) circle. For radial gradients in canvas this is the value 'y1'. Takes a value between 0 and 1. */
         gradientCY?: Number;
-        /** The gradientEndOffset attribute is a number (ranging from 0 to 1) which indicates where the second gradient stop is placed, see the SVG specification for more
-       /* information. For linear gradients, this attribute represents a location along the gradient vector. For radial gradients, it represents a percentage distance
-       /* from (fx,fy) to the edge of the outermost/largest circle. */
+        /** The gradientEndOffset attribute is a number (ranging from 0 to 1) which indicates where the second gradient stop is placed, see the SVG specification for more information. For linear gradients, this attribute represents a location along the gradient vector. For radial gradients, it represents a percentage distance from (fx,fy) to the edge of the outermost/largest circle. */
         gradientEndOffset?: Number;
-        /** This attribute defines the radius of the start circle of the radial gradient. The gradient will be drawn such that the 0% &lt;stop&gt; is mapped to the
-       /* perimeter of the start circle. For radial gradients in canvas this is the value 'r0'. Takes a value between 0 and 1. */
+        /** This attribute defines the radius of the start circle of the radial gradient. The gradient will be drawn such that the 0% <stop> is mapped to the perimeter of the start circle. For radial gradients in canvas this is the value 'r0'. Takes a value between 0 and 1. */
         gradientFR?: Number;
-        /** ‘fx’ and ‘fy’ define the focal point for the radial gradient. The gradient will be drawn such that the 0% gradient stop is mapped to (fx, fy). For
-       /* radial gradients in canvas this is the value 'x0'. Takes a value between 0 and 1. */
+        /** ‘fx’ and ‘fy’ define the focal point for the radial gradient. The gradient will be drawn such that the 0% gradient stop is mapped to (fx, fy). For radial gradients in canvas this is the value 'x0'. Takes a value between 0 and 1. */
         gradientFX?: Number;
-        /** y-coordinate of the circle center for the second color in case of gradient 'radial'. (The attribute fy in SVG) For radial gradients in canvas this is the value
-       /* 'y0'. Takes a value between 0 and 1. */
+        /** y-coordinate of the circle center for the second color in case of gradient 'radial'. (The attribute fy in SVG) For radial gradients in canvas this is the value 'y0'. Takes a value between 0 and 1. */
         gradientFY?: Number;
-        /** From the SVG specification: ‘cx’, ‘cy’ and ‘r’ define the largest (i.e., outermost) circle for the radial gradient. The gradient will be drawn such
-       /* that the 100% gradient stop is mapped to the perimeter of this largest (i.e., outermost) circle. For radial gradients in canvas this is the value 'r1'. Takes a
-       /* value between 0 and 1. */
+        /** From the SVG specification: ‘cx’, ‘cy’ and ‘r’ define the largest (i.e., outermost) circle for the radial gradient. The gradient will be drawn such that the 100% gradient stop is mapped to the perimeter of this largest (i.e., outermost) circle. For radial gradients in canvas this is the value 'r1'. Takes a value between 0 and 1. */
         gradientR?: Number;
         /** Second color for gradient. */
         gradientSecondColor?: String;
         /** Opacity of second gradient color. Takes a value between 0 and 1. */
         gradientSecondOpacity?: Number;
-        /** The gradientStartOffset attribute is a number (ranging from 0 to 1) which indicates where the first gradient stop is placed, see the SVG specification for more
-       /* information. For linear gradients, this attribute represents a location along the gradient vector. For radial gradients, it represents a percentage distance
-       /* from (fx,fy) to the edge of the outermost/largest circle. */
+        /** The gradientStartOffset attribute is a number (ranging from 0 to 1) which indicates where the first gradient stop is placed, see the SVG specification for more information. For linear gradients, this attribute represents a location along the gradient vector. For radial gradients, it represents a percentage distance from (fx,fy) to the edge of the outermost/largest circle. */
         gradientStartOffset?: Number;
         /**  */
         highlight?: Boolean;
@@ -78,33 +64,19 @@ declare namespace TSX {
         layer?: String;
         /** Line endings (linecap) of a stroke element, i.e. line, circle, curve. Possible values are:'butt','round','square'.Not available for VML renderer. */
         lineCap?: String;
-        /** If this is set to true, the element is updated in every update call of the board. If set to false, the element is updated only after zoom events or more
-       /* generally, when the bounding box has been changed. Examples for the latter behavior should be axes. */
+        /** If this is set to true, the element is updated in every update call of the board. If set to false, the element is updated only after zoom events or more generally, when the bounding box has been changed. Examples for the latter behavior should be axes. */
         needsRegularUpdate?: Boolean;
-        /** Precision options for JSXGraph elements. This attributes takes either the value 'inherit' or an object of the form:precision: {touch: 30,mouse: 4,pen: 4 }In the
-       /* first case, the global, JSXGraph-wide values of JXGraph.Options.precision are taken. */
+        /** Precision options for JSXGraph elements. This attributes takes either the value 'inherit' or an object of the form:precision: {touch: 30,mouse: 4,pen: 4 }In the first case, the global, JSXGraph-wide values of JXGraph.Options.precision are taken. */
         precision?: Object;
         /** A private element will be inaccessible in certain environments, e.g. a graphical user interface. */
         priv?: Boolean;
-        /** Determines whether two-finger manipulation may rotate this object. If set to false, the object can only be scaled and translated.In case the element is a
-       /* polygon or line and it has the attribute "rotatable:false", moving the element with two fingers results in a rotation or translation.If an element is set to be
-       /* neither scalable nor rotatable, it can only be translated.In case of a polygon, scaling is only possible if no vertex has snapToGrid or snapToPoints enabled and
-       /* no vertex is fixed by some other constraint. Also, the polygon itself has to have snapToGrid disabled. */
+        /** Determines whether two-finger manipulation may rotate this object. If set to false, the object can only be scaled and translated.In case the element is a polygon or line and it has the attribute ”rotatable:false”, moving the element with two fingers results in a rotation or translation.If an element is set to be neither scalable nor rotatable, it can only be translated.In case of a polygon, scaling is only possible if no vertex has snapToGrid or snapToPoints enabled and no vertex is fixed by some other constraint. Also, the polygon itself has to have snapToGrid disabled. */
         rotatable?: Boolean;
-        /** Determines whether two-finger manipulation of this object may change its size. If set to false, the object is only rotated and translated.In case the element is
-       /* a horizontal or vertical line having ticks, "scalable:true" enables zooming of the board by dragging ticks lines. This feature is enabled, for the ticks element
-       /* of the line element the attribute "fixed" has to be false and the line element's scalable attribute has to be true.In case the element is a polygon or line and
-       /* it has the attribute "scalable:false", moving the element with two fingers results in a rotation or translation.If an element is set to be neither scalable nor
-       /* rotatable, it can only be translated.In case of a polygon, scaling is only possible if no vertex has snapToGrid or snapToPoints enabled and no vertex is fixed
-       /* by some other constraint. Also, the polygon itself has to have snapToGrid disabled. */
+        /** Determines whether two-finger manipulation of this object may change its size. If set to false, the object is only rotated and translated.In case the element is a horizontal or vertical line having ticks, ”scalable:true” enables zooming of the board by dragging ticks lines. This feature is enabled, for the ticks element of the line element the attribute ”fixed” has to be false and the line element's scalable attribute has to be true.In case the element is a polygon or line and it has the attribute ”scalable:false”, moving the element with two fingers results in a rotation or translation.If an element is set to be neither scalable nor rotatable, it can only be translated.In case of a polygon, scaling is only possible if no vertex has snapToGrid or snapToPoints enabled and no vertex is fixed by some other constraint. Also, the polygon itself has to have snapToGrid disabled. */
         scalable?: Boolean;
-        /** If enabled:true the (stroke) element will get a customized shadow.Customize color and opacity: If the object's RGB stroke color is [r,g,b] and its opacity is
-       /* op, and the shadow parameters color is given as [r', g', b'] and opacity as op' the shadow will receive the RGB color[blend*r + r', blend*g + g', blend*b +
-       /* b']and its opacity will be equal to op * op'. Further, the parameters blur and offset can be adjusted.This attribute is only available with SVG, not with
-       /* canvas. */
+        /** If enabled:true the (stroke) element will get a customized shadow.Customize color and opacity: If the object's RGB stroke color is [r,g,b] and its opacity is op, and the shadow parameters color is given as [r', g', b'] and opacity as op' the shadow will receive the RGB color[blend*r + r', blend*g + g', blend*b + b']and its opacity will be equal to op * op'. Further, the parameters blur and offset can be adjusted.This attribute is only available with SVG, not with canvas. */
         shadow?: Object;
-        /** Snaps the element or its parents to the grid. Currently only relevant for points, circles, and lines. Points are snapped to grid directly, on circles and lines
-       /* it's only the parent points that are snapped */
+        /** Snaps the element or its parents to the grid. Currently only relevant for points, circles, and lines. Points are snapped to grid directly, on circles and lines it's only the parent points that are snapped */
         snapToGrid?: Boolean;
         /** The stroke color of the given geometry element. */
         strokeColor?: String;
@@ -112,36 +84,55 @@ declare namespace TSX {
         strokeOpacity?: Number;
         /** Width of the element's stroke. */
         strokeWidth?: Number;
-        /** Controls if an element can get the focus with the tab key. tabindex corresponds to the HTML attribute of the same name. See descriptiona at MDN. The additional
-       /* value "null" completely disables focus of an element. The value will be ignored if keyboard control of the board is not enabled or the element is fixed or not
-       /* visible. */
+        /** Controls if an element can get the focus with the tab key. tabindex corresponds to the HTML attribute of the same name. See descriptiona at MDN. The additional value ”null” completely disables focus of an element. The value will be ignored if keyboard control of the board is not enabled or the element is fixed or not visible. */
         tabindex?: Number;
-        /** If true the element will be traced, i.e. on every movement the element will be copied to the background. Use JXG.GeometryElement#clearTrace to delete the trace
-       /* elements.The calling of element.setAttribute({trace:false}) additionally deletes all traces of this element. By calling element.setAttribute({trace:'pause'})
-       /* the removal of already existing traces can be prevented.The visual appearance of the trace can be influenced by JXG.GeometryElement#traceAttributes. */
+        /** If true the element will be traced, i.e. on every movement the element will be copied to the background. Use JXG.GeometryElement#clearTrace to delete the trace elements.The calling of element.setAttribute({trace:false}) additionally deletes all traces of this element. By calling element.setAttribute({trace:'pause'}) the removal of already existing traces can be prevented.The visual appearance of the trace can be influenced by JXG.GeometryElement#traceAttributes. */
         trace?: Boolean | String;
         /** Extra visual properties for traces of an element */
         traceAttributes?: Object;
-        /** Transition duration (in milliseconds) for certain cahnges of properties like color and opacity. The properties can be set in the attribute transitionProperties
-       /* Works in SVG renderer, only. */
+        /** Transition duration (in milliseconds) for certain cahnges of properties like color and opacity. The properties can be set in the attribute transitionProperties Works in SVG renderer, only. */
         transitionDuration?: Number;
-        /** Properties which change smoothly in the time set in transitionDuration. Possible values are ['fill', 'fill-opacity', 'stroke', 'stroke-opacity', 'stroke-width',
-       /* 'width', 'height', 'rx', 'ry'] (and maybe more) for geometry elements and ['color', 'opacity', 'all'] for HTML texts. */
+        /** Properties which change smoothly in the time set in transitionDuration. Possible values are ['fill', 'fill-opacity', 'stroke', 'stroke-opacity', 'stroke-width', 'width', 'height', 'rx', 'ry'] (and maybe more) for geometry elements and ['color', 'opacity', 'all'] for HTML texts. */
         transitionProperties?: String[];
         /** If false the element won't be visible on the board, otherwise it is shown. */
         visible?: Boolean;
         /** If true a label will display the element's name. */
         withLabel?: Boolean;
-        /**  */
-        color?: String;
-        /**  */
+        /** Set display name  */
         name?: String;
     }
-    /** This element is used to provide a constructor for curve, which is just a wrapper for element Curve. A curve is a mapping from R to R^2. t mapsto (x(t),y(t)). The graph is drawn for t in the interval [a,b].The following types of curves can be plotted:parametric curves: t mapsto (x(t),y(t)), where x() and y() are univariate functions.polar curves: curves commonly written with polar equations like spirals and cardioids.data plots: plot line segments through a given list of coordinates. */
+    interface GeometryElement3DAttributes {
+        /** Set whether the element is visibledisplay name  */
+        visible?: Boolean;
+    }
+    interface ChartAttributes extends GeometryElementAttributes {
+        /** Select type of chart. */
+        chartStyle?: `bar` | `line`;
+        /**  */
+        width?: Number;
+        /**  */
+        labels?: any[];
+        /**  */
+        colorArray?: string[];
+        /**  */
+        label?: Object;
+    }
+    interface CircleAttributes extends GeometryElementAttributes {
+        /** Attributes for center point. */
+        center?: Point;
+        /** If true, moving the mouse over inner points triggers hasPoint. */
+        hasInnerPoints?: Boolean;
+        /** Attributes for circle label. */
+        label?: Label;
+        /** Attributes for center point. */
+        point?: Point;
+        /** Attributes for center point. */
+        point2?: Point;
+    }
+    interface CompositionAttributes {
+    }
     interface CurveAttributes extends GeometryElementAttributes {
-        /** The curveType is set in JXG.Curve#generateTerm and used in JXG.Curve#updateCurve. Possible values are'none' 'plot': Data plot 'parameter': we can not
-       /* distinguish function graphs and parameter curves 'functiongraph': function graph 'polar' 'implicit' (not yet) Only parameter and plot are set directly. Polar is
-       /* set with JXG.GeometryElement#setAttribute only. */
+        /** The curveType is set in JXG.Curve#generateTerm and used in JXG.Curve#updateCurve. Possible values are'none' 'plot': Data plot 'parameter': we can not distinguish function graphs and parameter curves 'functiongraph': function graph 'polar' 'implicit' (not yet) Only parameter and plot are set directly. Polar is set with JXG.GeometryElement#setAttribute only. */
         curveType?: String;
         /** If true use a recursive bisection algorithm. It is slower, but usually the result is better. It tries to detect jumps and singularities. */
         doAdvancedPlot?: Boolean;
@@ -159,9 +150,7 @@ declare namespace TSX {
         numberPointsHigh?: Number;
         /** Number of points used for plotting triggered by move events (i.e. lower quality plotting but fast) in case Curve#doAdvancedPlot is false. */
         numberPointsLow?: Number;
-        /** Select the version of the plot algorithm.Version 1 is very outdatedVersion 2 is the default version in JSXGraph v0.99.*, v1.0, and v1.1, v1.2.0Version 3 is an
-       /* internal version that was never published ina stable version.Version 4 is available since JSXGraph v1.2.0Version 4 plots correctly logarithms if the function
-       /* term is supplied as string (i.e. as JessieCode) */
+        /** Select the version of the plot algorithm.Version 1 is very outdatedVersion 2 is the default version in JSXGraph v0.99.*, v1.0, and v1.1, v1.2.0Version 3 is an internal version that was never published ina stable version.Version 4 is available since JSXGraph v1.2.0Version 4 plots correctly logarithms if the function term is supplied as string (i.e. as JessieCode) */
         plotVersion?: Number;
         /** Apply Ramer-Douglas-Peuker smoothing. */
         RDPsmoothing?: Boolean;
@@ -170,32 +159,38 @@ declare namespace TSX {
         /** Number of points used for plotting triggered by move events in case (i.e. lower quality plotting but fast) Curve#doAdvancedPlot is true. */
         recursionDepthLow?: Number;
     }
-    /** This element is used to provide a constructor for a general line. A general line is given by two points. By setting additional properties a line can be used as an arrow and/or axis. */
+    interface GroupAttributes extends GeometryElementAttributes {
+    }
+    interface ImageAttributes extends GeometryElementAttributes {
+        /** List of attractor elements. If the distance of the image is less than attractorDistance the image is made to glider of this element. */
+        attractors?: Element[];
+        /** Defines the CSS class used by the image. CSS attributes defined in this class will overwrite the corresponding JSXGraph attributes, e.g. opacity. The default CSS class is defined in jsxgraph.css. */
+        cssClass?: String;
+        /** Defines the CSS class used by the image when highlighted. CSS attributes defined in this class will overwrite the corresponding JSXGraph attributes, e.g. highlightFillOpacity. The default CSS class is defined in jsxgraph.css. */
+        highlightCssClass?: String;
+        /** Image rotation in degrees. */
+        rotate?: Number;
+        /** Defines together with Image#snapSizeY the grid the image snaps on to. The image will only snap on user coordinates which are integer multiples to snapSizeX in x and snapSizeY in y direction. If this value is equal to or less than 0, it will use the grid displayed by the major ticks of the default ticks of the default x axes of the board. */
+        snapSizeX?: Number;
+        /** Defines together with Image#snapSizeX the grid the image snaps on to. The image will only snap on integer multiples to snapSizeX in x and snapSizeY in y direction. If this value is equal to or less than 0, it will use the grid displayed by the major ticks of the default ticks of the default y axes of the board. */
+        snapSizeY?: Number;
+    }
     interface LineAttributes extends GeometryElementAttributes {
-        /** Configure the arrow head at the position of its first point or the corresponding intersection with the canvas borderIn case firstArrow is an object it has the
-       /* sub-attributes:{type: 1, // possible values are 1, 2, ..., 7. Default value is 1.size: 6, // size of the arrow head. Default value is 6.// This value is
-       /* multiplied with the strokeWidth of the line// Exception: for type=7 size is ignoredhighlightSize: 6, // size of the arrow head in case the element is
-       /* highlighted. Default value }type=7 is the default for curves if firstArrow: true */
+        /** Configure the arrow head at the position of its first point or the corresponding intersection with the canvas borderIn case firstArrow is an object it has the sub-attributes:{type: 1, // possible values are 1, 2, ..., 7. Default value is 1.size: 6, // size of the arrow head. Default value is 6.// This value is multiplied with the strokeWidth of the line// Exception: for type=7 size is ignoredhighlightSize: 6, // size of the arrow head in case the element is highlighted. Default value }type=7 is the default for curves if firstArrow: true */
         firstArrow?: Boolean | Object;
         /** Attributes for the line label. */
         label?: Object;
-        /** Configure the arrow head at the position of its second point or the corresponding intersection with the canvas border.In case lastArrow is an object it has the
-       /* sub-attributes:{type: 1, // possible values are 1, 2, ..., 7. Default value is 1.size: 6, // size of the arrow head. Default value is 6.// This value is
-       /* multiplied with the strokeWidth of the line.// Exception: for type=7 size is ignoredhighlightSize: 6, // size of the arrow head in case the element is
-       /* highlighted. Default value is 6. }type=7 is the default for curves if lastArrow: true */
+        /** Configure the arrow head at the position of its second point or the corresponding intersection with the canvas border.In case lastArrow is an object it has the sub-attributes:{type: 1, // possible values are 1, 2, ..., 7. Default value is 1.size: 6, // size of the arrow head. Default value is 6.// This value is multiplied with the strokeWidth of the line.// Exception: for type=7 size is ignoredhighlightSize: 6, // size of the arrow head in case the element is highlighted. Default value is 6. }type=7 is the default for curves if lastArrow: true */
         lastArrow?: Boolean | Object;
-        /** This number (pixel value) controls where infinite lines end at the canvas border. If zero, the line ends exactly at the border, if negative there is a margin to
-       /* the inside, if positive the line ends outside of the canvas (which is invisible). */
+        /** This number (pixel value) controls where infinite lines end at the canvas border. If zero, the line ends exactly at the border, if negative there is a margin to the inside, if positive the line ends outside of the canvas (which is invisible). */
         margin?: Number;
         /** Attributes for first defining point of the line. */
         point1?: Point;
         /** Attributes for second defining point of the line. */
         point2?: Point;
-        /** Defines together with Point#snapSizeY the grid the point snaps on to. The point will only snap on integer multiples to snapSizeX in x and snapSizeY in y
-       /* direction. If this value is equal to or less than 0, it will use the grid displayed by the major ticks of the default ticks of the default x axes of the board. */
+        /** Defines together with Point#snapSizeY the grid the point snaps on to. The point will only snap on integer multiples to snapSizeX in x and snapSizeY in y direction. If this value is equal to or less than 0, it will use the grid displayed by the major ticks of the default ticks of the default x axes of the board. */
         snapSizeX?: Number;
-        /** Defines together with Point#snapSizeX the grid the point snaps on to. The point will only snap on integer multiples to snapSizeX in x and snapSizeY in y
-       /* direction. If this value is equal to or less than 0, it will use the grid displayed by the major ticks of the default ticks of the default y axes of the board. */
+        /** Defines together with Point#snapSizeX the grid the point snaps on to. The point will only snap on integer multiples to snapSizeX in x and snapSizeY in y direction. If this value is equal to or less than 0, it will use the grid displayed by the major ticks of the default ticks of the default y axes of the board. */
         snapSizeY?: Number;
         /** If set to true, the point will snap to a grid defined by Point#snapSizeX and Point#snapSizeY. */
         snapToGrid?: Boolean;
@@ -210,129 +205,190 @@ declare namespace TSX {
         /** If set to true, Line#lastArrow is set to true and the point is visible, the arrow head will just touch the circle line of the start point of the line. */
         touchLastPoint?: Boolean;
     }
-    /** This element is used to provide a constructor for a general point. A free point is created if the given parent elements are all numbers and the property fixed is not set or set to false. If one or more parent elements is not a number but a string containing a GEONExT constraint or a function the point will be considered as constrained). That means that the user won't be able to change the point's position directly. */
     interface PointAttributes extends GeometryElementAttributes {
-        /** If the distance of the point to one of its attractors is less than this number the point will be a glider on this attracting element. If set to zero nothing
-       /* happens. */
-        attractorDistance?: Number;
-        /** List of attractor elements. If the distance of the point is less than attractorDistance the point is made to glider of this element. */
-        attractors?: Element[];
-        /** Unit for attractorDistance and snatchDistance, used for magnetized points and for snapToPoints. Possible values are 'screen' and 'user'. */
-        attractorUnit?: String;
-        /** If set to true, the point will only snap to (possibly invisibly) grid points when within Point#attractorDistance of such a grid point.The coordinates of the
-       /* grid points are either integer multiples of snapSizeX and snapSizeY (given in user coordinates, not pixels) or are the intersection points of the major ticks of
-       /* the boards default axes in case that snapSizeX, snapSizeY are negative. */
-        attractToGrid?: Boolean;
-        /** There are different point styles which differ in appearance. Posssible values are Value InputOutput crossx circleo square, [][] plus+ minus- divide|
-       /* diamond&lt;&gt; triangleup^, a, A triangledownv triangleleft&lt; triangleright&gt; */
+        /** There are different point styles which differ in appearance. Posssible values are Value InputOutput crossx circleo square, [][] plus+ minus- divide| diamond<> triangleup^, a, A triangledownv triangleleft< triangleright> */
         face?: String;
-        /** List of elements which are ignored by snapToPoints. */
-        ignoredSnapToPoints?: Element[];
-        /** Truncating rule for the digits in the infobox.'auto': done automatically by JXG.autoDigits() 'none': no truncation number: truncate after "number digits" with
-       /* JXG.toFixed() */
-        infoboxDigits?: String | Number;
         /** If true, the infobox is shown on mouse/pen over, if false not. If the value is 'inherit', the value of JXG.Board#showInfobox is taken. true | false | 'inherit' */
         showInfobox?: Boolean | String;
         /** Size of a point, either in pixel or user coordinates. Means radius resp. half the width of a point (depending on the face). */
         size?: Number;
-        /** Unit for size. Possible values are 'screen' and 'user. */
-        sizeUnit?: String;
-        /** Defines together with Point#snapSizeY the grid the point snaps on to. It is given in user coordinates, not in pixels. The point will only snap on integer
-       /* multiples to snapSizeX in x and snapSizeY in y direction. If this value is equal to or less than 0, it will use the grid displayed by the major ticks of the
-       /* default ticks of the default x axes of the board. */
-        snapSizeX?: Number;
-        /** Defines together with Point#snapSizeX the grid the point snaps on to. It is given in user coordinates, not in pixels. The point will only snap on integer
-       /* multiples to snapSizeX in x and snapSizeY in y direction. If this value is equal to or less than 0, it will use the grid displayed by the major ticks of the
-       /* default ticks of the default y axes of the board. */
-        snapSizeY?: Number;
-        /** If set to true, the point will snap to a grid of integer multiples of Point#snapSizeX and Point#snapSizeY (in user coordinates).The coordinates of the grid
-       /* points are either integer multiples of snapSizeX and snapSizeY (given in user coordinates, not pixels) or are the intersection points of the major ticks of the
-       /* boards default axes in case that snapSizeX, snapSizeY are negative. */
-        snapToGrid?: Boolean;
-        /** If set to true, the point will snap to the nearest point in distance of Point#attractorDistance. */
-        snapToPoints?: Boolean;
-        /** If the distance of the point to one of its attractors is at least this number the point will be released from being a glider on the attracting element. If set
-       /* to zero nothing happens. */
-        snatchDistance?: Number;
         /** This attribute was used to determined the point layout. It was derived from GEONExT and was replaced by Point#face and Point#size. */
         style?: Number;
-        /** If true, the point size changes on zoom events. */
-        zoom?: Boolean;
     }
-    /** Construct and handle texts.The coordinates can either be abslute (i.e. respective to the coordinate system of the board) or be relative to the coordinates of an element given in Text#anchor.HTML, MathJaX, KaTeX and GEONExT syntax can be handled.There are two ways to display texts:using the text element of the renderer (canvas or svg). In most cases this is the suitable approach if speed matters. However, advanced rendering like MathJax, KaTeX or HTML/CSS are not possible.using HTML &lt;div&gt;. This is the most flexible approach. The drawback is that HTML can only be display "above" the geometry elements. If HTML should be displayed in an inbetween layer, conder to use an element of type ForeignObject (available in svg renderer, only). */
+    interface PolygonAttributes extends GeometryElementAttributes {
+        /** Attributes for the polygon border lines. */
+        borders?: Line;
+        /** If true, moving the mouse over inner points triggers hasPoint. */
+        hasInnerPoints?: Boolean;
+        /** By default, the strokewidths of the borders of a polygon are not changed during highlighting (only strokeColor and strokeOpacity are changed to highlightStrokeColor, and highlightStrokeOpacity). However, strokewidth is changed to highlightStrokewidth if an individual border gets the focus.With this attribute set to true, also the borders change strokeWidth if the polygon itself gets the focus. */
+        highlightByStrokeWidth?: Boolean;
+        /** Attributes for the polygon label. */
+        label?: Label;
+        /** Attributes for the polygon vertices. */
+        vertices?: Point;
+        /** Is the polygon bordered by lines? */
+        withLines?: Boolean;
+    }
     interface TextAttributes extends GeometryElementAttributes {
-        /** Anchor element Point, Text or Image of the text. If it exists, the coordinates of the text are relative to this anchor element. In this case, only numbers are
-       /* possible coordinates, functions are not supported. */
+        /** Anchor element Point, Text or Image of the text. */
         anchor?: Object;
-        /** The horizontal alignment of the text. Possible values include 'auto, 'left', 'middle', and 'right'. */
+        /** The horizontal alignment of the text. */
         anchorX?: String;
-        /** The vertical alignment of the text. Possible values include 'auto, 'top', 'middle', and 'bottom'. For MathJax or KaTeX, 'top' is recommended. */
+        /** The vertical alignment of the text. */
         anchorY?: String;
-        /** List of attractor elements. If the distance of the text is less than attractorDistance the text is made to glider of this element. */
+        /** List of attractor elements. */
         attractors?: Element[];
         /** CSS class of the text in non-highlighted view. */
         cssClass?: String;
-        /** Default CSS properties of the HTML text element.The CSS properties which are set here, are handed over to the style property of the HTML text element. That
-       /* means, they have higher property than any CSS class.If a property which is set here should be overruled by a CSS class then this property should be removed
-       /* here.The reason, why this attribute should be kept to its default value at all, is that screen dumps of SVG boards with board.renderer.dumpToCanvas() will
-       /* ignore the font-family if it is set in a CSS class. It has to be set explicitly as style attribute.In summary, the order of priorities from high to low
-       /* isJXG.Options.text.cssStyleJXG.Options.text.cssDefaultStyleJXG.Options.text.cssClass */
+        /** Default CSS properties of the HTML text element. */
         cssDefaultStyle?: String;
-        /** CSS properties of the HTML text element.The CSS properties which are set here, are handed over to the style property of the HTML text element. That means, they
-       /* have higher property than any CSS class. */
+        /** CSS properties of the HTML text element. */
         cssStyle?: String;
         /** Used to round texts given by a number. */
         digits?: Number;
-        /** Determines the rendering method of the text. Possible values include 'html' and 'internal. */
+        /** Determines the rendering method of the text. */
         display?: String;
-        /** Sensitive area for dragging the text. Possible values are 'all', or something else. If set to 'small', a sensitivity margin at the right and left border is
-       /* taken. This may be extended to left, right, ... in the future. */
+        /** Sensitive area for dragging the text. */
         dragArea?: String;
         /** The font size in pixels. */
         fontSize?: Number;
-        /** CSS unit for the font size of a text element. Usually, this will be the default value 'px' but for responsive application, also 'vw', 'vh', vmax', 'vmin' or
-       /* 'rem' might be useful. */
+        /** CSS unit for the font size of a text element. */
         fontUnit?: String;
         /** CSS class of the text in highlighted view. */
         highlightCssClass?: String;
-        /** Default CSS properties of the HTML text element in case of highlighting.The CSS properties which are set here, are handed over to the style property of the HTML
-       /* text element. That means, they have higher property than any CSS class. */
+        /** Default CSS properties of the HTML text element in case of highlighting. */
         highlightCssDefaultStyle?: String;
-        /** CSS properties of the HTML text element in case of highlighting.The CSS properties which are set here, are handed over to the style property of the HTML text
-       /* element. That means, they have higher property than any CSS class. */
+        /** CSS properties of the HTML text element in case of highlighting. */
         highlightCssStyle?: String;
-        /** Internationalization support for texts consisting of a number only.Setting the local overwrites the board-wide locale set in the board attributes. The JSXGraph
-       /* attribute digits is overruled by the Intl attributes "minimumFractionDigits" and "maximumFractionDigits". See
-       /* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat for more information about possible options.See
-       /* below for an example where the text is composed from a string and a locale formatted number. */
+        /** Internationalization support for texts consisting of a number only. */
         intl?: object;
-        /** If enabled, the text will be handled as label. Intended for internal use. */
+        /** If enabled, the text will be handled as label. */
         isLabel?: Boolean;
-        /** Object or function returning an object that contains macros for KaTeX. */
+        /** Object or function returning an object that contains macros for KaTeX */
         katexMacros?: Object;
-        /** If set to true, the text is parsed and evaluated. For labels parse==true results in converting names of the form k_a to subscripts. If the text is given by
-       /* string and parse==true, the string is parsed as JessieCode expression. */
+        /** If set to true, the text is parsed and evaluated. */
         parse?: Boolean;
-        /** Text rotation in degrees. Works for non-zero values only in combination with display=='internal'. */
+        /** Text rotation in degrees. */
         rotate?: Number;
-        /** Defines together with Text#snapSizeY the grid the text snaps on to. The text will only snap on integer multiples to snapSizeX in x and snapSizeY in y direction.
-       /* If this value is equal to or less than 0, it will use the grid displayed by the major ticks of the default ticks of the default x axes of the board. */
+        /** Defines together with Text#snapSizeY the grid the text snaps on to. */
         snapSizeX?: Number;
-        /** Defines together with Text#snapSizeX the grid the text snaps on to. The text will only snap on integer multiples to snapSizeX in x and snapSizeY in y direction.
-       /* If this value is equal to or less than 0, it will use the grid displayed by the major ticks of the default ticks of the default y axes of the board. */
+        /** Defines together with Text#snapSizeX the grid the text snaps on to. */
         snapSizeY?: Number;
         /** If true, the input will be given to ASCIIMathML before rendering. */
         useASCIIMathML?: Boolean;
         /** If set to true and caja's sanitizeHTML function can be found it will be used to sanitize text output. */
         useCaja?: Boolean;
-        /** If true, KaTeX will be used to render the input string. For this feature, katex.min.js and katex.min.css have to be included.The example below does not work,
-       /* because there is a conflict with the MathJax library which is used below. */
+        /** If true, KaTeX will be used to render the input string. */
         useKatex?: Boolean;
-        /** If true, MathJax will be used to render the input string. Supports MathJax 2 as well as Mathjax 3. It is recommended to use this option together with the option
-       /* "parse: false". Otherwise, 4 backslashes (e.g. \\\\alpha) are needed instead of two (e.g. \\alpha). */
+        /** If true, MathJax will be used to render the input string. */
         useMathJax?: Boolean;
     }
-    /** A circular sector is a subarea of the area enclosed by a circle. It is enclosed by two radii and an arc. */
+    interface TicksAttributes extends GeometryElementAttributes {
+        /** Determine the position of the tick with value 0. 'left' means point1 of the line, 'right' means point2, and 'middle' is equivalent to the midpoint of the defining points. This attribute is ignored if the parent line is of type axis. */
+        anchor?: String;
+        /** Format tick labels that were going to have scientific notation like 5.00e+6 to look like 5•10⁶. */
+        beautifulScientificTickLabels?: Boolean;
+        /** If a label exceeds Ticks#maxLabelLength this determines the number of digits used to shorten the tick label. */
+        digits?: Number;
+        /** Draw labels yes/no */
+        drawLabels?: Boolean;
+        /** Draw the zero tick, that lies at line.point1? */
+        drawZero?: Boolean;
+        /** Tick face for major ticks of finite length.By default (face: '|') this is a straight line. Possible other values are ''. These faces are used in JXG.Hatch for hatch marking parallel lines. */
+        face?: String;
+        /** A function that expects two JXG.Coords, the first one representing the coordinates of the tick that is to be labeled, the second one the coordinates of the center (the tick with position 0). The third parameter is a null, number or a string. In the latter two cases, this value is taken. Returns a string. */
+        generateLabelText?: Function;
+        /** A function that expects two JXG.Coords, the first one representing the coordinates of the tick that is to be labeled, the second one the coordinates of the center (the tick with position 0). */
+        generateLabelValue?: Function;
+        /** If true, ignore the tick endings attribute for infinite (full height) ticks. This affects major and minor ticks. */
+        ignoreInfiniteTickEndings?: Boolean;
+        /** Whether line boundaries should be included or not in the lower and upper bounds when creating ticks. In mathematical terms: if a segment considered as interval is open (includeBoundaries:false) or closed (includeBoundaries:true). In case of open interval, the interval is shortened by a small ε. */
+        includeBoundaries?: Boolean;
+        /** Let JSXGraph determine the distance between ticks automatically. If true, the attribute ticksDistance is ignored. The distance between ticks is affected by the size of the board and the attribute minTicksDistance (in pixel). */
+        insertTicks?: Boolean;
+        /** Internationalization support for ticks labels. */
+        intl?: Object;
+        /** Attributes for the ticks labels */
+        label?: Object;
+        /** User defined labels for special ticks. Instead of the i-th tick's position, the i-th string stored in this array is shown. If the number of strings in this array is less than the number of special ticks, the tick's position is shown as a fallback. */
+        labels?: String[];
+        /** Total height of a major tick. If negative the full height of the board is taken. */
+        majorHeight?: Number;
+        /** Decides in which direction major ticks are visible. Possible values are either the constants 0=false or 1=true or a function returning 0 or 1.In case of [0,1] the tick is only visible to the right of the line. In case of [1,0] the tick is only visible to the left of the line. */
+        majorTickEndings?: [Number, Number];
+        /** The maximum number of characters a tick label can use. */
+        maxLabelLength?: Number;
+        /** Total height of a minor tick. If negative the full height of the board is taken. */
+        minorHeight?: Number;
+        /** The number of minor ticks between two major ticks. */
+        minorTicks?: Number;
+        /** Minimum distance in pixel of equidistant ticks in case insertTicks==true. */
+        minTicksDistance?: Number;
+        /** If a label exceeds Ticks#maxLabelLength this determines the precision used to shorten the tick label. Deprecated! Replaced by the attribute digits. */
+        precision?: Number;
+        /** Scale the ticks but not the tick labels. */
+        scale?: Number;
+        /** A string that is appended to every tick, used to represent the scale factor given in Ticks#scale. */
+        scaleSymbol?: String;
+        /** Decides in which direction minor ticks are visible. Possible values are either the constants 0=false or 1=true or a function returning 0 or 1.In case of [0,1] the tick is only visible to the right of the line. In case of [1,0] the tick is only visible to the left of the line. */
+        tickEndings?: [Number, Number];
+        /** The default distance (in user coordinates, notpixels) between two ticks. Please be aware that this value does not have to be used if Ticks#insertTicks is set to true. */
+        ticksDistance?: Number;
+        /** By default, i.e. if ticksPerLabel==false, labels are generated for major ticks, only. If ticksPerLabel is set to a(n integer) number, this denotes the number of minor ticks between two labels. */
+        ticksPerLabel?: String;
+        /** Set the ticks type. Possible values are 'linear' or 'polar'. */
+        type?: String;
+        /** Use the unicode character 0x2212, i.e. the HTML entity &minus; as minus sign. That is −1 instead of -1. */
+        useUnicodeMinus?: Boolean;
+    }
+    interface View3DAttributes extends GeometryElement3DAttributes {
+        /** Position of the main axes in a View3D element. Possible values are 'center' and 'border'. */
+        axesPosition?: String;
+        /** Allow vertical dragging of objects, i.e. in direction of the z-axis. Subobjects areenabled: truekey: 'shift'Possible values for attribute key: 'shift' or 'ctrl'. */
+        verticalDrag?: Object;
+        /** Attributes of the 3D x-axis. */
+        xAxis?: Object;
+        /** Attributes of the 3D plane orthogonal to the x-axis at the ”front” of the cube. */
+        xPlaneFront?: Object;
+        /** Attributes of the 3D y-axis on the 3D plane orthogonal to the x-axis at the ”front” of the cube. */
+        xPlaneFrontYAxis?: Object;
+        /** Attributes of the 3D z-axis on the 3D plane orthogonal to the x-axis at the ”front” of the cube. */
+        xPlaneFrontZAxis?: Object;
+        /** Attributes of the 3D plane orthogonal to the x-axis at the ”rear” of the cube. */
+        xPlaneRear?: Object;
+        /** Attributes of the 3D y-axis on the 3D plane orthogonal to the x-axis at the ”rear” of the cube. */
+        xPlaneRearYAxis?: Object;
+        /** Attributes of the 3D z-axis on the 3D plane orthogonal to the x-axis at the ”rear” of the cube. */
+        xPlaneRearZAxis?: Object;
+        /** Attributes of the 3D y-axis. */
+        yAxis?: Line3D;
+        /** Attributes of the 3D plane orthogonal to the y-axis at the ”front” of the cube. */
+        yPlaneFront?: Object;
+        /** Attributes of the 3D x-axis on the 3D plane orthogonal to the y-axis at the ”front” of the cube. */
+        yPlaneFrontXAxis?: Object;
+        /** Attributes of the 3D z-axis on the 3D plane orthogonal to the y-axis at the ”front” of the cube. */
+        yPlaneFrontZAxis?: Object;
+        /** Attributes of the 3D plane orthogonal to the y-axis at the ”rear” of the cube. */
+        yPlaneRear?: Object;
+        /** Attributes of the 3D x-axis on the 3D plane orthogonal to the y-axis at the ”rear” of the cube. */
+        yPlaneRearXAxis?: Object;
+        /** Attributes of the 3D z-axis on the 3D plane orthogonal to the y-axis at the ”rear” of the cube. */
+        yPlaneRearZAxis?: Object;
+        /** Attributes of the 3D z-axis. */
+        zAxis?: Line3D;
+        /** Attributes of the 3D plane orthogonal to the z-axis at the ”front” of the cube. */
+        zPlaneFront?: Object;
+        /** Attributes of the 3D x-axis on the 3D plane orthogonal to the z-axis at the ”front” of the cube. */
+        zPlaneFrontXAxis?: Object;
+        /** Attributes of the 3D y-axis on the 3D plane orthogonal to the z-axis at the ”front” of the cube. */
+        zPlaneFrontYAxis?: Object;
+        /** Attributes of the 3D plane orthogonal to the z-axis at the ”rear” of the cube. */
+        zPlaneRear?: Object;
+        /** Attributes of the 3D x-axis on the 3D plane orthogonal to the z-axis at the ”rear” of the cube. */
+        zPlaneRearXAxis?: Object;
+        /** Attributes of the 3D y-axis on the 3D plane orthogonal to the z-axis at the ”rear” of the cube. */
+        zPlaneRearYAxis?: Object;
+    }
     interface SectorAttributes extends CurveAttributes {
         /** Attributes for helper point anglepoint in case it is provided by coordinates. */
         anglePoint?: Point;
@@ -347,28 +403,24 @@ declare namespace TSX {
         /** Type of sector. Possible values are 'minor', 'major', and 'auto'. */
         selection?: String;
     }
-    /** The angle element is used to denote an angle defined by three points. Visually it is just a Sector element with a radius not defined by the parent elements but by an attribute radius. As opposed to the sector, an angle has two angle points and no radius point. Sector is displayed if type=="sector". If type=="square", instead of a sector a parallelogram is displayed. In case of type=="auto", a square is displayed if the angle is near orthogonal. If no name is provided the angle label is automatically set to a lower greek letter. */
     interface AngleAttributes extends SectorAttributes {
         /** Attributes for sub-element arc. In general, the arc will run through the first point and thus will not have the same radius as the angle sector. */
         arc?: Arc;
         /** Attributes of the dot point marking right angles. */
         dot?: Object;
-        /** Sensitivity (in degrees) to declare an angle as right angle. If the angle measure is inside this distance from a rigth angle, the orthoType of the angle is used
-       /* for display. */
+        /** Sensitivity (in degrees) to declare an angle as right angle. If the angle measure is inside this distance from a rigth angle, the orthoType of the angle is used for display. */
         orthoSensitivity?: Number;
         /** Display type of the angle field in case of a right angle. Possible values are 'sector' or 'sectordot' or 'square' or 'none'. */
         orthoType?: String;
         /**  */
         pointsquare?: Object;
-        /** Radius of the sector, displaying the angle. The radius can be given as number (in user coordinates) or as string 'auto'. In the latter case, the angle is set to
-       /* an value between 20 and 50 px. */
-        radius?: Object;
+        /** Radius of the sector, displaying the angle. The radius can be given as number (in user coordinates) or as string 'auto'. In the latter case, the angle is set to an value between 20 and 50 px. */
+        radius?: Number;
         /**  */
         radiuspoint?: Object;
         /** Display type of the angle field. Possible values are 'sector' or 'sectordot' or 'square' or 'none'. */
         type?: String;
     }
-    /** An arc is a segment of the circumference of a circle. It is defined by a center, one point that defines the radius, and a third point that defines the angle of the arc. */
     interface ArcAttributes extends CurveAttributes {
         /** Attributes for angle point. */
         anglePoint?: Point;
@@ -381,18 +433,14 @@ declare namespace TSX {
         /** Type of arc. Possible values are 'minor', 'major', and 'auto'. */
         selection?: String;
     }
-    /** This element is used to provide a constructor for arrow, which is just a wrapper for element Line with Line#straightFirst and Line#straightLast properties set to false and Line#lastArrow set to true. */
     interface ArrowAttributes extends LineAttributes {
     }
-    /** A parallel is a line through a given point with the same slope as a given line or the line through two given point.If original line is given as a JSXGraph line object, the resulting parallel line will be defined by the given point and an infinitely far away point (an ideal point). That means, the line can not be shortened to a segment.If the original line is given as two points, the resulting parallel line can be shortened to a a segment. */
     interface ParallelAttributes extends LineAttributes {
         /** Attributes of helper point of normal. */
         point?: Point;
     }
-    /** An arrow parallel is a segment with an arrow attached which is parallel through a given segment, given by its defining two points, through a given point. */
     interface ArrowparallelAttributes extends ParallelAttributes {
     }
-    /** This element is used to provide a constructor for an axis. It's strictly spoken just a wrapper for element Line with Line#straightFirst and Line#straightLast properties set to true. Additionally Line#lastArrow is set to true and default Ticks will be created. */
     interface AxisAttributes extends LineAttributes {
         /** Attributes for the axis label. */
         label?: Label;
@@ -402,33 +450,177 @@ declare namespace TSX {
         point2?: Point;
         /** Attributes for ticks of the axis. */
         ticks?: Ticks;
-        /** Show / hide ticks.Deprecated. Suggested alternative is "ticks: {visible: false}" */
-        withTicks?: Boolean;
     }
-    /** A bisector is a line which divides an angle into two equal angles. It is given by three points A, B, and C and divides the angle ABC into two equal sized parts. */
     interface BisectorAttributes extends LineAttributes {
         /** Attributes for the helper point of the bisector. */
         point?: Point;
     }
-    /** Bisector lines are similar to Bisector but take two lines as parent elements. The resulting element is a composition of two lines. */
     interface BisectorlinesAttributes extends CompositionAttributes {
         /** Attributes for first line. */
         line1?: Line;
         /** Attributes for second line. */
         line2?: Line;
     }
-    /** Box plot curve. The direction of the box plot can be either vertical or horizontal which is controlled by the attribute "dir". */
-    interface BoxplotAttributes extends CurveAttributes {
-        /** Direction of the box plot: 'vertical' or 'horizontal' */
-        dir?: String;
-        /** Relative width of the maximum and minimum quantile */
-        smallWidth?: Number;
-    }
-    /** This element is used to provide a constructor for special texts containing a form button element.For this element, the attribute "display" has to have the value 'html' (which is the default).The underlying HTML button element can be accessed through the sub-object 'rendNodeButton', e.g. to add event listeners. */
     interface ButtonAttributes extends TextAttributes {
-        /** Control the attribute "disabled" of the HTML button. */
+        /** Control the attribute ”disabled” of the HTML button. */
         disabled?: Boolean;
     }
+    interface CircumcenterAttributes extends PointAttributes {
+    }
+    interface CircumcircleAttributes extends CircleAttributes {
+        /** Attributes for center point. */
+        center?: Point;
+    }
+    interface CircumcircleArcAttributes extends ArcAttributes {
+        /** Attributes for center point. */
+        center?: Point;
+    }
+    interface CircumcircleSectorAttributes extends SectorAttributes {
+    }
+    interface CombAttributes extends CurveAttributes {
+        /** Angle - given in radians - under which comb elements are positioned. */
+        angle?: Number;
+        /** Frequency of comb elements. */
+        frequency?: Number;
+        /** Attributes for first defining point of the comb. */
+        point1?: Point;
+        /** Attributes for second defining point of the comb. */
+        point2?: Point;
+        /** Should the comb go right to left instead of left to right. */
+        reverse?: Boolean;
+        /** Width of the comb. */
+        width?: Number;
+    }
+    interface ConicAttributes extends CurveAttributes {
+        /** Attributes for center point. */
+        center?: Point;
+        /** Attributes for foci points. */
+        foci?: Point;
+        /** Attributes for parabola line in case the line is given by two points or coordinate pairs. */
+        line?: Line;
+        /** Attributes for five points defining the conic, if some of them are given as coordinates. */
+        point?: Point;
+    }
+    interface CurveDifferenceAttributes extends CurveAttributes {
+    }
+    interface CurveIntersectionAttributes extends CurveAttributes {
+    }
+    interface CurveUnionAttributes extends CurveAttributes {
+    }
+    interface EllipseAttributes extends ConicAttributes {
+    }
+    interface FunctiongraphAttributes extends CurveAttributes {
+    }
+    interface GliderAttributes extends PointAttributes {
+    }
+    interface GridAttributes extends CurveAttributes {
+        /**  */
+        snapSizeX?: Boolean;
+        /**  */
+        snapSizeY?: Boolean;
+        /**  */
+        snapToGrid?: Boolean;
+    }
+    interface HatchAttributes extends TicksAttributes {
+    }
+    interface InequalityAttributes extends CurveAttributes {
+        /** By default an inequality is less (or equal) than. Set inverse to true will consider the inequality greater (or equal) than. */
+        inverse?: Boolean;
+    }
+    interface InputAttributes extends TextAttributes {
+        /** Control the attribute ”disabled” of the HTML input field. */
+        disabled?: Boolean;
+        /** Control the attribute ”maxlength” of the HTML input field. */
+        maxlength?: Number;
+    }
+    interface IntersectionAttributes extends GeometryElementAttributes {
+        /**  */
+        alwaysIntersect?: Boolean;
+    }
+    interface MidpointAttributes extends PointAttributes {
+    }
+    interface ParabolaAttributes extends ConicAttributes {
+    }
+    interface SegmentAttributes extends LineAttributes {
+    }
+    interface RegularPolygonAttributes extends PolygonAttributes {
+        /** Attributes for the polygon border lines. */
+        borders?: Line;
+        /** If true, moving the mouse over inner points triggers hasPoint. */
+        hasInnerPoints?: Boolean;
+        /** Attributes for the polygon vertices. */
+        vertices?: Point;
+        /** Is the polygon bordered by lines? */
+        withLines?: Boolean;
+    }
+    interface SliderAttributes extends GliderAttributes {
+        /** Attributes for the base line of the slider. */
+        baseline?: Line;
+        /** The number of digits of the slider value displayed in the optional text. */
+        digits?: Number;
+        /** Attributes for the highlighting line of the slider. */
+        highline?: Line;
+        /** Internationalization support for slider labels. */
+        intl?: object;
+        /** Attributes for the slider label. */
+        label?: Label;
+        /** If true, 'up' events on the baseline will trigger slider moves. */
+        moveOnUp?: Boolean;
+        /** Attributes for first (left) helper point defining the slider position. */
+        point1?: Point;
+        /** Attributes for second (right) helper point defining the slider position. */
+        point2?: Point;
+        /** If not null, this is appended to the value and to unitLabel in the slider label. Possible types: string, number or function. */
+        postLabel?: String;
+        /** The precision of the slider value displayed in the optional text. Replaced by the attribute ”digits”. */
+        precision?: Number;
+        /** Size of slider point. */
+        size?: Number;
+        /** If the difference between the slider value and one of the elements of snapValues is less than this number (in user coordinate units), the slider will snap to that value. */
+        snapValueDistance?: Number;
+        /** List of values to snap to. If the glider is within snapValueDistance (in user coordinate units) of one of these points, then the glider snaps to that point. */
+        snapValues?: [Number, Number];
+        /** The slider only returns integer multiples of this value, e.g. for discrete values set this property to 1. For continuous results set this to -1. */
+        snapWidth?: Number;
+        /** If not null, this replaces the part ”name = ” in the slider label. Possible types: string, number or function. */
+        suffixLabel?: String;
+        /** Attributes for the ticks of the base line of the slider. */
+        ticks?: Ticks;
+        /** If not null, this is appended to the value in the slider label. Possible types: string, number or function. */
+        unitLabel?: String;
+        /** Show slider label. */
+        withLabel?: Boolean;
+        /** Show slider ticks. */
+        withTicks?: Boolean;
+    }
+    interface TangentAttributes extends LineAttributes {
+    }
+    interface TapemeasureAttributes extends SegmentAttributes {
+        /** The precision of the tape measure value displayed in the optional text. */
+        digits?: Number;
+        /** Attributes for the tape measure label. */
+        label?: Label;
+        /** Attributes for first helper point defining the tape measure position. */
+        point1?: Point;
+        /** Attributes for second helper point defining the tape measure position. */
+        point2?: Point;
+        /** The precision of the tape measure value displayed in the optional text. Replaced by the attribute digits */
+        precision?: Number;
+        /** Text rotation in degrees. */
+        rotate?: Number;
+        /** Attributes for the ticks of the tape measure. */
+        ticks?: Ticks;
+        /** Show tape measure label. */
+        withLabel?: Boolean;
+        /** Show tape measure ticks. */
+        withTicks?: Boolean;
+    }
+    interface TransformAttributes extends GeometryElementAttributes {
+    }
+    interface VPointAttributes extends PointAttributes {
+    }
+    type point = [Number | Function, Number | Function];
+    type line = [Point | point, Point | point];
     interface InitBoardAttributes {
         /** Time (in msec) between two animation steps. */
         animationDelay?: Number;
@@ -438,201 +630,422 @@ declare namespace TSX {
         boundingbox?: [Number, Number, Number, Number];
         /** Enable browser scrolling on touch interfaces if the user double taps into an empty region of the board. */
         browserPan?: Boolean;
-        /** Attributes for the default axes in case of the attribute axis:true in JXG.JSXGraph#initBoard. */
-        defaultAxes?: Object;
-        /** Description string for the board. */
-        description?: String;
-        /** Supply the document object. */
-        document?: String;
-        /** Control the possibilities for dragging objects. */
-        drag?: Object;
         /** Attribute(s) to control the fullscreen icon. */
         fullscreen?: Object;
-        /** If set true and hasPoint() is true for both an element and it's label, the element (and not the label) is taken as drag element. */
-        ignoreLabels?: Boolean;
-        /** Support for internationalization of number formatting. */
-        intl?: Object;
+        /** Show grid? */
+        grid?: Boolean;
         /** If set to true, the ratio between horizontal and vertical unit sizes stays constant - independent of size changes of the hosting HTML div element. */
-        keepAspectRatio?: Number;
-        /** Control using the keyboard to change the construction. */
-        keyboard?: Object;
-        /** If enabled, user activities are logged in array "board.userLog". */
-        logging?: Boolean;
-        /** Maximal bounding box of the visible area in user coordinates. */
-        maxBoundingBox?: [Number, Number, Number, Number];
+        keepAspectRatio?: Boolean;
         /** Maximum frame rate of the board, i.e. */
         maxFrameRate?: Number;
-        /** Maximum number of digits in automatic label generation. */
-        maxNameLength?: Number;
-        /** Change redraw strategy in SVG rendering engine. */
-        moveTarget?: Object;
-        /** A number that will be added to the absolute position of the board used in mouse coordinate calculations in JXG.Board#getCoordsTopLeftCorner. */
-        offsetX?: Number;
-        /** A number that will be added to the absolute position of the board used in mouse coordinate calculations in JXG.Board#getCoordsTopLeftCorner. */
-        offsetY?: Number;
-        /** Control the possibilities for panning interaction (i.e. */
-        pan?: Object;
         /** Allow user interaction by registering mouse, pointer, keyboard or touch events. */
-        registerEvents?: Boolean;
+        registerEvents?: Object;
         /** Listen to fullscreen event. */
         registerFullscreenEvent?: Boolean;
         /** Listen to resize events, i.e. */
         registerResizeEvent?: Boolean;
         /** Control if JSXGraph reacts to resizing of the JSXGraph container element by the user / browser. */
         resize?: Boolean;
-        /** Attributes to control the screenshot function. */
-        screenshot?: Object;
-        /** Control the possibilities for a selection rectangle. */
-        selection?: Object;
-        /** Show a button which allows to clear all traces of a board. */
-        showClearTraces?: Boolean;
         /** Show copyright string in canvas. */
         showCopyright?: Boolean;
         /** Show a button in the navigation bar to start fullscreen mode. */
         showFullscreen?: Boolean;
-        /** If true, the infobox is shown on mouse/pen over for all points which have set their attribute showInfobox to 'inherit'. */
-        showInfobox?: Boolean;
         /** Display of navigation arrows and zoom buttons in the navigation bar. */
-        showNavigation?: Number;
+        showNavigation?: Boolean;
         /** Show a button in the navigation bar to force reload of a construction. */
         showReload?: Boolean;
         /** Show a button in the navigation bar to enable screenshots. */
         showScreenshot?: Boolean;
         /** Display of zoom buttons in the navigation bar. */
         showZoom?: Boolean;
-        /** If true the first element of the set JXG.board.objects having hasPoint==true is taken as drag element. */
-        takeFirst?: Number;
-        /** If true, when read from a file or string - the size of the div can be changed by the construction text. */
-        takeSizeFromFile?: Number;
-        /** Title string for the board. */
-        title?: String;
-        /** Control the possibilities for zoom interaction. */
-        zoom?: Object;
-        /** Zoom factor in horizontal direction. */
-        zoomX?: Number;
-        /** Zoom factor in vertical direction. */
-        zoomY?: Number;
+        /** set a visual theme for the board */
+        theme?: String;
+    }
+    export class Math {
+        static board: JSXBoard;
     }
     /** Initialize a new board. */
     export class JSXGraph {
         initBoard(html: string, attributes?: InitBoardAttributes): JSXBoard;
+        /** Version of underlying JSX library */
+        get version(): String;
         /** Delete a board and all its contents. */
         freeBoard(board: JSXBoard): void;
+        static dereference(params: any | any[]): any[];
+    }
+    interface CircleIface {
+        z_ignore: Object;
+        /** Two Points */
+        protractor(centerPoint: Point | point, secondPoint: Point | point, attributes?: CircleAttributes): Circle;
+        /** Point and Radius */
+        pointAndRadius(centerPoint: Point | point, p2: Point | point | Function | Line | line | Number, attributes?: CircleAttributes): Circle;
+        /** Point and Line, like Point and Radius, but takes the radius as the length of the line (which does not need to be near the circle).   */
+        pointAndLine(centerPoint: Point | point, remotePoint: Point | point | Line | line | Number | Function | Circle, attributes?: CircleAttributes): Circle;
+        /** Point and Circle */
+        pointAndCircle(p1: Point | point, p2: Circle, attributes?: CircleAttributes): Circle;
+    }
+    interface CurveIface {
+        z_ignore: Object;
+        /** Plot a set of points or a function from arrays X and Y */
+        dataPlot(xArray: Number[] | Function, yArray: Number[] | Function, attributes?: CurveAttributes): Curve;
+        /** Apply a Transform to a Curve */
+        transform(curve: Curve, transform: Transform, attributes?: CurveAttributes): Curve;
+    }
+    interface LineIface {
+        z_ignore: Object;
+        /** Defined by two points */
+        twoPoints(p1: Point | point, p2: Point | point, attributes?: LineAttributes): Line;
+        /** Defined by solution to a*x + b*y == c */
+        equation(a: Number | Function, b: Number | Function, c: Number | Function, attributes?: LineAttributes): Line;
+    }
+    interface AngleIface {
+        z_ignore: Object;
+        /** Angle defined by three points */
+        angle3P(from: Point | point, around: Point | point, to: Point | point, attributes?: AngleAttributes): Angle;
+        /** Angle defined by two lines and two directions */
+        angle2L(line1: Line | line, line2: Line | line, direction1: [Number, Number], direction2: [Number, Number], attributes?: AngleAttributes): Angle;
+    }
+    interface ConicIface {
+        z_ignore: Object;
+        /** Just as two (distinct) points determine a line, five points (no three collinear) determine a conic. */
+        fivePoints(A: Point | point, B: Point | point, C: Point | point, D: Point | point, E: Point | point, attributes?: ConicAttributes): Conic;
+        /** Build a plane algebraic curve from six numbers that satisfies Ax^2 + Bxy + Cy^2 + Dx + Ey + F = 0, and A,B,C not all zero.  This might be a circle, ellipse, parabola, or hyperbola. */
+        sixNumbers(A: Number, B: Number, C: Number, D: Number, E: Number, F: Number, attributes?: ConicAttributes): Conic;
+    }
+    interface EllipseIface {
+        z_ignore: Object;
+        /** Three Points */
+        threePoints(focalPoint1: Point | point, focalPoint2: Point | point, outerPoint: Point | point, attributes?: EllipseAttributes): Ellipse;
+        /** Two Points and Radius */
+        pointsAndRadius(p1: Point | point, pointO: Point | point, radius: Number | Function, attributes?: EllipseAttributes): Ellipse;
+        /** Three Points, plus start and end. */
+        ellipseArc(focalPoint1: Point | point, focalPoint2: Point | point, outerPoint: Point | point, startAngle: Number | Function, endAngle: Number | Function, attributes?: EllipseAttributes): Ellipse;
+    }
+    interface TransformIface {
+        z_ignore: Object;
+        /** Move a distance from a point */
+        translate(x: Number | Function, y: Number | Function, attributes?: TransformAttributes): Transform;
+        /** Increase distance from a point by a factor */
+        scale(x: number | Function, y: number | Function, attributes?: TransformAttributes): Transform;
+        /** Rotate by angle around a point */
+        rotate(angle: Number | Function, point: Point | point, attributes?: TransformAttributes): Transform;
+        /** Reflect around a line */
+        reflect(x: Number | Function, y: Number | Function, attributes?: TransformAttributes): Transform;
+        /** Move proportionally to distance */
+        shear(x: Number | Function, y: Number | Function, attributes?: TransformAttributes): Transform;
+        /** Transform using a MAT3 */
+        generic(x: Number | Function, y: Number | Function, attributes?: TransformAttributes): Transform;
+    }
+    interface VPointIface {
+        z_ignore: Object;
+        /** A Point and Transform */
+        pointAndTransform(p: [Number | Function, Number | Function] | Point, t: Transform, label?: String, attributes?: VPointAttributes): VPoint;
+        /** A Point and multiple Transforms */
+        pointAndTransformArray(p: Point | point, ttt: Transform[], label?: String, attributes?: VPointAttributes): VPoint;
+    }
+    export class JSXBoard {
+        board: JSXBoard | null;
+        private printLineNumber;
+        get defaultAxes(): GeometryElement;
+        /** Math.Clip */
+        get clip(): Clip;
+        /** This element is used to provide a constructor for a circle. */
+        circle: CircleIface;
+        /** This element is used to provide a constructor for curve, which is just a wrapper for element Curve. A curve is a mapping from R to R^2. t mapsto (x(t),y(t)). The graph is drawn for t in the interval [a,b]. The following types of curves can be plotted: parametric curves: t mapsto (x(t),y(t)), where x() and y() are univariate functions. polar curves: curves commonly written with polar equations like spirals and cardioids. data plots: plot line segments through a given list of coordinates. */
+        curve: CurveIface;
+        /** This element is used to provide a constructor for a general line. A general line is given by two points. By setting additional properties a line can be used as an arrow and/or axis. */
+        line: LineIface;
+        /** The angle element is used to denote an angle defined by three points. Visually it is just a Sector element with a radius not defined by the parent elements but by an attribute radius. As opposed to the sector, an angle has two angle points and no radius point. Sector is displayed if type==”sector”. If type==”square”, instead of a sector a parallelogram is displayed. In case of type==”auto”, a square is displayed if the angle is near orthogonal. If no name is provided the angle label is automatically set to a lower greek letter. */
+        angle: AngleIface;
+        /**  */
+        conic: ConicIface;
+        /** This element is used to provide a constructor for an ellipse. An ellipse is given by two points (the foci) and a third point on the ellipse or the length of the major axis. */
+        ellipse: EllipseIface;
+        /** This element is used to provide projective transformations. */
+        transform: TransformIface;
+        /**  */
+        vPoint: VPointIface;
+        constructor();
+        /** Legacy method to create elements. */
+        create(elType: string, params?: any[], attributes?: Object): GeometryElement;
+        /** force board update */
+        update(): void;
+        on(event: string, handler: (e: Event) => void, context?: unknown): void;
+        print(...args: any[]): void;
+        suspendUpdate(): void;
+        unsuspendUpdate(): void;
+        private dereference;
+        /** create a chart  Constructor for a chart.*/
+        chart(f: Number[], attributes?: ChartAttributes): Chart;
+        /** Array of Points  This element combines a given set of JXG.Point elements to a group. The elements of the group and dependent elements can be translated, rotated and scaled by dragging one of the group elements.*/
+        group(pointArray: Point[], attributes?: GroupAttributes): Group;
+        /**   Displays an image.*/
+        image(url: String, lowerLeft: point, widthHeight: [Number, Number], attributes?: ImageAttributes): Image;
+        /** Specify XY location  This element is used to provide a constructor for a general point. A free point is created if the given parent elements are all numbers and the property fixed is not set or set to false. If one or more parent elements is not a number but a string containing a GEONExT constraint or a function the point will be considered as constrained). That means that the user won't be able to change the point's position directly.*/
+        point(x: Number | Function, y: Number | Function, label?: String, attributes?: PointAttributes): Point;
+        /** Array of Points  A polygon is an area enclosed by a set of border lines which are determined by a list of points or a list of coordinate arrays or a function returning a list of coordinate arrays. Each two consecutive points of the list define a line.*/
+        polygon(pointArray: Point[], attributes?: PolygonAttributes): Polygon;
+        /**   Construct and handle texts. The coordinates can either be abslute (i.e. respective to the coordinate system of the board) or be relative to the coordinates of an element given in Text#anchor. HTML, MathJaX, KaTeX and GEONExT syntax can be handled. There are two ways to display texts: using the text element of the renderer (canvas or svg). In most cases this is the suitable approach if speed matters. However, advanced rendering like MathJax, KaTeX or HTML/CSS are not possible. using HTML <div>. This is the most flexible approach. The drawback is that HTML can only be display ”above” the geometry elements. If HTML should be displayed in an inbetween layer, conder to use an element of type ForeignObject (available in svg renderer, only).*/
+        text(x: Number | Function, y: Number | Function, string: String | Function, attributes?: TextAttributes): Text;
+        /** Here, lower is an array of the form [x, y] and dim is an array of the form [w, h]. The arrays [x, y] and [w, h] define the 2D frame into which the 3D cube is (roughly) projected. If the view azimuth=0 and elevation=0, the 3D view will cover a rectangle with lower left corner [x,y] and side lengths [w, h] of the board. The 'cube' is of the form [[x1, x2], [y1, y2], [z1, z2]] which determines the coordinate ranges of the 3D cube.   This element creates a 3D view.*/
+        view3D(x?: Number, y?: Number, w?: Number, h?: Number, x1?: Number, x2?: Number, y1?: Number, y2?: Number, z1?: Number, z2?: Number, attributes?: View3DAttributes): View3D;
+        /** Create an Arc with three points  An arc is a segment of the circumference of a circle. It is defined by a center, one point that defines the radius, and a third point that defines the angle of the arc.*/
+        arc(p1: Point | point, p2: Point | point, p3: Point | point, attributes?: ArcAttributes): Arc;
+        /** Arrow defined by two points (like a Segment) with arrow at P2  This element is used to provide a constructor for arrow, which is just a wrapper for element Line with Line#straightFirst and Line#straightLast properties set to false and Line#lastArrow set to true.*/
+        arrow(p1: Point | point, p2: Point | point, attributes?: ArrowAttributes): Arrow;
+        /** Create an Arrow parallel to a segment. The constructed arrow contains p3 and has the same slope as the line through p1 and p2.  An arrow parallel is a segment with an arrow attached which is parallel through a given segment, given by its defining two points, through a given point.*/
+        arrowparallel(p1: Point | point, p2: Point | point, p3: Point | point, attributes?: ArrowparallelAttributes): Arrowparallel;
+        /** Create an Axis with two points (like a Line)  This element is used to provide a constructor for an axis. It's strictly spoken just a wrapper for element Line with Line#straightFirst and Line#straightLast properties set to true. Additionally Line#lastArrow is set to true and default Ticks will be created.*/
+        axis(p1: Point | point, p2: Point | point, attributes?: AxisAttributes): Axis;
+        /** Bisect an Angle defined with three points  A bisector is a line which divides an angle into two equal angles. It is given by three points A, B, and C and divides the angle ABC into two equal sized parts.*/
+        bisector(p1: Point, p2: Point, p3: Point, attributes?: BisectorAttributes): Bisector;
+        /** Bisect a Line defined with two points  Bisector lines are similar to Bisector but take two lines as parent elements. The resulting element is a composition of two lines.*/
+        bisectorlines(l1: Line, l2: Line, attributes?: BisectorlinesAttributes): Bisectorlines;
+        /** create a button  This element is used to provide a constructor for special texts containing a form button element. For this element, the attribute ”display” has to have the value 'html' (which is the default). The underlying HTML button element can be accessed through the sub-object 'rendNodeButton', e.g. to add event listeners.*/
+        button(x: Number | Function, y: Number | Function, label: String, handler: Function, attributes?: ButtonAttributes): Button;
+        /** Creates a Point at the center of a circle defined by 3 points  Constructs the midpoint of a Circumcircle. Like the circumcircle the circumcenter is constructed by providing three points.*/
+        circumcenter(p1: Point | point, p2: Point | point, p3: Point | point, label?: String, attributes?: CircumcenterAttributes): Circumcenter;
+        /** Draw a circle defined by 3 points  A circumcircle is given by three points which are all lying on the circle.*/
+        circumcircle(p1: Point | point, p2: Point | point, p3: Point | point, attributes?: CircumcircleAttributes): Circumcircle;
+        /** Draw an arc from P1 to P3 (missing P3 to P1) defined by 3 points  A circumcircle arc is an Arc defined by three points. All three points lie on the arc.*/
+        circumcircleArc(p1: Point | point, p2: Point | point, p3: Point | point, attributes?: CircumcircleArcAttributes): CircumcircleArc;
+        /** Creates a CircumCenter and draws a sector from P1 to P3 (missing P3 to P1) defined by 3 points  A circumcircle sector is different from a Sector mostly in the way the parent elements are interpreted. At first, the circum centre is determined from the three given points. Then the sector is drawn from p1 through p2 to p3.*/
+        circumcircleSector(p1: Point | point, p2: Point | point, p3: Point | point, attributes?: CircumcircleSectorAttributes): CircumcircleSector;
+        /**   A comb to display domains of inequalities.*/
+        comb(p1: Point | point, p2: Point | point, attributes?: CombAttributes): Comb;
+        /**   Difference of two closed path elements. The elements may be of type curve, circle, polygon, inequality. If one element is a curve, it has to be closed. The resulting element is of type curve.*/
+        curveDifference(curve1: GeometryElement, curve2: GeometryElement, attributes?: CurveDifferenceAttributes): CurveDifference;
+        /**   Intersection of two closed path elements. The elements may be of type curve, circle, polygon, inequality. If one element is a curve, it has to be closed. The resulting element is of type curve.*/
+        curveIntersection(curve1: GeometryElement, curve2: GeometryElement, attributes?: CurveIntersectionAttributes): CurveIntersection;
+        /**   Union of two closed path elements. The elements may be of type curve, circle, polygon, inequality. If one element is a curve, it has to be closed. The resulting element is of type curve.*/
+        curveUnion(curve1: GeometryElement, curve2: GeometryElement, attributes?: CurveUnionAttributes): CurveUnion;
+        /**   This element is used to provide a constructor for functiongraph, which is just a wrapper for element Curve with JXG.Curve#X() set to x. The graph is drawn for x in the interval [a,b].*/
+        functiongraph(funct: Function, leftBorder?: Number, rightBorder?: Number, attributes?: FunctiongraphAttributes): Functiongraph;
+        /** A GeometryElement like Line, Circle, or Curve, and optionally a starting point defined by X,Y  This element is used to provide a constructor for a glider point.*/
+        glider(hostElement: GeometryElement, x?: Number, y?: Number, attributes?: GliderAttributes): Glider;
+        /**   Creates a grid to support the user with element placement.*/
+        grid(showGrid?: Boolean, attributes?: GridAttributes): Grid;
+        /**   Hatches can be used to mark congruent lines or curves.*/
+        hatch(line: Line | line, numberHatches: Number, attributes?: HatchAttributes): Hatch;
+        /**   Creates an area indicating the solution of a linear inequality or an inequality of a function graph, i.e. an inequality of type y*/
+        inequality(boundaryLine: Line | line | Curve, attributes?: InequalityAttributes): Inequality;
+        /**   This element is used to provide a constructor for special texts containing a HTML form input element. If the width of element is set with the attribute ”cssStyle”, the width of the label must be added. For this element, the attribute ”display” has to have the value 'html' (which is the default). The underlying HTML input field can be accessed through the sub-object 'rendNodeInput', e.g. to add event listeners.*/
+        input(x: Number | Function, y: Number | Function, prompt: String, initial: String, attributes?: InputAttributes): Input;
+        /**   An intersection point is a point which lives on two JSXGraph elements, i.e. it is one point of the set consisting of the intersection points of the two elements. The following element types can be (mutually) intersected: line, circle, curve, polygon, polygonal chain.*/
+        intersection(element1: Line | Circle, element2: Line | Circle, positiveNegativeRoot?: Number, label?: String, attributes?: IntersectionAttributes): Point;
+        /**   The midpoint element constructs a point in the middle of two given points.*/
+        midpoint(p1: Point | point, p2: Point | point, attributes?: MidpointAttributes): Midpoint;
+        /**   This element is used to provide a constructor for a parabola. A parabola is given by one point (the focus) and a line (the directrix).*/
+        parabola(focalPoint: Point | point, line: Line | line, attributes?: ParabolaAttributes): Parabola;
+        /**   This element is used to provide a constructor for a segment. It's strictly spoken just a wrapper for element Line with Line#straightFirst and Line#straightLast properties set to false. If there is a third variable then the segment has a fixed length (which may be a function, too).*/
+        segment(P1: Point | point, P2: Point | point, attributes?: SegmentAttributes): Segment;
+        /**   Constructs a regular polygon. It needs two points which define the base line and the number of vertices.*/
+        regularPolygon(P1: Point | point, P2: Point | point, nVertices: Number, attributes?: RegularPolygonAttributes): RegularPolygon;
+        /**   A slider can be used to choose values from a given range of numbers.*/
+        slider(P1: Point | point, P2: Point | point, minimumMaximumSteps: [number, number, number], attributes?: SliderAttributes): Slider;
+        /**   With the element tangent the slope of a line, circle, or curve in a certain point can be visualized. A tangent is always constructed by a glider on a line, circle, or curve and describes the tangent in the glider point on that line, circle, or curve.*/
+        tangent(glider: Glider, attributes?: TangentAttributes): Tangent;
+        /**   A tape measure can be used to measure distances between points.*/
+        tapemeasure(P1: Point | point, P2: Point | point, attributes?: TapemeasureAttributes): Tapemeasure;
     }
     export class GeometryElement {
         elValue: Object;
         constructor(elValue: any);
-        /** returns the X coordinate of this element */
-        X(): number;
-        /** returns the Y coordinate of this element */
-        Y(): number;
-        /** returns the Z coordinate of this element */
-        Z(): number;
-        /** returns the value of this element */
-        Value(): number;
+        /**  */
+        get x(): GeometryElement;
+        /**  */
+        get y(): GeometryElement;
+        /**  */
+        get ancestors(): Object;
+        /**  */
+        get baseElement(): GeometryElement;
+        /**  */
+        get board(): Board;
+        /**  */
+        get childElements(): Object;
+        /**  */
+        get descendants(): Object;
+        /**  */
+        get dump(): Boolean;
+        /**  */
+        get elementClass(): Object;
+        /**  */
+        get elType(): String;
+        /**  */
+        get hasLabel(): Boolean;
+        /**  */
+        get highlighted(): Boolean;
+        /**  */
+        get id(): String;
+        /**  */
+        get inherits(): Object;
+        /**  */
+        get isDraggable(): Boolean;
+        set isDraggable(param: Boolean);
+        /**  */
+        get isReal(): Boolean;
+        /**  */
+        get lastDragTime(): Date;
+        /**  */
+        get methodMap(): Object;
+        /**  */
+        get mouseover(): Boolean;
+        /**  */
+        get name(): String;
+        /**  */
+        get needsUpdate(): Boolean;
+        /**  */
+        get notExistingParents(): Object;
+        /**  */
+        get numTraces(): Number;
+        /**  */
+        get parents(): Object;
+        /**  */
+        get quadraticform(): Number[];
+        /**  */
+        get rendNode(): Object;
+        /**  */
+        get stdform(): Number[];
+        /**  */
+        get subs(): Object;
+        /**  */
+        get symbolic(): Object;
+        /**  */
+        get traces(): Object;
+        /**  */
+        get transformations(): Number[];
+        /**  */
+        get type(): Number;
+        /**  */
+        get visProp(): Object;
+        /**  */
+        get visPropCalc(): Object;
+        /** Add an element as a child to the current element. */
+        addChild(): GeometryElement;
+        /** Alias of JXG.EventEmitter.on. */
+        addEvent(): Number;
+        /** Adds ids of elements to the array this.parents. */
+        addParents(): Object;
+        /** Rotate texts or images by a given degree. */
+        addRotation(): String;
+        /** Adds ticks to this line or curve. */
+        addTicks(): String;
+        /** Animates properties for that object like stroke or fill color, opacity and maybe even more later. */
+        animate(): GeometryElement;
+        /** Dimensions of the smallest rectangle enclosing the element. */
+        bounds(): Number[];
+        /** Removes all objects generated by the trace function. */
+        clearTrace(): GeometryElement;
+        /** Copy the element to background. */
+        cloneToBackground(): GeometryElement;
+        /** Creates a label element for this geometry element. */
+        createLabel(): boolean;
+        /** Format a number according to the locale set in the attribute ”intl”. */
+        formatNumberLocale(): String | Number;
+        /** Array of strings containing the polynomials defining the element. */
+        generatePolynomial(): Number[];
+        /** Get the value of the property key. */
+        getAttribute(): Object;
+        /** Retrieve a copy of the current visProp. */
+        getAttributes(): Object;
+        /** Returns the elements name. */
+        getName(): String;
+        /** List of the element ids resp. */
+        getParents(): Number[];
+        /** Deprecated alias for JXG.GeometryElement#getAttribute. */
+        getProperty(): Number[];
+        /** The type of the element as used in JXG.Board#create. */
+        getType(): String;
+        /** Move an element to its nearest grid point. */
+        handleSnapToGrid(): GeometryElement;
+        /** Checks whether (x,y) is near the element. */
+        hasPoint(x: number, y: number): Boolean;
+        /** Hide the element. */
+        hide(): GeometryElement;
+        /** Hide the element. */
+        hideElement(): GeometryElement;
+        /**  */
+        labelColor(): Board;
+        /** Uses the ”normal” properties of the element. */
+        noHighlight(): Board;
+        /** Removes the element from the construction. */
+        remove(): Object;
+        /** Removes all ticks from a line or curve. */
+        removeAllTicks(): Object;
+        /** Remove an element as a child from the current element. */
+        removeChild(): Object;
+        /** Alias of JXG.EventEmitter.off. */
+        removeEvent(): Number;
+        /** Removes ticks identified by parameter named tick from this line or curve. */
+        removeTicks(): Object;
+        /** Determines whether the element has arrows at start or end of the arc. */
+        setArrow(): GeometryElement;
+        /**  */
+        setAttribute(attrs: GeometryElementAttributes): void;
+        /** Sets a label and its text If label doesn't exist, it creates one */
+        setLabel(): Object;
+        /** Updates the element's label text, strips all html. */
+        setLabelText(): Object;
+        /** Updates the element's label text and the element's attribute ”name”, strips all html. */
+        setName(): Object;
+        /** Sets ids of elements to the array this.parents. */
+        setParents(): Object;
+        /** Translates the object by (x, y). */
+        setPosition(transform: Transform): GeometryElement;
+        /** Moves an element by the difference of two coordinates. */
+        setPositionDirectly(x: number, y: number): GeometryElement;
+        /** Deprecated alias for JXG.GeometryElement#setAttribute. */
+        setProperty(): GeometryElement;
+        /** Make the element visible. */
+        show(): GeometryElement;
+        /** Make the element visible. */
+        showElement(): GeometryElement;
+        /** Snaps the element to points. */
+        snapToPoints(): GeometryElement;
+        /** Checks if locale is enabled in the attribute. */
+        useLocale(): Boolean;
     }
-    export class JSXBoard {
-        board: JSXBoard | null;
-        constructor();
-        /** Legacy method to create elements. */
-        create(elType: string, params?: any[], attributes?: Object): GeometryElement;
-        private dereference;
-        transform(dx: Number | Function | Point, dy: Number | [Number, Number] | Function | Point, ttype: 'translate' | 'scale' | 'reflect' | 'rotate' | 'shear' | 'generic', attributes?: Object): Transform;
-        /** Angle defined with three points */
-        angle(from: Point, around: Point, to: Point, attributes?: AngleAttributes): Angle;
-        /** Angle defined with two lines and two directions */
-        angle(line1: Line, line2: Line, direction1: [Number, Number], direction2: [Number, Number], attributes?: AngleAttributes): Angle;
-        /** Create an Arc with three points  An arc is a segment of the circumference of a circle. It is defined by a center, one point that
-       defines the radius, and a third point that defines the angle of the arc.*/
-        arc(p1: Point | [Number, Number], p2: Point | [Number, Number], p3: Point | [Number, Number], attributes?: ArcAttributes): Arc;
-        /** Arrow defined by two points (like a Line) */
-        arrow(p1: Point, p2: Point, attributes?: ArrowAttributes): Arrow;
-        /** Arrow defined by three numbers (like a Line) */
-        arrow(a: Number, b: Number, c: Number, attributes?: ArrowAttributes): Arrow;
-        /** Create an Arrow parallel to a segment. The constructed arrow contains p3 and has the same slope as the line through p1 and p2.  An arrow parallel is a segment with an arrow attached which is parallel through a given segment, given by its defining two points,
-       through a given point.*/
-        arrowparallel(p1: Point, p2: Point, p3: Point, attributes?: ArrowparallelAttributes): Arrowparallel;
-        /** Create an Axis with two points (like a Line) */
-        axis(p1: Point, p2: Point, attributes?: AxisAttributes): Axis;
-        /** Create an Axis with three number (like a Line) */
-        axis(a: Number, b: Number, c: Number, attributes?: AxisAttributes): Axis;
-        /** Bisect an Angle defined with three points  A bisector is a line which divides an angle into two equal angles. It is given by three points A, B, and
-       C and divides the angle ABC into two equal sized parts.*/
-        bisector(p1: Point, p2: Point, p3: Point, attributes?: BisectorAttributes): Bisector;
-        /** Bisect a Line defined with two points  Bisector lines are similar to Bisector but take two lines as parent elements. The resulting element is
-       a composition of two lines.*/
-        bisectorlines(p1: Point, p2: Point, attributes?: BisectorlinesAttributes): Bisectorlines;
-        /** Quantiles(array with at least five elements Number|Function|String) plus axis, plus width  Box plot curve. The direction of the box plot can be either vertical or horizontal which
-       is controlled by the attribute "dir".*/
-        boxplot(q: any[], axis: Number | Function, width: Number | Function, attributes?: BoxplotAttributes): Boxplot;
-        /** create a button  This element is used to provide a constructor for special texts containing a
-       form button element.
-
-       For this element, the attribute "display" has to have the value 'html' (which is the default).
-
-       The underlying HTML button element can be accessed through the sub-object 'rendNodeButton', e.g. to
-       add event listeners.*/
-        button(x: Number | Function, y: Number | Function, label: String | Function, handler: Function, attributes?: ButtonAttributes): Button;
-        /** Curve  This element is used to provide a constructor for curve, which is just a wrapper for element Curve.
-       A curve is a mapping from R to R^2. t mapsto (x(t),y(t)). The graph is drawn for t in the interval [a,b].
-
-       The following types of curves can be plotted:
-
-         parametric curves: t mapsto (x(t),y(t)), where x() and y() are univariate functions.
-         polar curves: curves commonly written with polar equations like spirals and cardioids.
-         data plots: plot line segments through a given list of coordinates.*/
-        curve(x: Number | Function | Arc, y: Number | Function | Transform, attributes?: CurveAttributes): Curve;
-        /**   This element is used to provide a constructor for a general line. A general line is given by two points. By setting additional properties
-       a line can be used as an arrow and/or axis.*/
-        line(p1: Point | [Number, Number] | Function, p2: Point | [Number, Number] | Function, attributes?: LineAttributes): Line;
-        /**   This element is used to provide a constructor for a general point. A free point is created if the given parent elements are all numbers
-       and the property fixed is not set or set to false. If one or more parent elements is not a number but a string containing a GEONExT
-       constraint or a function the point will be considered as constrained). That means that the user won't be able to change the point's
-       position directly.*/
-        point(x: Number | Function | Point, y: Number | Function | Transform, attributes?: PointAttributes): Point;
-        /**   Construct and handle texts.
-
-       The coordinates can either be abslute (i.e. respective to the coordinate system of the board) or be relative to the coordinates of an element
-       given in Text#anchor.
-
-       HTML, MathJaX, KaTeX and GEONExT syntax can be handled.
-
-       There are two ways to display texts:
-
-        using the text element of the renderer (canvas or svg). In most cases this is the suitable approach if speed matters.
-       However, advanced rendering like MathJax, KaTeX or HTML/CSS are not possible.
-        using HTML &lt;div&gt;. This is the most flexible approach. The drawback is that HTML can only be display "above" the geometry elements.
-       If HTML should be displayed in an inbetween layer, conder to use an element of type ForeignObject (available in svg renderer, only).*/
-        text(x: Number | Function, y: Number | Function, string: String | Function, attributes?: TextAttributes): Text;
+    export class GeometryElement3D {
+        elValue: Object;
+        constructor(elValue: any);
+        /**  */
+        get element2D(): Number[];
+        /**  */
+        get is3D(): Boolean;
+        /**  */
+        get view(): View3D;
+        /**  */
+        get strokeColor(): String;
+        /**  */
+        get strokeWidth(): Number;
+        /**  */
+        get fillColor(): String;
+        /**  */
+        get visible(): Boolean;
     }
     export class Board {
         elValue: Object;
         constructor(elValue: any);
     }
-    export class Infobox extends Board {
-        constructor(elValues: Board);
+    export class Infobox {
+        elValue: Object;
+        constructor(elValue: any);
     }
     export class CA {
         elValue: Object;
         constructor(elValue: any);
-        /** f = map (x) -> x*sin(x);
-       Usages:
-       h = D(f, x);
-       h = map (x) -> D(f, x); */
+        /** f = map (x) -> x*sin(x); Usages: h = D(f, x); h = map (x) -> D(f, x); or D(x^2, x); */
         expandDerivatives(): any;
-        /** Declare all subnodes as math nodes,
-       i.e recursively set node.isMath = true; */
+        /** Declare all subnodes as math nodes, i.e recursively set node.isMath = true; */
         setMath(): any;
     }
-    export class Chart {
-        elValue: Object;
-        constructor(elValue: any);
-        /** Contains pointers to the various subelements of the chart. */
-        get elements(): Number[];
+    export class Chart extends GeometryElement {
+        constructor(elValues: GeometryElement);
+        /**  */
+        get elements(): any[];
         /** Create bar chart defined by two data arrays. */
-        drawBar(): Number[];
-        /** Create line chart where the curve is given by a regression polynomial
-       defined by two data arrays. */
+        drawBar(): any[];
+        /** Create line chart where the curve is given by a regression polynomial defined by two data arrays. */
         drawFit(): Curve;
         /** Create line chart defined by two data arrays. */
         drawLine(): Curve;
@@ -642,61 +1055,38 @@ declare namespace TSX {
         drawPoints(): Number[];
         /** Create radar chart. */
         drawRadar(): Object;
-        /** Create line chart that consists of a natural spline curve
-       defined by two data arrays. */
+        /** Create line chart that consists of a natural spline curve defined by two data arrays. */
         drawSpline(): Curve;
         /** Template for dynamic charts update. */
         updateDataArray(): Chart;
     }
-    export class Circle {
-        elValue: Object;
-        constructor(elValue: any);
-        /** The circles center. */
-        get center(): Point;
-        /** Circle defining the radius of the circle given by the radius of the other circle
-       only set if method equals 'pointLine'. */
-        get circle(): Circle;
-        /** Line defining the radius of the circle given by the distance from the startpoint and the endpoint of the line
-       only set if method equals 'pointLine'. */
-        get line(): Line;
-        /** Stores the given method. */
-        get method(): String;
-        /** Point on the circle only set if method equals 'twoPoints'. */
-        get point2(): Point;
-        /** Radius of the circle
-       only set if method equals 'pointRadius' */
-        get radius(): Number;
-        /** Add transformations to this circle. */
-        addTransform(): Circle;
+    export class Circle extends GeometryElement {
+        constructor(elValues: GeometryElement);
         /** Circle area */
         Area(): Number;
-        /** Get bounding box of the circle. */
-        bounds(): Number[];
-        /** Get data to construct this element. */
-        getParents(): Number[];
-        /** Use <a href="../symbols/JXG.Circle.html#Radius">JXG.Circle#Radius</a>. */
-        getRadius(): Boolean;
         /** Perimeter (circumference) of circle. */
         Perimeter(): Number;
         /** Calculates the radius of the circle. */
         Radius(): Number;
-        /** Set a new radius, then update the board. */
-        setRadius(): Circle;
-        /** Uses the boards renderer to update the circle. */
-        update(): Number;
+        /** Treats the circle as parametric curve and calculates its X coordinate. */
+        X(): Number;
+        /** Treats the circle as parametric curve and calculates its Y coordinate. */
+        Y(): Number;
+        /** Treat the circle as parametric curve and calculates its Z coordinate. */
+        Z(): Number;
     }
     export class Complex {
         elValue: Object;
         constructor(elValue: any);
-        /** Absolute value in the polar form of the complex number. */
+        /**  */
         get absval(): Number;
-        /** Angle value in the polar form of the complex number. */
+        /**  */
         get angle(): Number;
-        /** Imaginary part of the complex number. */
+        /**  */
         get imaginary(): Number;
-        /** This property is only to signalize that this object is of type JXG.Complex. */
+        /**  */
         get isComplex(): Boolean;
-        /** Real part of the complex number. */
+        /**  */
         get real(): Number;
         /** Add another complex number to this complex number. */
         add(): Complex;
@@ -726,147 +1116,103 @@ declare namespace TSX {
         prepareUpdate(): Boolean;
         /** Remove an element from the composition container. */
         remove(): Boolean;
-        /** Invokes setAttribute for every stored element with a setAttribute method and hands over the given arguments. */
-        setAttribute(): any;
         /** Invokes setParents for every stored element with a setParents method and hands over the given arguments. */
         setParents(): any;
-        /** Invokes update for every stored element with a update method and hands over the given arguments. */
-        update(): any;
         /** Invokes updateRenderer for every stored element with a updateRenderer method and hands over the given arguments. */
         updateRenderer(): any;
     }
     export class Coords {
         elValue: Object;
         constructor(elValue: any);
-        /** Stores the board the object is used on. */
+        /**  */
         get board(): Board;
-        /** If true, this coordinates object will emit update events every time
-       the coordinates are set. */
+        /**  */
         get emitter(): boolean;
-        /** Stores coordinates for screen view as homogeneous coordinates. */
+        /**  */
         get scrCoords(): Number[];
-        /** Stores coordinates for user view as homogeneous coordinates. */
+        /**  */
         get usrCoords(): Number[];
-        /** Calculate distance of one point to another. */
-        distance(): Number;
         /** Test if one of the usrCoords is NaN or the coordinates are infinite. */
         isReal(): Boolean;
         /** Set coordinates by either user coordinates or screen coordinates and recalculate the other one. */
         setCoordinates(): Coords;
     }
-    export class CoordsElement extends GeometryElement {
-        constructor(elValues: GeometryElement);
-        /** Coordinates of the element. */
-        get coords(): Coords;
-        /** Stores the groups of this element in an array of Group. */
-        get groups(): Number[];
-        /** True if there the method this.updateConstraint() has been set. */
-        get isConstrained(): Boolean;
-        /** A <a href="../symbols/JXG.CoordsElement.html#updateGlider">JXG.CoordsElement#updateGlider</a> call is usually followed
-       by a general <a href="../symbols/JXG.Board.html#update">JXG.Board#update</a> which calls
-       <a href="../symbols/JXG.CoordsElement.html#updateGliderFromParent">JXG.CoordsElement#updateGliderFromParent</a>. */
-        get needsUpdateFromParent(): Boolean;
-        /** Determines whether the element slides on a polygon if point is a glider. */
-        get onPolygon(): Boolean;
-        /** Relative position on a slide element (line, circle, curve) if element is a glider on this element. */
-        get position(): Number;
-        /** When used as a glider this member stores the object, where to glide on. */
-        get slideObject(): GeometryElement;
-        /** List of elements the element is bound to, i.e. */
-        get slideObjects(): CoordsElement;
-        /** Convert the point to CAS point and call update(). */
-        addConstraint(): CoordsElement;
-        /** Add transformations to this element. */
-        addTransform(): CoordsElement;
-        /** Generic method to create point, text or image. */
-        create(): Coords;
-        /** Getter method for the distance to a second point, this is required for CAS-elements. */
-        Dist(): Number;
-        /** Converts a calculated element into a free element,
-       i.e. */
-        free(): Point;
-        /** A point can change its type from free point to glider
-       and vice versa. */
-        handleAttractors(): Point;
-        /** Let a point snap to the nearest point in distance of
-       JXG.Point#attractorDistance. */
-        handleSnapToPoints(): Point;
-        /** Convert the point to glider and update the construction. */
-        makeGlider(): CoordsElement;
-        /** Starts an animation which moves the point along a given path in given time. */
-        moveAlong(): CoordsElement;
-        /** Starts an animated point movement towards the given coordinates <tt>where</tt>. */
-        moveTo(): CoordsElement;
-        /** Remove the last slideObject. */
-        popSlideObject(): Point;
-        /** Sets the position of a glider relative to the defining elements
-       of the JXG.Point#slideObject. */
-        setGliderPosition(): Point;
-        /** Sets coordinates and calls the point's update() method. */
-        setPosition(): Point;
-        /** Translates the point by <tt>tv = (x, y)</tt>. */
-        setPositionByTransform(): Point;
-        /** Sets coordinates and calls the point's update() method. */
-        setPositionDirectly(): Point;
-        /** Alias for JXG.Element#handleSnapToGrid */
-        snapToGrid(): CoordsElement;
-        /** Alias for <a href="../symbols/JXG.CoordsElement.html#handleSnapToPoints">JXG.CoordsElement#handleSnapToPoints</a>. */
-        snapToPoints(): Point;
-        /** Applies the transformations of the element. */
-        updateTransform(): CoordsElement;
-        /** Starts an animated point movement towards the given coordinates <tt>where</tt>. */
-        visit(): CoordsElement;
-    }
     export class Curve extends GeometryElement {
         constructor(elValues: GeometryElement);
-        /** Array holding the x-coordinates of a data plot. */
+        /**  */
         get dataX(): Number[];
-        /** Array holding the y-coordinates of a data plot. */
+        set dataX(param: Number[]);
+        /**  */
         get dataY(): Number[];
-        /** Array of ticks storing all the ticks on this curve. */
+        set dataY(param: Number[]);
+        /**  */
         get ticks(): Number[];
-        /** Add transformations to this curve. */
-        addTransform(): Curve;
         /** Allocate points in the Coords array this.points */
         allocatePoints(): Number[];
         /** Converts the JavaScript/JessieCode/GEONExT syntax of the defining function term into JavaScript. */
         generateTerm(): Number[];
-        /** Checks whether (x,y) is near the curve. */
-        hasPoint(): Boolean;
         /** Gives the default value of the right bound for the curve. */
         maxX(): Number;
         /** Gives the default value of the left bound for the curve. */
         minX(): Number;
         /** Shift the curve by the vector 'where'. */
         moveTo(): Curve;
-        /** Finds dependencies in a given term and notifies the parents by adding the
-       dependent object to the found objects child elements. */
+        /** Finds dependencies in a given term and notifies the parents by adding the dependent object to the found objects child elements. */
         notifyParents(): Curve;
-        /** Computes for equidistant points on the x-axis the values of the function */
-        update(): Curve;
         /** Computes the curve path */
         updateCurve(): Curve;
-        /** For dynamic dataplots updateCurve can be used to compute new entries
-       for the arrays <a href="../symbols/JXG.Curve.html#dataX">JXG.Curve#dataX</a> and <a href="../symbols/JXG.Curve.html#dataY">JXG.Curve#dataY</a>. */
-        updateDataArray(): Curve;
+        /** For dynamic dataplots updateCurve can be used to compute new entries for the arrays JXG.Curve#dataX and JXG.Curve#dataY. */
+        updateDataArray(func: Function): void;
         /** Updates the visual contents of the curve. */
         updateRenderer(): Curve;
-        /** Applies the transformations of the curve to the given point <tt>p</tt>. */
+        /** Applies the transformations of the curve to the given point p. */
         updateTransform(): Point;
+        /** The parametric function which defines the x-coordinate of the curve. */
+        X(): Number;
+        /** The parametric function which defines the y-coordinate of the curve. */
+        Y(): Number;
+        /** Treat the curve as curve with homogeneous coordinates. */
+        Z(): Number;
     }
-    export class Curve3D extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class Curve3D extends GeometryElement3D {
+        constructor(elValues: GeometryElement3D);
+        /** Function which maps u to x; i.e. */
+        X(): any;
+        /** Function which maps u to y; i.e. */
+        Y(): any;
+        /** Function which maps u to z; i.e. */
+        Z(): any;
     }
     export class Dump {
         elValue: Object;
         constructor(elValue: any);
+        /** Adds markers to every element of the board */
+        addMarkers(): Dump;
+        /** Converts an array of different values into a parameter string that can be used by the code generators. */
+        arrayToParamStr(): Dump;
+        /** Removes markers from every element on the board. */
+        deleteMarkers(): Dump;
+        /** Generate a save-able structure with all elements. */
+        dump(): Dump;
+        /** Eliminate default values given by JXG.Options from the attributes object. */
+        minimizeObject(): Dump;
+        /** Prepare the attributes object for an element to be dumped as JavaScript or JessieCode code. */
+        prepareAttributes(): Dump;
+        /** Stringifies a string, i.e. */
+        str(): Dump;
+        /** Saves the construction in board to JavaScript. */
+        toJavaScript(): Dump;
+        /** Converts a JavaScript object into a JCAN (JessieCode Attribute Notation) string. */
+        toJCAN(): Dump;
+        /** Saves the construction in board to JessieCode. */
+        toJessie(): Dump;
     }
     export class ForeignObject {
         elValue: Object;
         constructor(elValue: any);
-        /** 'href' of the foreignObject. */
+        /**  */
         get content(): Number[];
-        /** Array of length two containing [width, height] of the foreignObject in pixel. */
+        /**  */
         get size(): Number[];
         /** Returns the height of the foreignObject in user coordinates. */
         H(): number;
@@ -877,14 +1223,9 @@ declare namespace TSX {
         /** Returns the width of the foreignObject in user coordinates. */
         W(): number;
     }
-    export class GeometryElement3D {
-        elValue: Object;
-        constructor(elValue: any);
-    }
-    export class Group {
-        elValue: Object;
-        constructor(elValue: any);
-        /** Cache coordinates of points. */
+    export class Group extends GeometryElement {
+        constructor(elValues: GeometryElement);
+        /**  */
         get coords(): Object;
         /** Adds all points in a group to this group. */
         addGroup(): Group;
@@ -898,8 +1239,6 @@ declare namespace TSX {
         addRotationPoint(): Group;
         /** Adds a point to the set of the scale points of the group. */
         addScalePoint(): Group;
-        /** Adds a point to the set of the translation points of the group. */
-        addTranslationPoint(): Group;
         /** List of the element ids resp. */
         getParents(): Number[];
         /** Removes a point from the group. */
@@ -926,15 +1265,12 @@ declare namespace TSX {
         setTranslationPoints(): Group;
         /** Releases all elements of this group. */
         ungroup(): Group;
-        /** Sends an update to all group members. */
-        update(): Group;
     }
-    export class Image {
-        elValue: Object;
-        constructor(elValue: any);
-        /** Array of length two containing [width, height] of the image in pixel. */
+    export class Image extends GeometryElement {
+        constructor(elValues: GeometryElement);
+        /**  */
         get size(): Number[];
-        /** 'href' of the image. */
+        /**  */
         get url(): string;
         /** Returns the height of the image in user coordinates. */
         H(): number;
@@ -948,29 +1284,27 @@ declare namespace TSX {
     export class Legend {
         elValue: Object;
         constructor(elValue: any);
-        /** (Circular) array of label colors. */
+        /**  */
         get colors(): Number[];
-        /** Label names of a legend element. */
+        /**  */
         get labels(): Number[];
-        /** Height (in px) of one legend entry */
+        /**  */
         get rowHeight(): Number;
-        /** Default style of a legend element. */
+        /**  */
         get style(): String;
     }
     export class Line extends GeometryElement {
         constructor(elValues: GeometryElement);
-        /** Reference of the ticks created automatically when constructing an axis. */
+        /**  */
         get defaultTicks(): Ticks;
-        /** If the line is the border of a polygon, the polygon object is stored, otherwise null. */
+        /**  */
         get parentPolygon(): Polygon;
-        /** Startpoint of the line. */
+        /** Attributes for first defining point of the line. */
         get point1(): Point;
-        /** Endpoint of the line. */
+        /** Attributes for second defining point of the line. */
         get point2(): Point;
-        /** Array of ticks storing all the ticks on this line. */
+        /** Attributes for ticks of the line. */
         get ticks(): Number[];
-        /** Add transformations to this line. */
-        addTransform(): Line;
         /** Determines the angle between the positive x axis and the line. */
         getAngle(): Number;
         /** Calculates the y intersect of the line. */
@@ -983,61 +1317,47 @@ declare namespace TSX {
         L(): Number;
         /** Calculates the slope of the line. */
         Slope(): Number;
+        /** Treat the line as parametric curve in homogeneous coordinates, where the parameter t runs from 0 to 1. */
+        X(): number;
+        /** Treat the line as parametric curve in homogeneous coordinates. */
+        Y(): number;
+        /** Treat the line as parametric curve in homogeneous coordinates. */
+        Z(): number;
     }
     export class Line3D extends GeometryElement3D {
         constructor(elValues: GeometryElement3D);
-        /** Direction which - together with a point - defines the line. */
+        /**  */
         get direction(): Number[] | Function;
-        /** 3D point which - together with a direction - defines the line. */
+        /**  */
         get point(): Point3D;
-        /** Starting point of the 3D line */
+        /**  */
         get point1(): Point3D;
-        /** End point of the 3D line */
+        /**  */
         get point2(): Point3D;
-        /** Range [r1, r2] of the line. */
+        /**  */
         get range(): Number[];
-    }
-    export class Plane3D extends GeometryElement {
-        constructor(elValues: GeometryElement);
-        /** Right hand side of the Hesse normal form. */
-        get d(): Number[];
-        /** Two linearly independent vectors - together with a point - define the plane. */
-        get direction1(): Number[] | Function;
-        /** Two linearly independent vectors - together with a point - define the plane. */
-        get direction2(): Number[] | Function;
-        /** Normal vector of the plane. */
-        get normal(): Number[];
-        /** 3D point which - together with two direction vectors - defines the plane. */
-        get point(): Point3D;
-        /** Range [r1, r2] of direction1. */
-        get range1(): Number[];
-        /** Range [r1, r2] of direction2. */
-        get range2(): Number[];
-        /** Direction vector 1 of the 3D plane. */
-        get vec1(): Number[];
-        /** Direction vector 2 of the 3D plane. */
-        get vec2(): Number[];
     }
     export class Point extends GeometryElement {
         constructor(elValues: GeometryElement);
-        /** Test if the point is on (is incident with) element "el". */
-        isOn(): Boolean;
-        /** Convert the point to intersection point and update the construction. */
-        makeIntersection(): Point;
-        /** Updates the position of the point. */
-        update(): CoordsElement;
-        /** Applies the transformations of the element to JXG.Point#baseElement. */
-        updateTransform(): CoordsElement;
+        /**  */
+        coords(): Number[];
+        /**  */
+        distance(toPoint: Point | point): number;
+        /** Set the face of a point element. */
+        face(style: 'cross' | 'circle' | 'square' | 'plus' | 'minus' | 'diamond'): Boolean;
+        /**  */
+        X(): number;
+        /**  */
+        Y(): number;
+        /**  */
+        Z(): number;
     }
-    export class Point3D {
-        elValue: Object;
-        constructor(elValue: any);
-        /** Homogeneous coordinates of a Point3D, i.e. */
-        get coords(): Number[];
-        /** Optional slide element, i.e. */
+    export class Point3D extends GeometryElement3D {
+        constructor(elValues: GeometryElement3D);
+        /**  */
         get slide(): GeometryElement3D;
         /** Set the position of a 3D point. */
-        setPosition(): Number[];
+        setPosition(): Point3D;
         /** Get x-coordinate of a 3D point. */
         X(): Number[];
         /** Get y-coordinate of a 3D point. */
@@ -1045,43 +1365,14 @@ declare namespace TSX {
         /** Get z-coordinate of a 3D point. */
         Z(): Number[];
     }
-    export class Polygon {
-        elValue: Object;
-        constructor(elValue: any);
-        /** References to the border lines of the polygon. */
+    export class Polygon extends GeometryElement {
+        constructor(elValues: GeometryElement);
+        /** Attributes for the polygon border lines. */
         get borders(): Number[];
-        /** References to the points defining the polygon. */
+        /** Attributes for the polygon vertices. */
         get vertices(): Number[];
-        /** Add more points to the polygon. */
-        addPoints(): Polygon;
-        /** Area of (not self-intersecting) polygon */
-        Area(): Number;
-        /** Bounding box of a polygon. */
-        boundingBox(): Number[];
-        /** Finds the index to a given point reference. */
-        findPoint(): Number;
-        /** return TextAnchor */
-        getTextAnchor(): Boolean;
         /** Checks whether (x,y) is near the polygon. */
-        hasPoint(): Boolean;
-        /** Hide the polygon including its border lines. */
-        hideElement(): Polygon;
-        /** Insert points to the vertex list of the polygon after index <tt>idx</tt>. */
-        insertPoints(): Polygon;
-        /** Generic method for the intersection of this polygon with another polygon. */
-        intersect(): Number[];
-        /** Alias for Perimeter. */
-        L(): Number;
-        /** Perimeter of polygon. */
-        Perimeter(): Number;
-        /** Wrapper for JXG.Math.Geometry.pnpoly. */
-        pnpoly(): Boolean;
-        /** Removes given set of vertices from the polygon */
-        removePoints(): Polygon;
-        /** Moves the polygon by the difference of two coordinates. */
-        setPositionDirectly(): Polygon;
-        /** Make the element visible. */
-        showElement(): Number[];
+        hasPoint(x: number, y: number): Boolean;
         /** Uses the boards renderer to update the polygon. */
         updateRenderer(): any;
     }
@@ -1096,32 +1387,29 @@ declare namespace TSX {
     }
     export class Text extends GeometryElement {
         constructor(elValues: GeometryElement);
-        /** Width and height of the text element in pixel. */
+        /**  */
         get size(): Number[];
-        /** Returns the bounding box of the text element in user coordinates as an
-       array of length 4: [upper left x, upper left y, lower right x, lower right y]. */
+        /** Returns the bounding box of the text element in user coordinates as an array of length 4: [upper left x, upper left y, lower right x, lower right y]. */
         bounds(): Number[];
         /** A very crude estimation of the dimensions of the textbox in case nothing else is available. */
         crudeSizeEstimate(): Number[];
-        /** Returns the value of the attribute "anchorX". */
+        /** Returns the value of the attribute ”anchorX”. */
         getAnchorX(): Number;
-        /** Returns the value of the attribute "anchorY". */
+        /** Returns the value of the attribute ”anchorY”. */
         getAnchorY(): Number;
         /** Return the width of the text element. */
         getSize(): Number[];
-        /** Replace _{} by &lt;sub&gt; */
+        /** Replace _{} by <sub> */
         replaceSub(): String;
-        /** Replace ^{} by &lt;sup&gt; */
+        /** Replace ^{} by <sup> */
         replaceSup(): String;
-        /** Sets the offset of a label element to the position with the least number
-       of overlaps with other elements, while retaining the distance to its
-       anchor element. */
+        /** Sets the offset of a label element to the position with the least number of overlaps with other elements, while retaining the distance to its anchor element. */
         setAutoPosition(): Text;
         /** Move the text to new coordinates. */
         setCoords(x: Number, y: Number): object;
         /** Defines new content. */
         setText(newText: String): Text;
-        /** Defines new content but converts &lt; and &gt; to HTML entities before updating the DOM. */
+        /** Defines new content but converts < and > to HTML entities before updating the DOM. */
         setTextJessieCode(): this;
         /** Evaluates the text. */
         update(): this;
@@ -1132,21 +1420,21 @@ declare namespace TSX {
     }
     export class Ticks extends GeometryElement {
         constructor(elValues: GeometryElement);
-        /** The board the ticks line is drawn on. */
+        /**  */
         get board(): Board;
-        /** Flag if the ticks are equidistant. */
+        /**  */
         get equidistant(): Boolean;
-        /** Array of fixed ticks. */
+        /**  */
         get fixedTicks(): Number[];
-        /** Used to ensure the uniqueness of label ids this counter is used. */
+        /**  */
         get labelCounter(): number;
-        /** Array where the labels are saved. */
+        /** User defined labels for special ticks. */
         get labels(): Number[];
-        /** A list of labels which have to be displayed in updateRenderer. */
+        /**  */
         get labelsData(): Number[];
-        /** The line the ticks belong to. */
+        /**  */
         get line(): Line;
-        /** Stores the ticks coordinates */
+        /**  */
         get ticks(): Number[];
         /** Formats label texts to make labels displayed in scientific notation look beautiful. */
         beautifyScientificNotationLabel(): String;
@@ -1154,30 +1442,24 @@ declare namespace TSX {
         hasPoint(): Boolean;
         /** Sets x and y coordinate of the tick. */
         setPositionDirectly(): Ticks;
-        /** Recalculate the tick positions and the labels. */
-        update(): Ticks;
         /** Uses the boards renderer to update the arc. */
         updateRenderer(): Ticks;
-    }
-    export class Transform {
-        elValue: Object;
-        constructor(elValue: any);
     }
     export class Turtle extends GeometryElement {
         constructor(elValues: GeometryElement);
         /** Move the turtle backwards. */
         back(): Turtle;
-        /** Alias for <a href="../symbols/JXG.Turtle.html#back">JXG.Turtle#back</a> */
+        /** Alias for JXG.Turtle#back */
         bk(): Turtle;
         /** Removes the turtle curve from the board. */
         clean(): Turtle;
         /** Removes the turtle completely and resets it to its initial position and direction. */
         clearScreen(): Turtle;
-        /** Alias for <a href="../symbols/JXG.Turtle.html#clearScreen">JXG.Turtle#clearScreen</a> */
+        /** Alias for JXG.Turtle#clearScreen */
         cs(): Number;
-        /** The "co"-coordinate of the turtle curve at position t is returned. */
+        /** The ”co”-coordinate of the turtle curve at position t is returned. */
         evalAt(): Number;
-        /** Alias for <a href="../symbols/JXG.Turtle.html#forward">JXG.Turtle#forward</a> */
+        /** Alias for JXG.Turtle#forward */
         fd(): Turtle;
         /** Move the turtle forward. */
         forward(): Turtle;
@@ -1193,13 +1475,13 @@ declare namespace TSX {
         hideTurtle(): Turtle;
         /** Moves the turtle to position [0,0]. */
         home(): Turtle;
-        /** Alias for <a href="../symbols/JXG.Turtle.html#hideTurtle">JXG.Turtle#hideTurtle</a> */
+        /** Alias for JXG.Turtle#hideTurtle */
         ht(): Turtle;
         /** Rotate the turtle direction to the right. */
         left(): Turtle;
         /** Rotates the turtle into a new direction. */
         lookTo(): Turtle;
-        /** Alias for <a href="../symbols/JXG.Turtle.html#left">JXG.Turtle#left</a> */
+        /** Alias for JXG.Turtle#left */
         lt(): Turtle;
         /** Gives the upper bound of the parameter if the turtle is treated as parametric curve. */
         maxX(): Turtle;
@@ -1207,29 +1489,26 @@ declare namespace TSX {
         minX(): Turtle;
         /** Moves the turtle to a given coordinate pair. */
         moveTo(): Turtle;
-        /** Alias for <a href="../symbols/JXG.Turtle.html#penDown">JXG.Turtle#penDown</a> */
+        /** Alias for JXG.Turtle#penDown */
         pd(): Turtle;
         /** Pen down, continues visible drawing */
         penDown(): Turtle;
         /** Pen up, stops visible drawing */
         penUp(): Turtle;
-        /** Alias for <a href="../symbols/JXG.Turtle.html#popTurtle">JXG.Turtle#popTurtle</a> */
+        /** Alias for JXG.Turtle#popTurtle */
         pop(): Turtle;
-        /** Gets the last position of the turtle on the stack, sets the turtle to this position and removes this
-       position from the stack. */
+        /** Gets the last position of the turtle on the stack, sets the turtle to this position and removes this position from the stack. */
         popTurtle(): Turtle;
-        /** Alias for <a href="../symbols/JXG.Turtle.html#penUp">JXG.Turtle#penUp</a> */
+        /** Alias for JXG.Turtle#penUp */
         pu(): Turtle;
-        /** Alias for <a href="../symbols/JXG.Turtle.html#pushTurtle">JXG.Turtle#pushTurtle</a> */
+        /** Alias for JXG.Turtle#pushTurtle */
         push(): Turtle;
         /** Pushes the position of the turtle on the stack. */
         pushTurtle(): Turtle;
         /** Rotate the turtle direction to the right */
         right(): Turtle;
-        /** Alias for <a href="../symbols/JXG.Turtle.html#right">JXG.Turtle#right</a> */
+        /** Alias for JXG.Turtle#right */
         rt(): Turtle;
-        /** Sets properties of the turtle, see also <a href="../symbols/JXG.GeometryElement.html#setAttribute">JXG.GeometryElement#setAttribute</a>. */
-        setAttribute(): Turtle;
         /** Sets the highlight pen color. */
         setHighlightPenColor(): Turtle;
         /** Sets the pen color. */
@@ -1240,30 +1519,36 @@ declare namespace TSX {
         setPos(): Turtle;
         /** Sets the visibility of the turtle head to true, */
         showTurtle(): Turtle;
-        /** Alias for <a href="../symbols/JXG.Turtle.html#showTurtle">JXG.Turtle#showTurtle</a> */
+        /** Alias for JXG.Turtle#showTurtle */
         st(): Number;
+        /** if t is not supplied the x-coordinate of the turtle is returned. */
+        X(): Number;
+        /** if t is not supplied the y-coordinate of the turtle is returned. */
+        Y(): Number;
+        /**  */
+        Z(): Number;
     }
-    export class View3D extends GeometryElement {
-        constructor(elValues: GeometryElement);
-        /** Slider to adapt azimuth angle */
+    export class View3D extends GeometryElement3D {
+        constructor(elValues: GeometryElement3D);
+        /**  */
         get az_slide(): Number[];
-        /** Bounding box (cube) [[x1, x2], [y1,y2], [z1,z2]] of the 3D view */
+        /**  */
         get bbox3D(): Number[];
-        /** Default axes of the 3D view, contains the axes of the view or null. */
+        /**  */
         get defaultAxes(): Object;
-        /** Slider to adapt elevation angle */
+        /**  */
         get el_slide(): Object;
-        /** An associative array / dictionary to store the objects of the board by name. */
+        /**  */
         get elementsByName(): Object;
         /**  */
         get llftCorner(): Number[];
         /**  */
         get matrix3D(): Object;
-        /** An associative array containing all geometric objects belonging to the view. */
+        /**  */
         get objects(): Object;
-        /** Distance of the view to the origin. */
+        /**  */
         get r(): Number;
-        /** Width and height [w, h] of the 3D view if elevation and azimuth are set to 0. */
+        /**  */
         get size(): Number[];
         /**  */
         animateAzimuth(): Object;
@@ -1275,14 +1560,11 @@ declare namespace TSX {
         intersectionPlanePlane(): Number[];
         /** Test if coordinates are inside of the bounding cube. */
         isInCube(): Number[];
-        /** Project a 2D coordinate to the plane defined by the point foot
-       and the normal vector `normal`. */
+        /** Project a 2D coordinate to the plane defined by point ”foot” and the normal vector `normal`. */
         project2DTo3DPlane(): Number[];
-        /** Project a 2D coordinate to a new 3D position by keeping
-       the 3D x, y coordinates and changing only the z coordinate. */
+        /** Project a 2D coordinate to a new 3D position by keeping the 3D x, y coordinates and changing only the z coordinate. */
         project2DTo3DVertical(): Number[];
-        /** Project 3D coordinates to 2D board coordinates
-       The 3D coordinates are provides as three numbers x, y, z or one array of length 3. */
+        /** Project 3D coordinates to 2D board coordinates The 3D coordinates are provides as three numbers x, y, z or one array of length 3. */
         project3DTo2D(): Number[];
         /** Limit 3D coordinates to the bounding cube. */
         project3DToCube(): GeometryElement3D | Composition;
@@ -1291,40 +1573,42 @@ declare namespace TSX {
         /**  */
         stopAzimuth(): any;
     }
-    export class Sector extends GeometryElement {
-        constructor(elValues: GeometryElement);
-        /** Midpoint of the sector. */
+    export class Sector extends Curve {
+        constructor(elValues: Curve);
+        /**  */
         get point1(): Point;
-        /** This point together with <a href="../symbols/Sector.html#point1">Sector#point1</a> defines the radius. */
+        /**  */
         get point2(): Point;
-        /** Defines the sector's angle. */
+        /**  */
         get point3(): Point;
-        /** Defines the sectors orientation in case of circumCircleSectors. */
+        /**  */
         get point4(): Point;
         /** Checks whether (x,y) is within the area defined by the sector. */
         hasPointSector(): Boolean;
         /** Returns the radius of the sector. */
         Radius(): Number;
     }
-    export class Vectorfield extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class Vectorfield extends Curve {
+        constructor(elValues: Curve);
         /** Set the defining functions of vector field. */
         setF(): Object;
     }
     export class Angle extends Sector {
         constructor(elValues: Sector);
-        /** The point defining the radius of the angle element. */
+        /**  */
         get point(): Point;
         /** Frees an angle from a prescribed value. */
         free(): Object;
         /** Set an angle to a prescribed value given in radians. */
         setAngle(): Object;
+        /** Returns the value of the angle. */
+        Value(): Number;
     }
-    export class Arc extends GeometryElement {
-        constructor(elValues: GeometryElement);
-        /** The point defining the arc's angle. */
+    export class Arc extends Curve {
+        constructor(elValues: Curve);
+        /**  */
         get anglepoint(): Point;
-        /** Point defining the arc's radius. */
+        /**  */
         get radiuspoint(): Point;
         /**  */
         getRadius(): Number;
@@ -1332,6 +1616,8 @@ declare namespace TSX {
         hasPointSector(): Boolean;
         /** Determines the arc's current radius. */
         Radius(): Number;
+        /** Returns the length of the arc or the value of the angle spanned by the arc. */
+        Value(): Number;
     }
     export class Arrow extends Line {
         constructor(elValues: Line);
@@ -1344,7 +1630,7 @@ declare namespace TSX {
     }
     export class Axis extends Line {
         constructor(elValues: Line);
-        /** The ticks attached to the axis. */
+        /**  */
         get defaultTicks(): Ticks;
     }
     export class Bisector extends Line {
@@ -1353,19 +1639,16 @@ declare namespace TSX {
     export class Bisectorlines extends Composition {
         constructor(elValues: Composition);
     }
-    export class Boxplot extends GeometryElement {
-        constructor(elValues: GeometryElement);
-    }
     export class Button extends Text {
         constructor(elValues: Text);
     }
-    export class Cardinalspline extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class Cardinalspline extends Curve {
+        constructor(elValues: Curve);
     }
     export class Checkbox extends Text {
         constructor(elValues: Text);
         /** Returns the value of the checkbox element */
-        Value(): number;
+        Value(): String;
     }
     export class Circumcenter extends Point {
         constructor(elValues: Point);
@@ -1378,35 +1661,35 @@ declare namespace TSX {
     }
     export class CircumcircleSector extends Sector {
         constructor(elValues: Sector);
-        /** Center of the circumcirclesector */
+        /**  */
         get center(): Circumcenter;
     }
-    export class Comb extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class Comb extends Curve {
+        constructor(elValues: Curve);
     }
-    export class Conic extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class Conic extends Curve {
+        constructor(elValues: Curve);
     }
-    export class CurveDifference extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class CurveDifference extends Curve {
+        constructor(elValues: Curve);
     }
-    export class CurveIntersection extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class CurveIntersection extends Curve {
+        constructor(elValues: Curve);
     }
-    export class CurveUnion extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class CurveUnion extends Curve {
+        constructor(elValues: Curve);
     }
-    export class Derivative extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class Derivative extends Curve {
+        constructor(elValues: Curve);
     }
     export class Ellipse extends Conic {
         constructor(elValues: Conic);
     }
-    export class Functiongraph extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class Functiongraph extends Curve {
+        constructor(elValues: Curve);
     }
-    export class ParametricSurface3D extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class ParametricSurface3D extends Curve {
+        constructor(elValues: Curve);
     }
     export class Functiongraph3D extends ParametricSurface3D {
         constructor(elValues: ParametricSurface3D);
@@ -1414,16 +1697,14 @@ declare namespace TSX {
     export class Glider extends Point {
         constructor(elValues: Point);
         /** Animate the point. */
-        startAnimation(): CoordsElement;
-        /** Stop animation. */
-        stopAnimation(): CoordsElement;
+        startAnimation(direction: Number, stepCount: Number, delayMSec: Number): void;
     }
-    export class Grid extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class Grid extends Curve {
+        constructor(elValues: Curve);
     }
     export class Hatch extends Ticks {
         constructor(elValues: Ticks);
-        /** The default distance (in user coordinates, not  pixels) between two hatch symbols. */
+        /**  */
         get ticksDistance(): Number;
     }
     export class Hyperbola extends Conic {
@@ -1435,59 +1716,59 @@ declare namespace TSX {
     export class Incircle extends Circle {
         constructor(elValues: Circle);
     }
-    export class Inequality extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class Inequality extends Curve {
+        constructor(elValues: Curve);
     }
     export class Input extends Text {
         constructor(elValues: Text);
         /** Sets value of the input element. */
         set(): GeometryElement;
         /** Returns the value (content) of the input element */
-        Value(): number;
+        Value(): String;
     }
-    export class Integral extends GeometryElement {
-        constructor(elValues: GeometryElement);
-        /** The point on the axis initially corresponding to the lower value of the interval. */
+    export class Integral extends Curve {
+        constructor(elValues: Curve);
+        /** Attributes of the (left) base point of the integral. */
         get baseLeft(): Point;
-        /** The point on the axis initially corresponding to the higher value of the interval. */
+        /** Attributes of the (right) base point of the integral. */
         get baseRight(): Point;
-        /** The glider on the curve corresponding to the lower value of the interval. */
+        /** Attributes of the (left) starting point of the integral. */
         get curveLeft(): Point;
-        /** The glider on the axis corresponding to the higher value of the interval. */
+        /** Attributes of the (right) end point of the integral. */
         get curveRight(): Point;
         /** Returns the current value of the integral. */
-        Value(): number;
+        Value(): Point;
     }
-    export class Intersection extends Point {
-        constructor(elValues: Point);
+    export class Intersection extends GeometryElement {
+        constructor(elValues: GeometryElement);
     }
     export class Label extends Text {
         constructor(elValues: Text);
     }
-    export class Locus extends GeometryElement {
-        constructor(elValues: GeometryElement);
-        /** The time it took to calculate the locus */
+    export class Locus extends Curve {
+        constructor(elValues: Curve);
+        /**  */
         get ctime(): Number;
-        /** The implicit definition of the locus. */
+        /**  */
         get eq(): String;
     }
-    export class MajorArc extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class MajorArc extends Curve {
+        constructor(elValues: Curve);
     }
-    export class MajorSector extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class MajorSector extends Curve {
+        constructor(elValues: Curve);
     }
-    export class Metapostspline extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class Metapostspline extends Curve {
+        constructor(elValues: Curve);
     }
     export class Midpoint extends Point {
         constructor(elValues: Point);
     }
-    export class MinorArc extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class MinorArc extends Curve {
+        constructor(elValues: Curve);
     }
-    export class MinorSector extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class MinorSector extends Curve {
+        constructor(elValues: Curve);
     }
     export class mirrorelement extends GeometryElement {
         constructor(elValues: GeometryElement);
@@ -1524,7 +1805,7 @@ declare namespace TSX {
     }
     export class PerpendicularSegment extends Segment {
         constructor(elValues: Segment);
-        /** Helper point */
+        /**  */
         get point(): PerpendicularPoint;
     }
     export class PolarLine extends Line {
@@ -1548,26 +1829,26 @@ declare namespace TSX {
     export class RegularPolygon extends Polygon {
         constructor(elValues: Polygon);
     }
-    export class Riemannsum extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class Riemannsum extends Curve {
+        constructor(elValues: Curve);
+        /** Returns the value of the Riemann sum, i.e. */
+        Value(): Number;
     }
     export class Semicircle extends Arc {
         constructor(elValues: Arc);
-        /** The midpoint of the two defining points. */
+        /**  */
         get midpoint(): Midpoint;
     }
     export class Slider extends Glider {
         constructor(elValues: Glider);
-        /** End value of the slider range. */
-        get _smax(): Number;
-        /** Start value of the slider range. */
-        get _smin(): Number;
         /** Sets the maximum value of the slider. */
         setMax(): Object;
         /** Sets the minimum value of the slider. */
         setMin(): Object;
         /** Sets the value of the slider. */
         setValue(): Object;
+        /** Returns the current slider value. */
+        value(): number;
     }
     export class Slopefield extends Vectorfield {
         constructor(elValues: Vectorfield);
@@ -1576,24 +1857,53 @@ declare namespace TSX {
     }
     export class Slopetriangle extends Line {
         constructor(elValues: Line);
+        /** Returns the value of the slope triangle, that is the slope of the tangent. */
+        Value(): Number;
     }
     export class Smartlabel extends Text {
         constructor(elValues: Text);
     }
-    export class Spline extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class Spline extends Curve {
+        constructor(elValues: Curve);
     }
-    export class Stepfunction extends GeometryElement {
-        constructor(elValues: GeometryElement);
+    export class Stepfunction extends Curve {
+        constructor(elValues: Curve);
     }
     export class Tangent extends Line {
         constructor(elValues: Line);
     }
     export class Tapemeasure extends Segment {
         constructor(elValues: Segment);
+        /** Returns the length of the tape measure. */
+        Value(): Number;
     }
-    export class Tracecurve extends GeometryElement {
+    export class Tracecurve extends Curve {
+        constructor(elValues: Curve);
+    }
+    export class Transform extends GeometryElement {
         constructor(elValues: GeometryElement);
+        /**  */
+        applyOnce(): Transform;
+        /**  */
+        bindTo(element: GeometryElement): Transform;
+        /**  */
+        melt(): Transform;
+        /**  */
+        setMatrix(): Transform;
+        /**  */
+        setProperty(): Transform;
+    }
+    export class VPoint extends Point {
+        constructor(elValues: Point);
+    }
+    export class Clip extends Math {
+        constructor(elValues: Math);
+        /**  */
+        difference(curve2: GeometryElement, curve1: GeometryElement): [number[], number[]];
+        /**  */
+        intersection(curve2: GeometryElement, curve1: GeometryElement): [number[], number[]];
+        /**  */
+        union(curve2: GeometryElement, curve1: GeometryElement): [number[], number[]];
     }
     export {};
 }

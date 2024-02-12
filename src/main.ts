@@ -10,7 +10,7 @@ import { OnClickSay } from "./onClickSay"
 import { asciiMath, testAsciiMath } from './ASCIIMathML'
 
 import { VT52 } from './vt52'
-import { TSX } from './jsxgraph'
+import { JSXGraph } from './jsxgraph'
 import { Draw, V3, Ray } from './draw'
 import { PlanetCute } from "./planetcute";
 
@@ -107,15 +107,20 @@ export class Main {
         // let onClickSay: OnClickSay
 
         (window as any).TSX = {
-
-            JSXGraph: (): TSX.JSXGraph => {
-                console.log('called TSX TSX init')
-                return new TSX.JSXGraph()
+            JSXGraph: (): JSXGraph => {
+                console.log('called TSX TSX init');
+                return new JSXGraph()
             },
+
         };
 
         // remember to add these to NAMESPACE in mathcoode.d.ts.txt
         (window as any).Mathcode = {
+
+            JSXGraph: (): JSXGraph => {
+                console.log('called Mathcode TSX init');
+                return new JSXGraph()
+            },
 
             VT52: (): VT52 => {
                 return new VT52()
@@ -161,7 +166,10 @@ export class Main {
                     console.log('%cMathcodeAPI.loader successful', 'background-color:red;color:white;')
                     console.log('courseInfo(raw): ', courseInfo, 'moodleID', moodleID)
 
-                    this.moodleID = moodleID
+                    this.moodleID = moodleID;
+
+                    // (window as any).TSX = new JSXGraph()
+                    // console.log('%cassiigned JSXGraph() to window.TSX', 'background-color:blue;color:white;')
 
                     // testAsciiMath()  // needs element 'testmath'
                     // testMindMap()  // needs element 'canvas'

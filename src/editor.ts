@@ -48,7 +48,7 @@ import lib_es2099 from "./extraLibs/lib.es2099.d.ts.txt"
 // import lib_jsxgraph from "./extraLibs/jsxgraph.d.ts.txt"
 
 import mathcode from "./extraLibs/mathcode.d.ts.txt"
-import matter from "./extraLibs/matter.d.ts.txt"
+// import matter from "./extraLibs/matter.d.ts.txt"
 import TSX from "./extraLibs/jsxgraph.d.ts.txt"
 
 import { RuntimeAnimation } from "babylonjs/Animations/runtimeAnimation";
@@ -207,7 +207,7 @@ export class Editor {
 
         monaco.languages.typescript.typescriptDefaults.addExtraLib(TSX)    // wrapper version
         monaco.languages.typescript.typescriptDefaults.addExtraLib(mathcode)    // my simply remix of the upper level call
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(matter)    // my simply remix of the upper level call
+        // monaco.languages.typescript.typescriptDefaults.addExtraLib(matter)    // my simply remix of the upper level call
 
         // this stuff has to go into the EVAL, since it doesn't see otherwise
 
@@ -215,24 +215,25 @@ export class Editor {
         this.systemDeclTS =
             `
             // const doc = document
-            const Mathcode:Mathcode = window.Mathcode
             // const JSXGraph.JSXGraph = window.JSXGraph
             // const Mathcode = window.Mathcode
             // const JXG = window.JXG   // (window as any).JXG
-            const BABYLON = window.BABYLON
-            const Matter = window.Matter
-            const document = window.document
+            // const BABYLON = window.BABYLON
+            // const Matter = window.Matter
+            // const document = window.document
             // let _canvas = document.getElementById("canvas") as HTMLCanvasElement
             // let canvas = document.getElementById("canvas") as HTMLCanvasElement
-            let jxgbox = document.getElementById("jxgbox")
+            // let jxgbox = document.getElementById("jxgbox")
             // let canvas2D = document.getElementById("canvas2D") as HTMLCanvasElement
             // let canvas3D = document.getElementById("canvas3D") as HTMLCanvasElement
             // var ctx = canvas.getContext("2d")!   // this causes WebGL to fail
             // const window.PlanetCute = new PlanetCute()
             // const PlanetCute = window.PlanetCute
             // const engine = new BABYLON.Engine(canvas, true);
-            let VT = Mathcode.VT52()
-            const JSXGraph = new TSX.JSXGraph()
+
+            const Mathcode:Mathcode = window.Mathcode
+            const VT = Mathcode.VT52()
+            const JSXGraph = Mathcode.JSXGraph()
             `
 
 
@@ -244,7 +245,7 @@ export class Editor {
             const Mathcode = window.Mathcode
             // const JSXGraph = window.TSX
             const BABYLON = window.BABYLON
-            const Matter = window.Matter
+            // const Matter = window.Matter
             const document = window.document
             // let _canvas = document.getElementById("canvas")
             // let canvas = document.getElementById("canvas")
@@ -257,11 +258,15 @@ export class Editor {
             // const PlanetCute = window.PlanetCute
             // const engine = new BABYLON.Engine(canvas, true);
             let VT = Mathcode.VT52()
-            const JSXGraph = window.TSX.JSXGraph()
+
+            // console.log('mathcode',mathcode.window)
+            // console.log('mathcode.TSX',mathcode.TSX)
+            // console.log('window.TSX',window.TSX)
+
+            const JSXGraph = Mathcode.JSXGraph()
 //
             let currentParagraph = "jxgbox"
 `
-
         this.prefixDecl =
             `declare function answer(myAnswer:string|number|number[]):bool;`
 
@@ -381,6 +386,7 @@ export class Editor {
             // Log.writeMoodleLog({'datacode': 'LOG_EditorRun', data01: sourceCode, data02: line.toString(), data03: col.toString() })
 
             this.editorCode = output.outputFiles[0].text as string;
+            console.log(this.editorCode)
             this.runEditorCode(this.editorCode)      // and run the whole mess
         }
 
@@ -397,7 +403,7 @@ export class Editor {
         code += editorCode + "\r\n"
         code += this.commandCode + "\r\n"
 
-        // console.log(code)
+        console.log(code)
 
         // wipe any observables from the last run
         Observable.resetUserObservers()
