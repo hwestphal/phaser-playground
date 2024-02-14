@@ -19,7 +19,7 @@ declare var WebGLObject: {
 
 
 import * as monaco from "monaco-editor";
-import * as BABYLON from 'babylonjs';
+// import * as BABYLON from 'babylonjs';
 import * as PlanetCute from './planetcute'
 
 
@@ -51,7 +51,7 @@ import mathcode from "./extraLibs/mathcode.d.ts.txt"
 // import matter from "./extraLibs/matter.d.ts.txt"
 // import TSX from "./extraLibs/jsxgraph.d.ts.txt"
 
-import { RuntimeAnimation } from "babylonjs/Animations/runtimeAnimation";
+// import { RuntimeAnimation } from "babylonjs/Animations/runtimeAnimation";
 import { Observable } from "./observer";
 
 // let x = JXG         // just to make sure webpack loads them
@@ -234,6 +234,7 @@ export class Editor {
             const Mathcode:Mathcode = window.Mathcode
             const VT = Mathcode.VT52()
             const JSXGraph = TSX.JSXGraph() as TSX.JSXGraph
+            let JSX = JSXGraph.initBoard('jxgbox')
             `
 
 
@@ -264,7 +265,9 @@ export class Editor {
             // console.log('window.TSX',window.TSX)
 
             const JSXGraph = Mathcode.JSXGraph()
-//
+            let JSX = JSXGraph.initBoard('jxgbox')
+
+
             let currentParagraph = "jxgbox"
 `
         this.prefixDecl =
@@ -433,81 +436,3 @@ export class Editor {
 
 
 
-
-
-
-
-            // new Function(src) is a safer form of eval().
-            // let code = `app.floor(30,30,5);let cube = app.cube().color('blue').move('up',1)`
-
-            // let app = new Baby(code)        // passes code into Baby to be run
-            // new Function(src) is a safer form of eval().
-
-            // let vt = this.vt52()
-            // vt.print('HELLO WORLD')
-            // await vt.print('done')
-            // console.log('done')
-
-
-            // let src = "use strict";(function(${names.join()}) {eval(${JSON.stringify(code)})}).apply(this, arguments[0]);
-
-
-            // new Function(src) is a safer form of eval().
-
-            // let f = new Function(src)
-            // f.call(app)
-            //     return () => new Function(src).call(window, args);
-            // } else {
-
-
-
-//    https://microsoft.github.io/monaco-editor/playground.html#extending-language-services-configure-javascript-defaults
-
-// // Add additonal d.ts files to the JavaScript language service and change.
-// // Also change the default compilation options.
-// // The sample below shows how a class Facts is declared and introduced
-// // to the system and how the compiler is told to use ES6 (target=2).
-
-// // validation settings
-// monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
-// 	noSemanticValidation: true,
-// 	noSyntaxValidation: false
-// });
-
-// // compiler options
-// monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-// 	target: monaco.languages.typescript.ScriptTarget.Latest,
-//     allowNonTsExtensions: true,
-//     noLib: true,                        // don't bring in everything
-// });
-
-// // extra libraries
-// var libSource = [
-// 	'declare class Facts {',
-// 	'    /**',
-// 	'     * Returns the next fact',
-// 	'     */',
-// 	'    static next():string',
-// 	'}',
-// ].join('\n');
-// var libUri = 'ts:filename/facts.d.ts';
-// monaco.languages.typescript.javascriptDefaults.addExtraLib(libSource, libUri);
-// // When resolving definitions and references, the editor will try to use created models.
-// // Creating a model for the library allows "peek definition/references" commands to work with the library.
-// monaco.editor.createModel(libSource, 'typescript', monaco.Uri.parse(libUri));
-
-// var jsCode = [
-// 	'"use strict";',
-// 	'',
-// 	'class Chuck {',
-// 	'    greet() {',
-// 	'        return Facts.next();',
-// 	'    }',
-// 	'}'
-// ].join('\n');
-
-// monaco.editor.create(document.getElementById('container'), {
-// 	value: jsCode,
-// 	language: 'javascript'
-// });
-//
