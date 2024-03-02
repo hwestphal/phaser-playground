@@ -39,6 +39,8 @@ import lib_es2018_asynciterable from "./extraLibs/lib.es2018.asynciterable.d.ts.
 import lib_es2019_string from "./extraLibs/lib.es2019.string.d.ts.txt"
 import lib_es2020_bigint from "./extraLibs/lib.es2020.bigint.d.ts.txt"
 import lib_es2021_string from "./extraLibs/lib.es2021.string.d.ts.txt"
+import lib_es2022_array from "./extraLibs/lib.es2022.array.d.ts.txt"
+import lib_es2023_array from "./extraLibs/lib.es2023.array.d.ts.txt"
 
 import babylonjs from "./extraLibs/babylonjs.d.ts.txt"
 
@@ -200,6 +202,8 @@ export class Editor {
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2019_string)
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2020_bigint)
         monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2021_string)
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2022_array)
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(lib_es2023_array)
 
         monaco.languages.typescript.typescriptDefaults.addExtraLib(babylonjs)
 
@@ -268,7 +272,6 @@ export class Editor {
             // console.log('window.TSX',window.TSX)
 
             const JSXGraph = Mathcode.JSXGraph()
-            let JSX = JSXGraph.initBoard('jxgbox')
 
             let currentParagraph = "jxgbox"
             `
