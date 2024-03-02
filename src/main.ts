@@ -10,7 +10,7 @@ import { OnClickSay } from "./onClickSay"
 import { asciiMath, testAsciiMath } from './ASCIIMathML'
 
 import { VT52 } from './vt52'
-import { JSXGraph } from './jsxgraph'
+import { TSX } from './jsxgraph'
 import { Draw, V3, Ray } from './draw'
 import { PlanetCute } from "./planetcute";
 
@@ -24,7 +24,7 @@ import { LangString } from './lang'
 import { dragElement } from './split'
 import { Raytracer } from './raytracer'
 import { Observable } from './observer';
-import { mindmap, testMindMap } from './mindmap';
+// import { mindmap, testMindMap } from './mindmap';
 import { Buffer } from "buffer";
 
 // import { XMLHttpRequest } from 'xmlhttprequest-ts'
@@ -66,9 +66,10 @@ export interface HostMsg {
 
 export class Main {
 
-    static moodleID: number     // might be several textbooks, but only one moodle person
-    static prevUniq = ''        // best guess, in case we don't have one for a log record
-
+    moodleID: number     // might be several textbooks, but only one moodle person
+    prevUniq = ''        // best guess, in case we don't have one for a log record
+    hiddenCode = ''      // prefix to code from the editor
+    hiddenDecl = ''      // TS decl for hidden code
 
 
     editorDiv: HTMLDivElement
@@ -101,25 +102,26 @@ export class Main {
     //     }
     // }
 
-
     /** Attaches the mathcode API to the window object so that you can discover it */
     static attachMathCodeAPI() {   // NB - STATIC !!!
         // let onClickSay: OnClickSay
 
         (window as any).TSX = {
-            JSXGraph: (): JSXGraph => {
+            JSXGraph: (): TSX.JSXGraph => {
                 console.log('called TSX TSX init');
-                return new JSXGraph()
+                return new TSX.JSXGraph()
             },
 
         };
 
+
+
         // remember to add these to NAMESPACE in mathcoode.d.ts.txt
         (window as any).Mathcode = {
 
-            JSXGraph: (): JSXGraph => {
+            JSXGraph: (): TSX.JSXGraph => {
                 console.log('called Mathcode TSX init');
-                return new JSXGraph()
+                return new TSX.JSXGraph()
             },
 
             VT52: (): VT52 => {
@@ -166,7 +168,7 @@ export class Main {
                     console.log('%cMathcodeAPI.loader successful', 'background-color:red;color:white;')
                     console.log('courseInfo(raw): ', courseInfo, 'moodleID', moodleID)
 
-                    this.moodleID = moodleID;
+                    main.moodleID = moodleID;
 
                     // (window as any).TSX = new JSXGraph()
                     // console.log('%cassiigned JSXGraph() to window.TSX', 'background-color:blue;color:white;')
@@ -193,6 +195,16 @@ export class Main {
 
                 },
 
+                hiddencode: (hidden64: string, decl64: string) => {
+
+                    let b = Buffer.from(hidden64, 'base64')
+                    main.hiddenCode = b.toString()
+                    b = Buffer.from(hidden64, 'base64')
+                    main.hiddenDecl = b.toString()
+
+                    main.setupMonacoEditor(main.hiddenCode,main.hiddenDecl)
+                    // console.log('hidden code', this.hiddenCode)
+                },
 
                 logAnswerToQuestion: (paragraphUniq: string, bakery0: string) => {
                     console.log('in logAnswerToQuestion()');
@@ -204,10 +216,10 @@ export class Main {
 
                     let sayThis = document.getElementById(utterID)  // : HTMLElement or null
                     if (!sayThis) {     // might be null
-                        writeMoodleLog({ 'datacode': 'LOG_Error', 'id': this.moodleID, 'textbook': textbook, 'data01': `could not find HTML ID '${utterID}' for paragraph '${paragraph}'` })
+                        writeMoodleLog({ 'datacode': 'LOG_Error', 'id': main.moodleID, 'textbook': textbook, 'data01': `could not find HTML ID '${utterID}' for paragraph '${paragraph}'` })
                     } else {
 
-                        writeMoodleLog({ 'datacode': 'LOG_ClickSay', 'id': this.moodleID, 'textbook': textbook, 'data01': sayThis.innerHTML.substring(0, 40), 'uniq': paragraph })
+                        writeMoodleLog({ 'datacode': 'LOG_ClickSay', 'id': main.moodleID, 'textbook': textbook, 'data01': sayThis.innerHTML.substring(0, 40), 'uniq': paragraph })
 
                         if (!this.onClickSay)
                             this.onClickSay = new OnClickSay()
@@ -269,9 +281,9 @@ export class Main {
                 },
 
                 mindmap: (content: string, canvas: string) => {
-                    console.log('drawing mindmap', content, canvas)
-                    let pm = new mindmap(content, canvas)
-                    pm.drawMindMap()
+                    // console.log('drawing mindmap', content, canvas)
+                    // let pm = new mindmap(content, canvas)
+                    // pm.drawMindMap()
                     // testMindMap()
                 },
 
@@ -293,11 +305,11 @@ export class Main {
 
                     if (!readyToReflect) {
                         // if NOT ready, then use 1001, data01 describes what is missing
-                        writeMoodleLog({ 'datacode': 'LOG_NotReadyToReflect', 'id': this.moodleID, 'textbook': textbook, 'data01': 'code challenge', 'uniq': step })
+                        writeMoodleLog({ 'datacode': 'LOG_NotReadyToReflect', 'id': main.moodleID, 'textbook': textbook, 'data01': 'code challenge', 'uniq': step })
                         alert('checking whether you are reading to finish ' + step.toString())
                     } else {
                         // if ready, then use 1002.  and set a flag so don't have to check again
-                        writeMoodleLog({ 'datacode': 'Log_ReadyToReflect', 'id': this.moodleID, 'textbook': textbook, 'uniq': step })
+                        writeMoodleLog({ 'datacode': 'Log_ReadyToReflect', 'id': main.moodleID, 'textbook': textbook, 'uniq': step })
                     }
                     return readyToReflect
                 },
@@ -306,19 +318,20 @@ export class Main {
                 // MathcodeAPI.completeStep("00051","step","activity","topic")
                 completeStep: (id: string, uniq: string, textbook: string) => {
                     // alert('complete step')
-                    writeMoodleLog({ 'datacode': 'Log_CompleteStep', 'id': this.moodleID, 'textbook': textbook, 'uniq': uniq, })
+                    writeMoodleLog({ 'datacode': 'Log_CompleteStep', 'id': main.moodleID, 'textbook': textbook, 'uniq': uniq, })
                     return (true)  // whetherh we can go ahead
                 },
 
                 copyToEditor(paragraph: string, code: string, textbook: string) {
                     let codeString = window.atob(code)
-                    writeMoodleLog({ 'datacode': 'Log_CopyToEditor', 'id': this.moodleID, 'textbook': textbook, 'uniq': paragraph, data01: code })
+                    writeMoodleLog({ 'datacode': 'Log_CopyToEditor', 'id': main.moodleID, 'textbook': textbook, 'uniq': paragraph, data01: code })
                     Main.editor.editor.setValue(codeString)
+                    console.log('copyToEditor', codeString)
                 },
 
                 runInCanvas(paragraph: string, code: string, textbook: string) {   // convert from TS to JS first !!
                     let tsCode = window.atob(code)
-                    writeMoodleLog({ 'datacode': 'Log_RunInCanvas', 'id': this.moodleID, 'textbook': textbook, 'uniq': paragraph, data01: tsCode })
+                    writeMoodleLog({ 'datacode': 'Log_RunInCanvas', 'id': main.moodleID, 'textbook': textbook, 'uniq': paragraph, data01: tsCode })
                     let jsCode = ts.transpile(tsCode);
 
                     // before we do anything else, we WIPE OUT any previous
@@ -329,12 +342,12 @@ export class Main {
                     while (jxgDiv.firstChild) {
                         jxgDiv.firstChild.remove()
                     }
-                    let canv = document.createElement("canvas")
-                    canv.id = 'canvas'
+                    let canv = document.createElement("jxgbox")
+                    canv.id = 'jxgbox'
                     jxgDiv.appendChild(canv)
 
 
-
+                    console.log('runEditorCode', jsCode)
                     Main.editor.runEditorCode(jsCode)
                 },
 
@@ -349,12 +362,12 @@ export class Main {
                         // console.log('removing', jxgDiv.lastElementChild)
                         jxgDiv.removeChild(jxgDiv.lastElementChild);
                     }
-                    let canv = document.createElement("canvas")
-                    canv.id = 'canvas'
+                    let canv = document.createElement("jxgbox")
+                    canv.id = 'jxgbox'
                     jxgDiv.appendChild(canv)
 
                     try {
-                        Main.editor.transpile()  // also runs
+                        Main.editor.transpile(main.hiddenCode)  // also runs
                     } catch (e) {   // transpile error.  show it in an alert
                         alert(e);
                     }
@@ -386,7 +399,7 @@ export class Main {
                     B.style.display = 'block'
                     C.style.display = 'none'
 
-                    writeMoodleLog({ 'datacode': 'LOG_SnapQuestion', 'id': this.moodleID, 'textbook': textbook, 'data01': question, 'data02': answer, 'data03': myAnswer, 'uniq': uniq })
+                    writeMoodleLog({ 'datacode': 'LOG_SnapQuestion', 'id': main.moodleID, 'textbook': textbook, 'data01': question, 'data02': answer, 'data03': myAnswer, 'uniq': uniq })
                 },
 
                 // sometimes the host wants to write without a refresh
@@ -415,43 +428,6 @@ export class Main {
                     document.getElementById(tabName).style.display = 'block';
                 },
 
-                wSpinnerPrefix: '',
-                wSpinnerVowel: '',
-                wSpinnerSuffix: '',
-
-                wordSpinner: function(pvs: string, letters: string) {
-                    console.log('wordspinner', pvs, letters)
-                    // shift all the existing words down
-                    document.getElementById('spin3').innerHTML = document.getElementById('spin2').innerHTML;
-                    document.getElementById('spin2').innerHTML = document.getElementById('spin1').innerHTML;
-                    document.getElementById('spin1').innerHTML = document.getElementById('spin0').innerHTML;
-
-                    if (pvs == 'p') { this.wSpinnerPrefix = letters; }
-                    else {
-                        if (pvs == 'v') { this.wSpinnerVowel = letters; }
-                        else { this.wSpinnerSuffix = letters; }
-                    }
-
-                    console.log('pre', this.wSpinnerPrefix, 'vow', this.wSpinnerVowel, 'suf', this.wSpinnerSuffix)
-                    document.getElementById('spin0').innerHTML = this.wSpinnerPrefix + this.wSpinnerVowel + this.wSpinnerSuffix;
-                },
-
-
-                wordSpinnerPlusE: function(pvs: string, letters: string) {
-
-                    // shift all the existing words down
-                    document.getElementById('spin3').innerHTML = document.getElementById('spin2').innerHTML;
-                    document.getElementById('spin2').innerHTML = document.getElementById('spin1').innerHTML;
-                    document.getElementById('spin1').innerHTML = document.getElementById('spin0').innerHTML;
-
-                    if (pvs == 'p') { this.wSpinnerPrefix = letters; }
-                    else {
-                        if (pvs == 'v') { this.wSpinnerVowel = letters; }
-                        else { this.wSpinnerSuffix = letters; }
-                    }
-
-                    document.getElementById('spin0').innerHTML = this.wSpinnerPrefix + this.wSpinnerVowel + this.wSpinnerSuffix + 'e';
-                }
 
 
 
@@ -509,83 +485,6 @@ export class Main {
 
 
 
-        // monaco.editor.createModel(lib_baby, 'typescript', monaco.Uri.parse(babyUri));
-
-        this.editorDiv = document.getElementById("editor") as HTMLDivElement
-        console.log('%clooking for editor div element', 'background-color:blue;color:white;')
-        if (this.editorDiv) {  // if page has an editor div
-            console.log('%cSTARTING EDITOR', 'background-color:blue;color:white;')
-
-            Main.editor = new Editor(this.editorDiv, this.template);  // static !!
-            console.log('%c seems to have started', 'background-color:blue;color:white;')
-
-            // this.game = undefined //new GameLauncher(800, 600);
-            this.download = document.getElementById("download") as HTMLButtonElement;
-            this.upload = document.getElementById("upload") as HTMLButtonElement;
-            this.files = document.getElementById("files") as HTMLButtonElement;
-            this.run = document.getElementById("run") as HTMLButtonElement;
-            this.stop = document.getElementById("stop") as HTMLButtonElement;
-            this.pause = document.getElementById("pause") as HTMLButtonElement;
-            this.command = document.getElementById("command") as HTMLButtonElement;
-            // this.fullscreen = document.getElementById("fullscreen") as HTMLButtonElement;
-
-
-            if (this.download)
-                this.download.onclick = () => Main.editor.download("game.ts");
-            if (this.upload)
-                this.upload.onclick = () => Main.editor.upload();
-            if (this.files)
-                this.files.onclick = () => (window as any).MathcodeAPI.refreshFileExplorer(1);
-
-            if (this.run) {
-                this.run.onclick = async () => {
-                    console.log('clicked RUN #2')
-                    // this.run.disabled = false;  // was true
-                    // this.stop.disabled = false;
-                    // this.pause.disabled = false;
-                    // this.command.disabled = false;
-                    let jxgDiv = document.getElementById('jxgbox')
-                    console.log('removing with method 1')
-                    while (jxgDiv.lastElementChild) {
-                        console.log('removing', jxgDiv.lastElementChild)
-                        jxgDiv.removeChild(jxgDiv.lastElementChild);
-                    }
-
-                    // this.fullscreen.disabled = false;
-
-                    try {
-
-                        // before we do anything else, we WIPE OUT any previous
-                        // content of <div id='jxgbox'>
-                        // if someone wants a canvas, they add their own
-
-                        // const fn = await this.editor.transpile(this.game.scope);
-                        //this.editorDiv.hidden = true;
-                        Main.editor.transpile()  // also runs
-                        // this.editor.runEditorCode()
-
-                    } catch (e) {   // transpile error.  show it in an alert
-                        alert(e);
-                        this.resetButtons();
-                    }
-                };
-            }
-
-
-            // this.command.onclick = () => {
-            //     console.log('clicked command')
-            //     // const paused = this.game.paused;
-            //     // this.game.paused = !paused;
-            //     // this.pause.innerText = paused ? "Pause" : "Continue";
-            //     // this.fullscreen.disabled = !paused;
-            // };
-        } else {
-            console.log('%cdid not find editor div element', 'background-color:blue;color:white;')
-        }
-        // this.fullscreen.onclick = () => this.game.fullScreen = true;
-
-
-
 
     }
 
@@ -636,9 +535,9 @@ export class Main {
         // so we simply use the PREVIOUS UNIQ (usually that got us here)
 
         if (payload.uniq == undefined)
-            payload.uniq = this.prevUniq
+            payload.uniq = main.prevUniq
         else
-            this.prevUniq = payload.uniq
+            main.prevUniq = payload.uniq
 
 
 
@@ -670,6 +569,86 @@ export class Main {
         let base64 = Buffer.from(JsonData, 'utf8').toString('base64');
         console.log('base64', base64)
         navigator.sendBeacon("ajax.php?payload=" + base64);
+    }
+
+
+
+    setupMonacoEditor(hiddenCode:string,hiddenDecl:string) {
+        // monaco.editor.createModel(lib_baby, 'typescript', monaco.Uri.parse(babyUri));
+
+        this.editorDiv = document.getElementById("editor") as HTMLDivElement
+        console.log('%clooking for editor div element', 'background-color:blue;color:white;')
+        if (this.editorDiv) {  // if page has an editor div
+            console.log('%cSTARTING EDITOR', 'background-color:blue;color:white;')
+
+            Main.editor = new Editor(this.editorDiv, this.template, hiddenCode, hiddenDecl);  // static !!
+
+            console.log('%c seems to have started', 'background-color:blue;color:white;')
+
+            // this.game = undefined //new GameLauncher(800, 600);
+            this.download = document.getElementById("download") as HTMLButtonElement;
+            this.upload = document.getElementById("upload") as HTMLButtonElement;
+            this.files = document.getElementById("files") as HTMLButtonElement;
+            this.run = document.getElementById("run") as HTMLButtonElement;
+            this.stop = document.getElementById("stop") as HTMLButtonElement;
+            this.pause = document.getElementById("pause") as HTMLButtonElement;
+            this.command = document.getElementById("command") as HTMLButtonElement;
+            // this.fullscreen = document.getElementById("fullscreen") as HTMLButtonElement;
+
+
+            if (this.download)
+                this.download.onclick = () => Main.editor.download("game.ts");
+            if (this.upload)
+                this.upload.onclick = () => Main.editor.upload();
+            if (this.files)
+                this.files.onclick = () => (window as any).MathcodeAPI.refreshFileExplorer(1);
+
+            if (this.run) {
+                this.run.onclick = async () => {
+                    console.log('clicked RUN #2')
+                    // this.run.disabled = false;  // was true
+                    // this.stop.disabled = false;
+                    // this.pause.disabled = false;
+                    // this.command.disabled = false;
+                    let jxgDiv = document.getElementById('jxgbox')
+                    console.log('removing with method 1')
+                    while (jxgDiv.lastElementChild) {
+                        console.log('removing', jxgDiv.lastElementChild)
+                        jxgDiv.removeChild(jxgDiv.lastElementChild);
+                    }
+
+                    // this.fullscreen.disabled = false;
+
+                    try {
+
+                        // before we do anything else, we WIPE OUT any previous
+                        // content of <div id='jxgbox'>
+                        // if someone wants a canvas, they add their own
+
+                        // const fn = await this.editor.transpile(this.game.scope);
+                        //this.editorDiv.hidden = true;
+                        Main.editor.transpile(main.hiddenCode)  // also runs
+                        // this.editor.runEditorCode()
+
+                    } catch (e) {   // transpile error.  show it in an alert
+                        alert(e);
+                        this.resetButtons();
+                    }
+                };
+            }
+
+
+            // this.command.onclick = () => {
+            //     console.log('clicked command')
+            //     // const paused = this.game.paused;
+            //     // this.game.paused = !paused;
+            //     // this.pause.innerText = paused ? "Pause" : "Continue";
+            //     // this.fullscreen.disabled = !paused;
+            // };
+        } else {
+            console.log('%cdid not find editor div element', 'background-color:blue;color:white;')
+        }
+        // this.fullscreen.onclick = () => this.game.fullScreen = true;
     }
 
 }

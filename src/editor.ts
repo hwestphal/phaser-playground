@@ -116,23 +116,25 @@ export class Editor {
     el: HTMLElement
     storageKey: string
     safeDelay: number
+    hiddenDecl: string
 
     systemDeclTS = ''     // hidden stuff that goes into all editors
     systemDeclJS = ''   // same hidden stuff in JS
 
-    prefixDecl = ''     // hidden decl for TS for THIS instance of the editor
-    prefixCode = ''     // hidden code for THIS instance of the editor
+    // prefixDecl = ''     // hidden decl for TS for THIS instance of the editor
+    // prefixCode = ''     // hidden code for THIS instance of the editor
 
     editorCode = ''
     commandCode = ''
 
-    constructor(el: HTMLElement, initFile: string) {
+    constructor(el: HTMLElement, initFile: string, hiddenCode:string = '',hiddenDecl: string ='') {
         // console.log('%cSTARTING EDITOR','background-color:blue;color:white;')
         // return;
         this.el = el
         this.initFile = initFile
         this.storageKey = ''
         this.safeDelay = 5000
+        this.hiddenDecl = hiddenDecl
 
 
         monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
@@ -236,21 +238,18 @@ export class Editor {
             const JSXGraph = TSX.JSXGraph() as TSX.JSXGraph
             let JSX = JSXGraph.initBoard('jxgbox')
             `
-
+            + hiddenDecl;
 
         // must be JAVASCRIPT, not TYPESCRIPT
         this.systemDeclJS =
             `
             // const doc = document
             // const JXG = window.JXG   // (window as any).JXG
-            const Mathcode = window.Mathcode
             // const JSXGraph = window.TSX
-            const BABYLON = window.BABYLON
+            // const BABYLON = window.BABYLON
             // const Matter = window.Matter
-            const document = window.document
             // let _canvas = document.getElementById("canvas")
             // let canvas = document.getElementById("canvas")
-            let jxgbox = document.getElementById("jxgbox")
 
             // let canvas2D = document.getElementById("canvas2D")
             // let canvas3D = document.getElementById("canvas3D")
@@ -258,6 +257,10 @@ export class Editor {
             // const window.PlanetCute = new PlanetCute()
             // const PlanetCute = window.PlanetCute
             // const engine = new BABYLON.Engine(canvas, true);
+
+            const Mathcode = window.Mathcode
+            const document = window.document
+            let jxgbox = document.getElementById("jxgbox")
             let VT = Mathcode.VT52()
 
             // console.log('mathcode',mathcode.window)
@@ -267,22 +270,12 @@ export class Editor {
             const JSXGraph = Mathcode.JSXGraph()
             let JSX = JSXGraph.initBoard('jxgbox')
 
-
             let currentParagraph = "jxgbox"
-`
-        this.prefixDecl =
-            `declare function answer(myAnswer:string|number|number[]):bool;`
-
-
-
-        this.prefixCode =
-            `function answer(myAnswer){
-                return (myAnswer == '42')
-            }`
+            `
+            + hiddenCode;
 
 
         monaco.languages.typescript.typescriptDefaults.addExtraLib(this.systemDeclTS)
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(this.prefixDecl)
 
         this.editor = monaco.editor.create(this.el, {
             automaticLayout: true,
@@ -345,21 +338,18 @@ export class Editor {
 
 
 
-    async transpile(scope: any = {}) {
-        // return;
-        console.log('in transpile()', scope)
-        const names = Object.keys(scope);
-        const args = names.map((key) => scope[key]);
-        const model = this.editor.getModel();   // typescript needs a typeguard to be happy
+    async transpile(hiddenCode:string) {
+
+        // const args = names.map((key) => scope[key]);
+        const model =this.editor.getModel();   // typescript needs a typeguard to be happy
         // console.log('model from editor is', model)
 
         if (model !== null) {
-            const resource = model.uri;
-
-            const crud = monaco.editor.getModelMarkers({ resource })
-            console.log('crud', crud);
+            const resource = model.uri;  // returns an ITextModel
 
             const errors = monaco.editor.getModelMarkers({ resource })
+            console.log('errors', errors);
+
             let errorString = ''
             errors.forEach(m => {
                 switch (m.code) {
@@ -371,8 +361,9 @@ export class Editor {
                 }
             });
             if (errorString.length > 0) {
-                // alert('errors coming')    //
+                // alert('errors coming')
                 alert(errorString)    //
+
                 return
             }
 
@@ -389,7 +380,6 @@ export class Editor {
             // Log.writeMoodleLog({'datacode': 'LOG_EditorRun', data01: sourceCode, data02: line.toString(), data03: col.toString() })
 
             this.editorCode = output.outputFiles[0].text as string;
-            console.log(this.editorCode)
             this.runEditorCode(this.editorCode)      // and run the whole mess
         }
 
@@ -398,11 +388,11 @@ export class Editor {
 
 
     runEditorCode(editorCode: string) {
-
+        // console.log('runeditorcode', editorCode, hiddenCode)
 
         let code = ''
         code += this.systemDeclJS + "\r\n"
-        code += this.prefixCode + "\r\n"
+        // code += hiddenCode + "\r\n"
         code += editorCode + "\r\n"
         code += this.commandCode + "\r\n"
 
@@ -414,6 +404,7 @@ export class Editor {
         // eval() is crazy dangerous because it runs in the local context
         // Function() is a bit safer, but not much
 
+        console.log('code to run',code)
         let f = new Function(code)
         f()
     }

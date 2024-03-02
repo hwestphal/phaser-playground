@@ -48,7 +48,7 @@ export class VT52 {
     static displayColorBuffer: string[]
 
     initialized = false
-    canvasID = 'canvas'
+    canvasID = ''
 
     cursorX: number = 0
     cursorY: number = 0
@@ -66,7 +66,7 @@ export class VT52 {
     board: any   // used for JXG graphing
     boundingBox: number[]  //[x1,y1,x2,y2]
 
-    constructor(canvasID: string = 'canvas') {
+    constructor(canvasID: string = 'jxgbox') {
         this.initialized = false
         this.canvasID = canvasID
         // we DO NOT initialize right away, because that interferes with Babylon
