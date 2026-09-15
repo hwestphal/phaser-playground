@@ -1,17 +1,38 @@
 {
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
-        "strict": true,
-        "target": "es6",
-        "module": "esnext",
-        "moduleResolution": "node",
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "importHelpers": true,
+        "noImplicitAny": true,
+        "module": "commonjs",
+        "target": "ESNext",
+        "lib": [
+            "es5",
+            "es6",
+            "es2022",
+            "esnext",
+            "DOM",
+        ],
         "allowJs": true,
+        "skipLibCheck": true,
         "sourceMap": true,
+        "esModuleInterop": true,
+        "declaration": true,
+        "checkJs": false,
+        "experimentalDecorators": true,
     },
+    "files": [
+        "src/main.ts"
+    ],
+    "typeRoots": [
+        "node_modules/@types"
+    ],
     "include": [
-        "src/**/*"
-    ]
+        "src/**/*.ts",
+        "planetcute/planetcute.d.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ],
 }
+
+

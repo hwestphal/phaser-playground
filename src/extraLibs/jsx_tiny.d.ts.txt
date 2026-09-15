@@ -1,0 +1,175 @@
+type attributes = {
+    // point
+    name?: string
+    size?: number
+    face?: string
+    fixed?: boolean    // cannot be dragged  (also for lines)
+    visible?:boolean
+    style?: string | number
+
+    // line
+    firstArrow?: boolean | object   // eg: {type:4 size:8}
+    lastArrow?: boolean | object
+    straightFirst?: boolean  // extend past first point
+    straightLast?: boolean   // extend past last point
+    strokeColor?: string
+    strokeWidth?: number
+    strokeOpacity?:number
+    strokeColorOpacity?: number   // between 0 and 1
+    fontSize?:number
+    fontUnit?:string
+    dash?: string            // 0:solid, 1:dotted, 2-5: short,medium,long dashes
+    highlightStrokeColor?: string  // for mouse-over
+    traced?: boolean
+    ticks?: object
+
+
+    // circle
+     keepAspectRatio?:boolean
+     method?:string
+
+    // polygon
+    fillColor?: string
+    fillOpacity?:number
+    withLines?: boolean
+    hasInnerPoints?: boolean
+    vertices?: any
+
+    // angle
+    radius?: number
+    arc2?: any
+
+    // board
+    boundingbox?: number[]
+    axis?: boolean,
+    showCopyright?: boolean   // LGPL and MIT, but still copyright
+    showNavigation?: boolean
+    showClearTraces?: boolean
+
+    // arrow
+    label?: object    // eg: {position:top}
+    withLabel?: boolean
+
+    // intersection
+    trace?: boolean
+    color?: string
+
+    // slider
+    snapWidth?: number
+    withlabel?:boolean
+
+
+    // chart
+    chartStyle?: string
+    width?:number
+    colorArray?:string[]
+    labels?:any[]
+
+    // curve
+    curveType?:string
+
+    // transform
+    type?: string
+
+    // 3D
+    xAxis?:object
+    yAxis?:object
+    zAxis?:object
+    axesPosition?:string
+    xAxis?:object
+    xPlaneFront?:object
+    xPlaneRear?:object
+    yPlaneFront?:object
+    yPlaneRear?:object
+    zPlaneFront?:object
+    zPlaneRear?:object
+
+    xPlaneRearYAxis?:object
+    xPlaneRearZAxis?:object
+    yPlaneFrontXAxis?:object
+    yPlaneFrontZAxis?:object
+    zPlaneFrontXAxis?:object
+    zPlaneFrontYAxis?:object
+
+    // point3d
+    point1?: object
+    point2?: object
+
+    // functiongraph3D
+    stepsU?:number
+    stepsV?:number
+
+    // text
+    cssStyle?:string
+}
+
+
+
+type JSXElement = {
+    X: () => number
+    Y: () => number
+    Z: () => number
+    Value: () => number
+    moveTo: (location: any, mSec?: number) => void
+    L: () => number
+    bindTo: (transformation:any) => void
+    visit?: any
+    vertices?: any
+    content?: any
+    needsUpdate?: boolean
+    on:(trigger:string,action:any) => any
+    startAnimation: ( direction:number, stepCount:number, delay:number) => void
+    stopAnimation: () => void
+    addParents:(parents:any[]) => void
+    create(elementType:string, coordinates: any[] | function , attributes?: attributes)=> JSXElement
+    point1?: object
+    point2?: object
+
+}
+type Board = {      // JSG.Board - manages properties of a board
+/*
+    create(elementType:'angle' | 'arc' | 'arrow' | 'axis' | 'bisector' |
+    'button' | 'cardinalspline' | 'chart' | 'checkbox' | 'circle' |
+    'circumcircle' | 'circumcirclearc' | 'circumcirclesector' | 'conic' |
+    'curve' | 'curveddifference' | 'curveintersection' | 'curveunion' |
+    'ellipse' | 'functiongraph' | 'glider' | 'grid' | 'group' |
+    'hatch' | 'hyperbola' | 'image' | 'input' | 'integral' | 'intersection' | 'otherintersection' |
+    'line' | 'metapostspline' | 'midpoint' | 'mirrorelement' | 'normal' |
+    'perpendicular' | 'plot' | 'point' | 'polygon' | 'polygonalchain' |
+    'regularpolygon' | 'reflection' | 'riemannsum' | 'sector' | 'segment' | 'semicircle' |
+    'slider' | 'slopetriangle' | 'stepfunction' | 'tangent' |
+    'tapemeasure' | 'text' | 'ticks' | 'tracecurve' | 'transform' |
+    'turtle',
+*/
+    create(elementType:string, coordinates: number[] | function, attributes?: attributes): JSXElement,
+
+      options: any,
+
+    defaultAxes: any,
+    unsuspendUpdate(),
+}
+
+
+
+declare namespace JXG {
+    export class JSXGraph {
+        static initBoard(HTML_ID: string, attributes: attributes): Board;
+        static freeBoard(Board):Board;
+        static registerElement(element:JSXElement)
+    }
+    export class Options {
+        static label: any
+        static text: any
+        static line: any
+    }
+    export class Math{
+        static Numerics: any
+    }
+    export class CanvasRenderer{
+        static context: any
+    }
+
+
+    function addEvent(a:any,eventType:string,c:()=>void,d:any):any
+    function toFixed(a:any,b:number):number
+}

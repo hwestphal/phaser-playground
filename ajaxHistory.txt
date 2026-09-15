@@ -1,0 +1,36 @@
+    Thursday, 20-Aug-2026 01:07:12 CEST <span style="color:blue;">:</span>  <b style='color:red;'>ERROR</b> [2] (line 157): /home/tom/html/baby-playground/models.php.  Undefined global variable $firstTime models.php(25) models.php(157) models.php(292) models.php(74) index.php(14) 
+    Thursday, 20-Aug-2026 15:36:36 CEST <span style="color:blue;">:</span>  <b style='color:red;'>ERROR</b> [2] (line 408): /home/tom/html/baby-playground/index.php.  scandir(./icons): Failed to open directory: No such file or directory models.php(26) index.php(408) index.php(78) 
+    Thursday, 20-Aug-2026 15:36:36 CEST <span style="color:blue;">:</span>  <b style='color:red;'>ERROR</b> [2] (line 408): /home/tom/html/baby-playground/index.php.  scandir(): (errno 2): No such file or directory models.php(26) index.php(408) index.php(78) 
+    Thursday, 20-Aug-2026 15:36:36 CEST <span style="color:blue;">:</span>  <b style='color:red;'>ERROR</b> [2] (line 410): /home/tom/html/baby-playground/index.php.  foreach() argument must be of type array|object, bool given models.php(26) index.php(410) index.php(78) 
+    Thursday, 20-Aug-2026 17:04:24 CEST <span style="color:blue;">query:</span>  CREATE TABLE IF NOT EXISTS `showcase` (
+              `id`           integer PRIMARY KEY AUTOINCREMENT NOT NULL ON CONFLICT FAIL,
+              `userid`       integer default 0,
+              `uniq`         text default '',
+              `jsxversion`   text default '',
+              `gameframe`    integer default 0,
+              `isodate`      text default '',
+              `code`         text default '',
+              `hiddencode`   text default '',
+              `hiddendecl`   text default '',
+              `hash`         text default '',
+              `visits`       integer default 0,
+              `datecreate`   integer default 0); models.php(332) models.php(180) models.php(82) index.php(169) 
+    Thursday, 20-Aug-2026 17:04:24 CEST <span style="color:blue;">query:</span>  CREATE INDEX IF NOT EXISTS `idx1_showcase` ON showcase (uniq); models.php(332) models.php(183) models.php(82) index.php(169) 
+    Thursday, 20-Aug-2026 17:04:24 CEST <span style="color:blue;">query:</span>  CREATE INDEX IF NOT EXISTS `idx2_showcase` ON showcase (datecreate,hash); models.php(332) models.php(185) models.php(82) index.php(169) 
+    Thursday, 20-Aug-2026 17:04:24 CEST <span style="color:blue;">query:</span>  CREATE INDEX IF NOT EXISTS `idx3_showcase` ON showcase (hash); models.php(332) models.php(187) models.php(82) index.php(169) 
+    Thursday, 20-Aug-2026 17:04:24 CEST <span style="color:blue;">:</span>  <b style='color:red;'>ERROR</b> [2] (line 233): /home/tom/html/baby-playground/models.php.  Undefined array key 0 models.php(26) models.php(233) models.php(90) index.php(169) 
+    Tuesday, 08-Sep-2026 23:24:58 CEST <span style="color:blue;">:</span>  {"p1":"previewicons"} index.php(77) 
+    Tuesday, 08-Sep-2026 23:25:08 CEST <span style="color:blue;">:</span>  {"p1":"previewicons"} index.php(77) 
+    Tuesday, 08-Sep-2026 23:25:20 CEST <span style="color:blue;">:</span>  {"p1":"previewicons"} index.php(77) 
+    Tuesday, 08-Sep-2026 23:25:26 CEST <span style="color:blue;">:</span>  {"p1":"previewicons"} index.php(77) 
+    Tuesday, 08-Sep-2026 23:26:20 CEST <span style="color:blue;">:</span>  {"p1":"previewicons"} index.php(77) 
+    Tuesday, 08-Sep-2026 23:26:26 CEST <span style="color:blue;">:</span>  {"p1":"previewicons"} index.php(77) 
+    Tuesday, 08-Sep-2026 23:26:40 CEST <span style="color:blue;">:</span>  {"p1":"previewicons"} index.php(77) 
+    Tuesday, 08-Sep-2026 23:26:44 CEST <span style="color:blue;">:</span>  {"p":"previewicons"} index.php(77) 
+    Tuesday, 08-Sep-2026 23:26:45 CEST <span style="color:blue;">:</span>  {"p":"previewicons"} index.php(77) 
+    Tuesday, 08-Sep-2026 23:26:53 CEST <span style="color:blue;">:</span>  {"p":"previewicons"} index.php(77) 
+    Tuesday, 08-Sep-2026 23:28:00 CEST <span style="color:blue;">:</span>  {"p":"previewicons"} index.php(77) 
+    Tuesday, 08-Sep-2026 23:28:05 CEST <span style="color:blue;">:</span>  {"p":"previewIcons"} index.php(77) 
+    Tuesday, 08-Sep-2026 23:28:36 CEST <span style="color:blue;">:</span>  {"p":"previewIcons"} index.php(77) 
+    Tuesday, 08-Sep-2026 23:30:20 CEST <span style="color:blue;">:</span>  {"p":"previewIcons"} index.php(77) 
+

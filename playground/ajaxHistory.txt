@@ -1,0 +1,37 @@
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">Wed, 19 Aug 2026 10:15:10 +0200:</span>  called at  ajax.php(36) 
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">queryString:</span>   ajax.php(37) 
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">request:</span>  {"payload":"eyJkYXRhY29kZSI6IkxPR19TaGFyZUNvZGUiLCJpZCI6IjEiLCJ0ZXh0Ym9vayI6InBsYXlncm91bmQiLCJkYXRhMDEiOiIiLCJkYXRhMDIiOiJNRDFZMjNYTTUiLCJkYXRhMDUiOiJiR1YwSUVFZ1BTQlVVMWd1VUc5cGJuUW9XeTB4TENBd1hTa0tiR1YwSUVJZ1BTQlVVMWd1VUc5cGJuUW9XekVzSURCZEtRcFVVMWd1VEdsdVpTaEJMQ0JDS1FvSyIsImRhdGEwNiI6IiIsImRhdGEwNyI6IiIsInBhcmFncmFwaCI6IiJ9"} ajax.php(38) 
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">:</span>  Array
+(
+    [payload] => eyJkYXRhY29kZSI6IkxPR19TaGFyZUNvZGUiLCJpZCI6IjEiLCJ0ZXh0Ym9vayI6InBsYXlncm91bmQiLCJkYXRhMDEiOiIiLCJkYXRhMDIiOiJNRDFZMjNYTTUiLCJkYXRhMDUiOiJiR1YwSUVFZ1BTQlVVMWd1VUc5cGJuUW9XeTB4TENBd1hTa0tiR1YwSUVJZ1BTQlVVMWd1VUc5cGJuUW9XekVzSURCZEtRcFVVMWd1VEdsdVpTaEJMQ0JDS1FvSyIsImRhdGEwNiI6IiIsImRhdGEwNyI6IiIsInBhcmFncmFwaCI6IiJ9
+)
+ ajax.php(39) 
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">:</span>  eyJkYXRhY29kZSI6IkxPR19TaGFyZUNvZGUiLCJpZCI6IjEiLCJ0ZXh0Ym9vayI6InBsYXlncm91bmQiLCJkYXRhMDEiOiIiLCJkYXRhMDIiOiJNRDFZMjNYTTUiLCJkYXRhMDUiOiJiR1YwSUVFZ1BTQlVVMWd1VUc5cGJuUW9XeTB4TENBd1hTa0tiR1YwSUVJZ1BTQlVVMWd1VUc5cGJuUW9XekVzSURCZEtRcFVVMWd1VEdsdVpTaEJMQ0JDS1FvSyIsImRhdGEwNiI6IiIsImRhdGEwNyI6IiIsInBhcmFncmFwaCI6IiJ9 ajax.php(44) 
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">:</span>  {"datacode":"LOG_ShareCode","id":"1","textbook":"playground","data01":"","data02":"MD1Y23XM5","data05":"bGV0IEEgPSBUU1guUG9pbnQoWy0xLCAwXSkKbGV0IEIgPSBUU1guUG9pbnQoWzEsIDBdKQpUU1guTGluZShBLCBCKQoK","data06":"","data07":"","paragraph":""} ajax.php(47) 
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">:</span>  {"datacode":"LOG_ShareCode","id":"1","textbook":"playground","data01":"","data02":"MD1Y23XM5","data05":"bGV0IEEgPSBUU1guUG9pbnQoWy0xLCAwXSkKbGV0IEIgPSBUU1guUG9pbnQoWzEsIDBdKQpUU1guTGluZShBLCBCKQoK","data06":"","data07":"","paragraph":""} ajax.php(50) 
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">query:</span>  CREATE TABLE IF NOT EXISTS `showcase` (
+              `id`           integer PRIMARY KEY AUTOINCREMENT NOT NULL ON CONFLICT FAIL,
+              `userid`       integer default 0,
+              `uniq`         text default '',
+              `jsxversion`   text default '',
+              `gameframe`    integer default 0,
+              `isodate`      text default '',
+              `code`         text default '',
+              `hiddencode`   text default '',
+              `hiddendecl`   text default '',
+              `hash`         text default '',
+              `visits`       integer default 0,
+              `datecreate`   integer default 0); models.php(331) models.php(179) models.php(110) ajax.php(52) 
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">query:</span>  CREATE INDEX IF NOT EXISTS `idx1_showcase` ON showcase (uniq); models.php(331) models.php(182) models.php(110) ajax.php(52) 
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">query:</span>  CREATE INDEX IF NOT EXISTS `idx2_showcase` ON showcase (datecreate,hash); models.php(331) models.php(184) models.php(110) ajax.php(52) 
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">query:</span>  CREATE INDEX IF NOT EXISTS `idx3_showcase` ON showcase (hash); models.php(331) models.php(186) models.php(110) ajax.php(52) 
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">:</span>  let A = TSX.Point([-1, 0])
+let B = TSX.Point([1, 0])
+TSX.Line(A, B)
+
+ models.php(114) ajax.php(52) 
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">:</span>   models.php(115) ajax.php(52) 
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">:</span>   models.php(116) ajax.php(52) 
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">:</span>  processing-->  MD1Y23XM5: bGV0IEEgPSBUU1guUG9pbnQoWy0xLCAwXSkKbGV0IEIgPSBUU1guUG9pbnQoWzEsIDBdKQpUU1guTGluZShBLCBCKQoK models.php(121) ajax.php(52) 
+    Wednesday, 19-Aug-2026 10:15:10 CEST <span style="color:blue;">query:</span>  INSERT INTO showcase (jsxversion, code, hiddencode, hiddendecl, isodate, hash, datecreate, uniq) VALUES ('2.1.5', 'bGV0IEEgPSBUU1guUG9pbnQoWy0xLCAwXSkKbGV0IEIgPSBUU1guUG9pbnQoWzEsIDBdKQpUU1guTGluZShBLCBCKQoK', '', '', '2026-08-19', 'b386065a5f6340e6d8a5075b3eaeb5cbb85e6f5c', 1787127310, 'MD1Y23XM5') models.php(331) models.php(391) models.php(221) models.php(123) ajax.php(52) 
+

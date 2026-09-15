@@ -1,0 +1,148 @@
+declare namespace Mathcode{
+    function VT52():VT52;
+    function Draw(width:number?):Draw;
+    function V3(x:number,y:number,z:number):V3;
+    function Point3(x:number,y:number,z:number):V3;
+    function Color(x:number,y:number,z:number):V3;
+    function Ray(origin: V3, direction: V3):Ray;
+    function PlanetCute():PlanetCute;
+    function addObserver(type:'keypress'|'keydown'|'click'|'mousedown',handler:object):Observable;
+    function JSXBoard():JSXBoard;
+}
+
+
+
+declare class VT52 {
+    constructor(canvasID: string ='canvas');
+
+    print(text: string|number|boolean, color?: string): Promise<void>;
+    printString(text?: string, color?: string): Promise<void>;
+    printChar(charCode: number, charColor?: string): Promise<void>;
+    setCursor(row: number, col: number);
+    setCursor(row: number, col: number);
+    colorPoint(row: number, col: number, color: string);
+    colorXY(x: number, y: number, color?: string);
+    drawAxisLines(boundingBox?:number[]);
+    graph(func:Function,color?:string);
+    sound(url:string);
+    clear();
+    drawKeyboard(board:Board, width:number, height:number, handler:string);
+}
+
+
+declare class Draw {
+    constructor(width?:number);
+    writeColor(x:V3);
+    putImage();
+    framebuffer:any;
+    render(rayColor:(r: Ray,world:any=null) => V3,world:any=null);
+    test();
+    height:number;
+    width.number;
+}
+
+declare class V3 {
+   x: number;
+   y: number;
+   z: number;
+   constructor(x:number,y:number,z:number):V3;
+   add(other:V3):V3;
+   subtract(other:V3):V3;
+   dot(other:V3):number;
+   length():number;
+   normalize():V3;
+   scale(scaler:number):V3;
+   cross(other:V3):V3;
+   lengthSquared():number;
+   toString():string;
+}
+
+declare class Ray{
+     origin:V3;
+     direction:V3;
+     constructor(origin: V3, direction: V3);
+     at(t:number):V3;
+}
+
+declare class PlanetCute {
+    constructor(canvasID:string);
+    ctx():CanvasRenderingContext2D;
+    placeTile(tile:HTMLImageElement, x:number,y:number,height:number):void;
+
+
+    BrownBlock: HTMLImageElement;
+    CharacterBoy: HTMLImageElement;
+    CharacterCatGirl: HTMLImageElement;
+    CharacterHornGirl: HTMLImageElement;
+    CharacterPinkGirl: HTMLImageElement;
+    CharacterPrincessGirl: HTMLImageElement;
+    ChestClosed: HTMLImageElement;
+    ChestLid: HTMLImageElement;
+    ChestOpen: HTMLImageElement;
+    DirtBlock: HTMLImageElement;
+    DoorTallClosed: HTMLImageElement;
+    DoorTallOpen: HTMLImageElement;
+    EnemyBug: HTMLImageElement;
+    GemBlue: HTMLImageElement;
+    GemGreen: HTMLImageElement;
+    GemOrange: HTMLImageElement;
+    GrassBlock: HTMLImageElement;
+    Heart: HTMLImageElement;
+    Key: HTMLImageElement;
+    PlainBlock: HTMLImageElement;
+    PlanetCuteShadowMockup: HTMLImageElement;
+    PlanetCuteShadowTest: HTMLImageElement;
+    RampEast: HTMLImageElement;
+    RampNorth: HTMLImageElement;
+    RampSouth: HTMLImageElement;
+    RampWest: HTMLImageElement;
+    Rock: HTMLImageElement;
+    RoofEast: HTMLImageElement;
+    RoofNorthEast: HTMLImageElement;
+    RoofNorth: HTMLImageElement;
+    RoofNorthWest: HTMLImageElement;
+    RoofSouthEast: HTMLImageElement;
+    RoofSouth: HTMLImageElement;
+    RoofSouthWest: HTMLImageElement;
+    RoofWest: HTMLImageElement;
+    Selector: HTMLImageElement;
+    ShadowEast: HTMLImageElement;
+    ShadowNorthEast: HTMLImageElement;
+    ShadowNorth: HTMLImageElement;
+    ShadowNorthWest: HTMLImageElement;
+    ShadowSideWest: HTMLImageElement;
+    ShadowSouthEast: HTMLImageElement;
+    ShadowSouth: HTMLImageElement;
+    ShadowSouthWest: HTMLImageElement;
+    ShadowWest: HTMLImageElement;
+    SpeechBubble: HTMLImageElement;
+    Star: HTMLImageElement;
+    StoneBlock: HTMLImageElement;
+    StoneBlockTall: HTMLImageElement;
+    Thumbs: HTMLImageElement;
+    TreeShort: HTMLImageElement;
+    TreeTall: HTMLImageElement;
+    TreeUgly: HTMLImageElement;
+    WallBlock: HTMLImageElement;
+    WallBlockTall: HTMLImageElement;
+    WaterBlock: HTMLImageElement;
+    WindowTall: HTMLImageElement;
+    WoodBlock: HTMLImageElement;
+}
+
+
+declare var Image: {
+    new(width?: number, height?: number): HTMLImageElement;
+};
+declare function setInterval(handler: TimerHandler, timeout?: number, ...arguments: any[]): number;
+declare function clearInterval(handle?: number): void;
+
+declare function setTimeout(handler: TimerHandler, timeout?: number, ...arguments: any[]): number;
+declare function clearTimeout(handle?: number): void;
+
+declare function requestAnimationFrame(callback: FrameRequestCallback): number;
+
+declare function addEventListener<K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+declare function addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+declare function removeEventListener<K extends keyof WindowEventMap>(type: K, listener: (this: Window, ev: WindowEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+declare function removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;

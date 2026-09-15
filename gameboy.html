@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>JSXGraph template</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <link href="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js" type="text/javascript"
+        charset="UTF-8"></script>
+
+    <!-- The next line is optional: load MathJax -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+</head>
+
+<body>
+
+    <style type='text/css'>
+        .wrapper {
+            display: flex;
+            flex-wrap: nowrap;
+            min-width: 150px;
+        }
+
+        .button {
+            background: rgb(242, 96, 43);
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+    </style>
+    `
+    <div
+        style="border:solid 2px black; border-radius: 10px;padding:10px;width:100%;max-width:720px;background-color: rgb(178, 214, 246);">
+
+        <div id="jxgbox" class="jxgbox" style="width:100%; height:700px;"></div>
+
+        <div>
+            <div class="wrapper">
+                <table style="padding-left:100px;padding-top:20px;">
+                    <tr>
+                        <td></td>
+                        <td><input type="button" class='button' id="btn_Up" value="&#x2B06;"></input>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><input type="button" class='button' id="btn_Lf" value="&#x2B05;"></input>
+                        <td></td>
+                        <td><input type="button" class='button' id="btn_Rt" value="&#x27A1;"></input>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="button" class='button' id="btn_Dn" value="&#x2B07;"></input>
+                        <td>
+                    </tr>
+                </table>
+                <div class="wrapper"></div>
+                <div style="float:left;padding-top:50px;">
+                    <input type="button" class='button' style="margin-right:50px;" id="btn_A" value="A"></input>
+                    <input type="button" class='button' style="margin-right:50px;" id="btn_B" value="B"></input>
+                    <input type="button" class='button' id="btn_C" value="C"></input>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+            var board = JXG.JSXGraph.initBoard('jxgbox', {
+                boundingbox: [-5, 2, 5, -2],
+                axis: true
+            });
+            let input = board.create('input', [0, 0,])
+
+            addEventListener("keydown", (e) => { console.log(e.keyCode); input.set(input.Value() + String.fromCharCode(e.keyCode)) })
+
+        </script>
+        <script>
+
+            let btn_A = (e) => dispatchEvent(new KeyboardEvent("keydown", {
+                key: "A",
+                keyCode: 65,
+                code: "KeyA"
+            }))
+            let btn_B = (e) => dispatchEvent(new KeyboardEvent("keydown", {
+                key: "B",
+                keyCode: 66,
+                code: "KeyB"
+            }))
+            let btn_C = (e) => dispatchEvent(new KeyboardEvent("keydown", {
+                key: "C",
+                keyCode: 67,
+                code: "KeyC"
+            }))
+            let btn_Up = (e) => dispatchEvent(new KeyboardEvent("keydown", {
+                key: "",
+                keyCode: 38,
+                code: "ArrowUp"
+            }))
+            let btn_Dn = (e) => dispatchEvent(new KeyboardEvent("keydown", {
+                key: "",
+                keyCode: 38,
+                code: "ArrowDown"
+            }))
+            let btn_Lf = (e) => dispatchEvent(new KeyboardEvent("keydown", {
+                key: "",
+                keyCode: 37,
+                code: "ArrowLeft"
+            }))
+            let btn_Rt = (e) => dispatchEvent(new KeyboardEvent("keydown", {
+                key: "",
+                keyCode: 39,
+                code: "ArrowRight"
+            }))
+
+
+            document.getElementById('btn_A').addEventListener("click", btn_A);
+            document.getElementById('btn_B').addEventListener("click", btn_B);
+            document.getElementById('btn_C').addEventListener("click", btn_B);
+
+            document.getElementById('btn_Up').addEventListener("click", btn_Up);
+            document.getElementById('btn_Dn').addEventListener("click", btn_Dn);
+            document.getElementById('btn_Lf').addEventListener("click", btn_Lf);
+            document.getElementById('btn_Rt').addEventListener("click", btn_Rt);
+
+            // document.getElementById('btn_B').addEventListener("click", btn_B);
+            // document.getElementById('txt').addEventListener("keydown", txtKeydown);
+
+        </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<head>
+    <script type="text/javascript" charset="UTF-8" src="dist.1.14/bootstrap/bootstrap-5.3.3.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="dist.1.14/bootstrap/bootstrap-5.3.3.min.css" />
+    <script type="text/javascript" charset="UTF-8" src="dist.1.14/jsxgraphcore.js"></script>
+    <link rel="stylesheet" type="text/css" href="dist.1.14/jsxgraph.css" />
+</head>
+
+<body>
+    <div id="jxgbox" class="jxgbox" style="width:850px; height:850px;"></div>
+    <script type="module" defer>
+        import { TXG } from "./dist.1.14/tsxgraph.js";
+        let TSX = TXG.TSXGraph.initBoard('jxgbox');
+
+        let range = 10; // size of the board (square)
+        let gameOver = false;
+        TSX.setBoundingBox(-.5, range - .5, range - .5, -.5);
+        TSX.grid();
+        let xy2i = (xy) => xy[0] + range * xy[1]; // convert back and forth
+        let i2xy = (i) => [i % range, Math.floor(i / range)];
+        const right = [1, 0], left = [-1, 0], up = [0, 1], down = [0, -1];
+        let direction = right; // start the snake going right
+        TSX.on("keydown", (e) => {
+            if ('code' in e) { //  only allow left/right if going up/down, etc
+                if (e.code == 'ArrowRight' && direction[0] == 0)
+                    direction = right;
+                if (e.code == 'ArrowLeft' && direction[0] == 0)
+                    direction = left;
+                if (e.code == 'ArrowUp' && direction[1] == 0)
+                    direction = up;
+                if (e.code == 'ArrowDown' && direction[1] == 0)
+                    direction = down;
+            } // ignore everything else.
+        });
+        let random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+        let newPoint = (i, color) => TSX.point(i2xy(i), { strokeColor: color, strokeWidth: 12 });
+        let getNewApple = () => {
+            let emptyArray = [...Array(range * range).keys()]; //=> [0, 1, 2, ...]
+            let emptyCells = emptyArray.filter(a => !snakeArray.some(b => a === b)); // array of cells that are NOT in the snake
+            if (emptyCells.length == 0) {
+                gameOver = true;
+            }
+            return emptyCells[random(0, emptyCells.length - 1)];
+        };
+        // check if hit an edge, return new i position or -1.  if range is 15, then valid values are 0-14
+        let canMoveTo = (i, direction) => {
+            let xy = i2xy(i);
+            if ((xy[0] + direction[0]) < 0 || (xy[0] + direction[0]) >= range)
+                return -1;
+            if ((xy[1] + direction[1]) < 0 || (xy[1] + direction[1]) >= range)
+                return -1;
+            return xy2i([xy[0] + direction[0], xy[1] + direction[1]]);
+        };
+        let snakeArray = [xy2i([2, 2])]; // always start off at same place
+        let snakeDot = newPoint(snakeArray[0], 'red');
+        let apple = getNewApple();
+        let appleDot = newPoint(apple, 'green');
+        let shockwaveSize = .2;
+        let shockwave = TSX.circle(() => i2xy(snakeArray[0]), () => shockwaveSize, { strokeColor: 'black', strokeWidth: 5, opacity: () => 1 - shockwaveSize });
+        let snakeCurve = TSX.curve([0], [0], { strokeColor: 'red', strokeWidth: 5 });
+        let snakeUpdate = () => {
+            let x = [];
+            let y = [];
+            snakeArray.map((n) => { let xy = i2xy(n); x.push(xy[0]); y.push(xy[1]); });
+            snakeCurve.dataX = x;
+            snakeCurve.dataY = y;
+            snakeCurve.updateCurve();
+        };
+        let move = () => {
+            if (gameOver) {
+                if (shockwaveSize < 1) {
+                    shockwaveSize += .1;
+                    TSX.update();
+                }
+            }
+            else {
+                // is this a legal move?
+                let projected = canMoveTo(snakeArray[0], direction); // -1 if off the board
+                if (projected < 0) { // did we step off the board? (got a -1 from offsetCellIndex)
+                    gameOver = true;
+                    return;
+                }
+                if (snakeArray.slice(1, -1).includes(projected)) { // slice because last element will move away, so no hit
+                    gameOver = true;
+                    return;
+                }
+                if (projected == apple) { // we ate the apple
+                    snakeArray.unshift(apple); // add apple to front of snake
+                    snakeDot.setPositionDirectly(i2xy(projected)); // move snakehead
+                    apple = getNewApple(); // and find a new target
+                    appleDot.setPositionDirectly(i2xy(apple)); // move apple
+                }
+                else { // must moving the snake forward
+                    snakeArray.pop(); // move snake by moving tail to head
+                    snakeArray.unshift(projected);
+                    snakeDot.setPositionDirectly(i2xy(projected));
+                }
+                snakeUpdate();
+                TSX.update();
+            }
+        }
+        setInterval(move, 300);
+    </script>
+</body>
+
+</html>
